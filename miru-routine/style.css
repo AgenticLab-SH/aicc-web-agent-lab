@@ -1,0 +1,22 @@
+:root {
+  font: 1rem/1.55 system-ui, sans-serif;
+  color: #0f172a;
+  background: #f7f9fc;
+  --blue: #0369a1;
+  --blue-dark: #075985;
+  --blue-pale: #e0f2fe;
+  --muted: #475569;
+  --line: #e2e8f0;
+}
+*, *::before, *::after { box-sizing: border-box; }
+body { margin: 0; }
+main { max-width: 36rem; margin: auto; padding: 1.4rem; }
+p, h1, h2 { margin: 0 0 .5rem; }
+header time { color: var(--muted); }
+.progress-card { background: var(--blue-pale); color: var(--blue-dark); border-radius: 28px; padding: 1.25rem; margin: 1rem 0 1.5rem; }
+progress { width: 100%; accent-color: var(--blue); }
+ul { margin: 0; padding: 0; list-style: none; display: grid; gap: .65rem; }
+label { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: center; min-height: 56px; gap: .75rem; padding: .7rem 1rem; background: white; border: 1px solid var(--line); border-radius: 20px; cursor: pointer; }
+input { width: 1.25rem; height: 1.25rem; accent-color: var(--blue); }
+label time { display: block; color: var(--blue-dark); font-variant-numeric: tabular-nums; }
+:focus-visible { outline: 3px solid #b45309; outline-offset: 3px; }

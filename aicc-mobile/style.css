@@ -1,0 +1,27 @@
+:root {
+  font: 1rem/1.55 system-ui, sans-serif;
+  color: #162033;
+  background: #f2f5fa;
+  --accent: #224cb8;
+  --line: #d6dfed;
+}
+*, *::before, *::after { box-sizing: border-box; }
+body { margin: 0; }
+main { max-width: 58rem; margin: auto; padding: 1.25rem; }
+h1, h2, h3, p { margin: 0 0 .65rem; }
+a { color: var(--accent); }
+nav, .filters { display: flex; flex-wrap: wrap; gap: .75rem 1.25rem; }
+nav a { display: inline-flex; align-items: center; min-height: 44px; }
+section { margin-top: 1.5rem; }
+.timestamp, #count, .state { color: #465975; font-size: .875rem; }
+label { display: grid; gap: .25rem; flex: 1 1 10rem; }
+input, select, button { min-height: 44px; font: inherit; padding: .45rem .75rem; }
+input, select, dialog, article { border: 1px solid var(--line); border-radius: .75rem; background: #fff; }
+button { border: 0; border-radius: .65rem; background: var(--accent); color: white; cursor: pointer; }
+:focus-visible { outline: 3px solid #b25200; outline-offset: 3px; }
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr)); gap: .8rem; }
+article, dialog { padding: 1rem; }
+dialog { max-width: min(28rem, calc(100% - 2rem)); }
+dialog::backdrop { background: #16203373; }
+dt { font-weight: 700; }
+dd { margin: 0 0 .65rem; }

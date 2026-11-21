@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AICC 모바일 프리뷰</title>
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <main>
+    <header>
+      <p class="timestamp">업데이트 <time id="updated"></time></p>
+      <h1>AICC</h1>
+      <nav aria-label="주 메뉴"><a href="#apps">내 앱</a><a href="#overview">전체 개발 현황</a></nav>
+    </header>
+    <section id="apps" aria-labelledby="apps-title">
+      <h2 id="apps-title">내 앱</h2>
+      <div class="filters">
+        <label>앱 검색<input id="search" type="search" placeholder="예: 메모"></label>
+        <label>상태<select id="filter"><option value="all">전체</option></select></label>
+      </div>
+      <p id="count" role="status"></p>
+      <div id="apps-list" class="grid"></div>
+    </section>
+    <section id="overview" aria-labelledby="overview-title">
+      <h2 id="overview-title">전체 개발 현황</h2>
+      <p>예시 프로젝트의 확인된 작업과 다음 작업을 살펴봅니다.</p>
+      <dl><dt>작업 연결</dt><dd>이력 조회 확인 · 이어하기 실사용 검증 예정</dd><dt>모바일 앱</dt><dd>앱 목록 확인 · 좁은 화면 검증 예정</dd></dl>
+    </section>
+  </main>
+  <dialog id="app-detail" aria-labelledby="detail-title">
+    <h2 id="detail-title"></h2><p id="detail-message"></p>
+    <form method="dialog"><button>닫기</button></form>
+  </dialog>
+  <script type="module" src="./main.mjs"></script>
+</body>
+</html>

@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>미루 오늘의 루틴 프리뷰</title>
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <main>
+    <header><time id="today"></time><h1>오늘의 루틴</h1></header>
+    <section class="progress-card" aria-labelledby="rhythm-title">
+      <h2 id="rhythm-title">오늘의 리듬</h2>
+      <p id="summary" role="status"></p>
+      <progress id="progress" aria-label="오늘 루틴 완료 수"></progress>
+    </section>
+    <section aria-labelledby="schedule-title">
+      <h2 id="schedule-title">시간표</h2>
+      <ul id="routines"></ul>
+    </section>
+  </main>
+  <script type="module" src="./main.mjs"></script>
+</body>
+</html>
