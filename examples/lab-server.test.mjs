@@ -14,6 +14,9 @@ test('lab serves the app with private scope and a one-use synthetic confirmation
   assert.equal((await read('/mobile.html')).status,200);
   assert.equal((await read('/api/mobile/apps')).status,409);
   assert.equal((await read('/downloads/aicc-mobile.apk')).status,404);
+  const downloadVersion=await (await read('/downloads/aicc-mobile.json')).json();
+  assert.equal(downloadVersion.mock,true);
+  assert.equal(downloadVersion.signed,false);
   assert.equal((await read('/.env.example')).status,404);
   const session=await post('local-session',{});
   const {csrf}=await session.json();

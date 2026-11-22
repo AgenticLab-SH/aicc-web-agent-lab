@@ -63,7 +63,7 @@ function connectionLabel(){
 }
 function acceptSession(value){
   if(csrf&&csrf!==value.csrf){preview=null;$('confirmChange').disabled=true;if($('confirmDialog').open)$('confirmDialog').close();}
-  session=value;csrf=value.csrf;connectionLabel();window.dispatchEvent(new Event('aicc:session-ready'));return value;
+  session=value;csrf=value.csrf;connectionLabel();updateNextStep();window.dispatchEvent(new Event('aicc:session-ready'));return value;
 }
 async function syncSession(){
   if(sessionSync)return sessionSync;
@@ -240,6 +240,23 @@ function appOpenLink(app,url,label='열기'){
   open.addEventListener('auxclick',event=>{if(event.button===1)remember();});
   return open;
 }
+function updateNextStep(){
+  const link=$('nextStepLink'), text=$('nextStepText');
+  const openable=appSnapshot?.apps.filter(app=>registeredAppUrl(app)).length??0;
+  if(openable){
+    text.textContent=`마지막으로 읽은 목록에 웹 주소가 등록된 앱이 ${openable}개 있습니다.`;
+    link.href='#apps';
+    link.textContent='내 앱 열기';
+  }else if(appSnapshot?.status==='AVAILABLE'){
+    text.textContent='웹에서 열 수 있는 등록 앱이 없습니다. 공통 도구에서 PC 전용 작업도 확인할 수 있습니다.';
+    link.href='#tools';
+    link.textContent='도구 안내 보기';
+  }else{
+    text.textContent='내 앱에서 등록 목록을 조회하고 사용할 수 있는 화면을 확인하세요.';
+    link.href='#apps';
+    link.textContent='내 앱 불러오기';
+  }
+}
 function renderQuickApps(){
   const apps=appSnapshot?.apps??[];
   const items=[];
@@ -318,7 +335,7 @@ async function loadApps(){
       $('appsStatus').textContent='일부 등록 자료를 읽지 못했습니다. 마지막 전체 목록을 유지했습니다. 다시 조회하세요.';
       return;
     }
-    appSnapshot=value;renderApps();renderQuickApps();
+    appSnapshot=value;renderApps();renderQuickApps();updateNextStep();
     $('appsStatus').textContent=value.status==='PARTIAL'
       ? '확인된 앱만 표시합니다. 전체 목록은 다시 조회하세요.'
       : '목록 확인 '+date(value.observedAt);
@@ -363,7 +380,7 @@ function navigatePanel(id,load=true){
   openPanel(id,load);window.dispatchEvent(new Event('aicc:panel-change'));window.scrollTo({top:0,behavior:'instant'});
   const heading=$(['ai-reports','ai-work','ai-queue'].includes(id)?'aiWorkspace':id)?.querySelector('h2');if(heading){heading.tabIndex=-1;heading.focus({preventScroll:true});}
 }
-for(const a of document.querySelectorAll('nav[aria-label="관리 항목"] a[href^="#"]'))a.onclick=e=>{
+for(const a of document.querySelectorAll('nav[aria-label="관리 항목"] a[href^="#"], #nextStepLink'))a.onclick=e=>{
   if(e.ctrlKey||e.metaKey||e.shiftKey||e.altKey)return;
   e.preventDefault();navigatePanel(a.hash.slice(1));
 };

@@ -1,9 +1,10 @@
 <!doctype html>
 <html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="referrer" content="no-referrer"><title>AICC 설치·업데이트</title><link rel="stylesheet" href="/mobile.css"><script type="module" src="/install.js"></script></head>
 <body><main class="install-page">
-<header><h1>AICC 설치·업데이트</h1><p>공개 미리보기에서는 설명과 합성 버전을 제공합니다.</p>
-<p>등록 앱은 AICC의 ‘내 앱’에서 엽니다. 작업을 이어가려면 기존에 연결한 브라우저를 사용하세요.</p>
-<a class="app-open" href="/mobile.html#apps">웹에서 열기 · 내 앱</a></header>
+<header><h1>AICC 설치·업데이트</h1><p>웹앱이나 Android 설치본을 선택하세요. 설치·업데이트가 끝나면 기기에서 AICC를 열어 확인하세요.</p>
+  <p>업데이트 전에는 진행 중인 편집과 확인을 마쳐 주세요.</p>
+  <p>등록 앱은 AICC의 ‘내 앱’에서 엽니다. 작업을 이어가려면 기존에 연결한 브라우저를 사용하세요.</p>
+  <a class="app-open" href="/mobile.html#apps">웹에서 열기 · 내 앱</a></header>
 <p id="installStatus" class="app-list-status" role="status"></p>
 <section id="selectedApp" aria-labelledby="selectedAppTitle" hidden>
   <h2 id="selectedAppTitle"></h2><p id="selectedAppStatus"></p>
@@ -17,9 +18,9 @@
   <p>편집·확인 작업을 마친 뒤 제어 화면에서 <strong>앱 업데이트</strong>를 누르세요. 연결에 실패하면 현재 화면을 유지하며 지시를 자동으로 다시 보내지 않습니다.</p>
 </section>
 <details id="apkHelp"><summary>Android 설치·업데이트</summary>
-  <p>기존 웹앱은 그대로 사용할 수 있습니다. Android 설치본을 쓰고 있다면 아래 파일을 열고 Android의 업데이트 확인을 따르세요. USB 연결은 필요 없습니다.</p>
+  <p>Android 설치 파일이 제공되면 파일을 내려받아 기기의 설치·업데이트 안내를 따르세요. USB 연결은 필요 없습니다.</p>
   <p id="apkVersion" class="muted" role="status"></p>
-  <div class="app-home-actions"><a href="/downloads/aicc-mobile.apk" download="aicc-mobile.apk">Android 설치 파일 내려받기</a><a href="/downloads/aicc-mobile.json">버전·파일 검증 정보</a></div>
+  <div id="apkActions" class="app-home-actions" hidden><a href="/downloads/aicc-mobile.apk" download="aicc-mobile.apk">Android 설치 파일 내려받기</a><a href="/downloads/aicc-mobile.json">버전·파일 검증 정보</a></div>
 </details>
 <details><summary>휴대폰 연결과 홈 화면</summary>
   <p>처음에는 PC의 ‘휴대폰 연결’에서 발급한 링크를 여세요. 제어 화면의 작업은 연결된 PC·서버가 켜져 있어야 실행됩니다.</p>

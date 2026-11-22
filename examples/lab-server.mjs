@@ -13,11 +13,11 @@ const mediaTypes = new Map([
 const observedAt = '2026-11-22T00:00:00.000Z';
 const readOnly = { ok: true, readOnly: true, mock: true };
 const apps = [
-  { id: 'aicc', title: 'AICC', state: 'WEB', url: '/mobile.html#ai-reports', description: '합성 보고와 도구를 확인합니다.' },
-  { id: 'demo-notes', title: '예시 노트', state: 'WEB', url: 'https://notes.example.invalid/', description: '가상 등록 주소입니다.' },
-  { id: 'demo-pc', title: '예시 데스크톱', state: 'PC_ONLY', description: 'Windows 전용 상태 예시입니다.' },
-  { id: 'demo-pending', title: '예시 준비 중', state: 'UNAVAILABLE', description: '등록 주소가 없는 상태입니다.' },
-  { id: 'demo-retired', title: '예시 종료', state: 'RETIRED', description: '사용 종료 이력입니다.' }
+  { id: 'aicc', title: 'AICC', state: 'WEB', url: '/mobile.html#ai-reports', description: '이 공개 작업본의 합성 보고·도구 화면을 엽니다.' },
+  { id: 'demo-notes', title: '합성 웹 앱 예시', state: 'WEB', url: 'https://notes.example.invalid/', description: '실재 서비스가 아닌 테스트 전용 가상 주소입니다.' },
+  { id: 'demo-pc', title: '합성 PC 전용 예시', state: 'PC_ONLY', description: '실재 제품이 아닌 Windows 전용 상태 표시 예시입니다.' },
+  { id: 'demo-pending', title: '합성 주소 미등록 예시', state: 'UNAVAILABLE', description: '테스트용으로 등록 주소가 없는 상태입니다.' },
+  { id: 'demo-retired', title: '합성 사용 종료 예시', state: 'RETIRED', description: '테스트용 사용 종료 상태입니다.' }
 ].map(app => ({ registered: true, url: null, ...app }));
 
 const tools = [

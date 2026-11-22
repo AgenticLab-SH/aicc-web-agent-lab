@@ -2,7 +2,6 @@ const $=id=>document.getElementById(id);
 const panel=$('selectedApp'),status=$('installStatus'),open=$('selectedAppOpen');
 const options={credentials:'same-origin',cache:'no-store'};
 let selectedRequest;
-
 async function loadSelectedApp(){
   selectedRequest?.abort();
   panel.hidden=true;open.hidden=true;open.removeAttribute('href');status.textContent='';
@@ -35,7 +34,6 @@ async function loadSelectedApp(){
 }
 void loadSelectedApp();
 window.addEventListener('hashchange',loadSelectedApp);
-
 $('apkHelp').addEventListener('toggle',async()=>{
   const label=$('apkVersion');
   if(!$('apkHelp').open||label.dataset.state)return;
@@ -44,7 +42,13 @@ $('apkHelp').addEventListener('toggle',async()=>{
     const response=await fetch('/downloads/aicc-mobile.json',{...options,signal:AbortSignal.timeout(10000)});
     if(!response.ok)throw Error();
     const version=await response.json();
-    if(version.signed!==true||typeof version.versionName!=='string'||!version.versionName)throw Error();
+    if(version.mock===true){
+      label.textContent='공개 미리보기에서는 실제 Android 설치 파일을 제공하지 않습니다. 웹에서 AICC를 열 수 있습니다.';
+      label.dataset.state='mock';
+      return;
+    }
+    if(version.signed!==true||typeof version.versionName!=='string'||!version.versionName.trim())throw Error();
+    $('apkActions').hidden=false;
     label.textContent=`다운로드 버전 ${version.versionName} · 폰에 설치된 버전은 Android 설정에서 확인하세요.`;
     label.dataset.state='loaded';
   }catch{
