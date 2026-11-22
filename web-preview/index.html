@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>미루 오늘의 루틴</title>
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <main class="app-shell">
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">MY SUNRISE · MIRU</p>
+        <time id="today" class="today-date"></time>
+        <h1>오늘의 루틴</h1>
+      </div>
+      <button id="add-routine" class="icon-button" type="button" aria-label="새 루틴 추가">＋</button>
+    </header>
+
+    <section class="hero-card" aria-labelledby="rhythm-title">
+      <div class="card-heading">
+        <div>
+          <p class="section-kicker">TODAY'S FLOW</p>
+          <h2 id="rhythm-title">오늘의 리듬</h2>
+        </div>
+        <span id="progress-count" class="count-pill">0 / 0</span>
+      </div>
+      <p id="summary" class="summary" role="status" aria-live="polite"></p>
+      <progress id="progress" aria-label="오늘 루틴 완료 수"></progress>
+    </section>
+
+    <section class="timeline-section" aria-labelledby="timeline-title">
+      <div class="section-heading">
+        <div>
+          <p class="section-kicker">24 HOUR PLAN</p>
+          <h2 id="timeline-title">원형 시간표</h2>
+        </div>
+        <button id="jump-now" class="text-button" type="button">현재 시각</button>
+      </div>
+      <div id="clock-wrap" class="clock-wrap">
+        <div id="clock" class="clock" aria-label="오늘의 24시간 원형 시간표" role="img">
+          <div class="clock-face" aria-hidden="true"></div>
+          <div class="clock-center">
+            <span>NOW</span>
+            <strong id="clock-now">--:--</strong>
+          </div>
+          <div id="clock-items"></div>
+        </div>
+        <p class="clock-help">색 조각을 누르면 목록의 같은 루틴으로 이동합니다.</p>
+      </div>
+    </section>
+
+    <section class="schedule-section" aria-labelledby="schedule-title">
+      <div class="section-heading">
+        <div>
+          <p class="section-kicker">ROUTINE LIST</p>
+          <h2 id="schedule-title">시간순 목록</h2>
+        </div>
+        <span id="routine-total" class="muted-count"></span>
+      </div>
+      <div id="empty-state" class="empty-state" hidden>
+        <div class="empty-mark">☀</div>
+        <h3>아직 등록한 루틴이 없어요</h3>
+        <p>오늘을 가볍게 시작할 첫 루틴을 추가해 보세요.</p>
+        <button id="empty-add" class="primary-button" type="button">첫 루틴 추가</button>
+      </div>
+      <ul id="routines" class="routine-list" aria-live="polite"></ul>
+    </section>
+  </main>
+
+  <dialog id="routine-dialog" class="routine-dialog" aria-labelledby="dialog-title">
+    <form id="routine-form" method="dialog">
+      <div class="dialog-heading">
+        <div>
+          <p class="section-kicker">ROUTINE</p>
+          <h2 id="dialog-title">루틴 추가</h2>
+        </div>
+        <button id="close-dialog" class="icon-button small" type="button" aria-label="닫기">×</button>
+      </div>
+      <input id="routine-id" type="hidden">
+      <label>루틴 이름
+        <input id="routine-title" name="title" maxlength="80" required placeholder="예: 가벼운 산책">
+      </label>
+      <div class="time-inputs">
+        <label>시작 시간<input id="routine-start" name="start" type="time" required></label>
+        <label>종료 시간<input id="routine-end" name="end" type="time" required></label>
+      </div>
+      <p id="form-error" class="form-error" role="alert"></p>
+      <div class="dialog-actions">
+        <button id="delete-routine" class="delete-button" type="button" hidden>삭제</button>
+        <span class="action-spacer"></span>
+        <button id="cancel-dialog" class="secondary-button" type="button">취소</button>
+        <button class="primary-button" type="submit">저장</button>
+      </div>
+    </form>
+  </dialog>
+
+  <script type="module" src="./main.mjs"></script>
+</body>
+</html>
