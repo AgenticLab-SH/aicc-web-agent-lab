@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="ko">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#edf2ee"><meta name="referrer" content="no-referrer"><title>AICC 관제 실행</title><link rel="stylesheet" href="/mobile.css"><link rel="stylesheet" href="/supervise.css"><script type="module" src="/supervise.js"></script></head>
+<body class="supervise connecting">
+<a class="skip-link" href="#mainContent">본문으로 이동</a>
+<header class="app-header"><div class="brand"><p class="eyebrow">AICC CONTROL</p><h1>관제 실행</h1></div><a class="back-link" href="/mobile.html">PC 관리로</a></header>
+<main id="mainContent" tabindex="-1">
+  <p id="connection" role="status">연결 확인 중…</p>
+  <p id="notice" role="alert"></p>
+  <section id="runs" aria-labelledby="runsTitle" aria-busy="true">
+    <div class="section-title"><h2 id="runsTitle">실행 상태</h2><div class="actions"><label class="inline">실행<select id="runSelect" disabled><option>불러오는 중…</option></select></label><button id="refresh" type="button" disabled>새로 조회</button></div></div>
+    <div id="runSummary" class="run-summary" role="status">불러오는 중…</div>
+    <ul class="legend" aria-label="상태 설명"><li><span class="chip turn_active">차례 진행</span> 지금 일하는 중</li><li><span class="chip waiting">대기</span> 차례 끝, 다음 지시 대기</li><li><span class="chip ended">종료</span> 깨우기 대상에서 빠짐</li><li><span class="chip crashed">이상</span> 비정상 종료·정체 의심</li></ul>
+    <div id="groups" class="cards group-cards"><div class="card skeleton" aria-hidden="true"></div><div class="card skeleton" aria-hidden="true"></div></div>
+  </section>
+  <section id="logs" aria-labelledby="logsTitle">
+    <div class="section-title"><h2 id="logsTitle">기록 보기</h2><div class="actions"><label class="inline">대상<select id="logTarget" disabled><option value="">깨우기·S0</option></select></label><button id="readLogs" type="button" disabled>기록 조회</button></div></div>
+    <p id="logStatus" class="muted" role="status">조회 전 · 각 기록의 끝 30줄만 읽습니다.</p>
+    <div id="logBlocks"></div>
+  </section>
+  <section id="addGroup" aria-labelledby="addTitle">
+    <h2 id="addTitle">그룹 추가</h2>
+    <p class="muted" id="addHelp">PC 로컬 연결에서만 쓸 수 있습니다. 경로는 절대 경로로 적습니다. 등록만으로 실행되지 않습니다. 기존 callback을 연결한 뒤 결과 전달을 미리보세요.</p>
+    <fieldset id="addFields" disabled>
+      <div class="form-grid">
+        <label>그룹 이름<input id="gName" required maxlength="41" placeholder="예: G5" autocomplete="off"></label>
+        <label>실행기<select id="gRunner"><option value="codex">Codex · 기존 callback</option><option value="kiro">Kiro · 과거 기록</option></select></label>
+        <label>agent<input id="gAgent" maxlength="41" placeholder="예: codex-g5" autocomplete="off"></label>
+        <label>세션 ID (있으면)<input id="gSession" placeholder="sess_… 또는 Codex 스레드 ID" autocomplete="off"></label>
+      </div>
+      <label>작업 폴더<input id="gCwd" placeholder="C:\demo\…" autocomplete="off"></label>
+      <label>첫 지시 파일<input id="gPrompt" placeholder="…\PROMPT.md" autocomplete="off"></label>
+      <label>PROGRESS 파일<input id="gProgress" placeholder="…\PROGRESS.md" autocomplete="off"></label>
+      <label hidden><input id="gElevated" type="checkbox"> 관리자 (과거 기록)</label>
+      <label hidden><input id="gOpen" type="checkbox" disabled> 직접 지시 실행 미지원</label><label>기존 일회용 callback ID<input id="gCallback" autocomplete="off" placeholder="등록된 callback ID (없으면 읽기만)"></label>
+      <div class="actions"><button id="previewAdd" type="button" class="primary">추가 미리보기</button></div>
+    </fieldset>
+  </section>
+  <section id="newRun" aria-labelledby="newTitle">
+    <h2 id="newTitle">새 실행</h2>
+    <p class="muted">PC 로컬 연결에서만 쓸 수 있습니다. 기존 관제 목록을 준비합니다. S0/Kiro 예약 깨우기는 등록하지 않습니다. 실제 실행은 등록된 Codex callback을 사용합니다.</p>
+    <fieldset id="newFields" disabled>
+      <div class="form-grid">
+        <label>실행 이름<input id="rName" maxlength="41" placeholder="예: weekend-run" autocomplete="off"></label>
+        <label>기한 (KST)<input id="rDeadline" type="datetime-local"></label>
+        <label>깨우기 간격(분)<input id="rInterval" type="number" min="5" max="120" value="10"></label>
+      </div>
+      <label>그룹 목록 (JSON)<textarea id="rGroups" spellcheck="false">[{"name":"G1","runner":"codex","workingDirectory":"C:\\work\\project"}]</textarea></label>
+      <label hidden><input id="rLaunch" type="checkbox" disabled> 예약 깨우기 미지원</label>
+      <div class="actions"><button id="planRun" type="button">계획 확인</button><button id="previewRun" type="button" class="primary">준비 미리보기</button></div>
+      <pre id="planOut" class="scroll-output" tabindex="0" hidden></pre>
+    </fieldset>
+  </section>
+</main>
+<dialog id="confirmDialog" aria-labelledby="confirmTitle">
+  <form method="dialog">
+    <h2 id="confirmTitle">변경 확인</h2>
+    <p id="confirmImpact"></p>
+    <p class="warning" id="confirmRollback"></p>
+    <p class="muted" id="confirmExpiry"></p>
+    <div class="actions"><button value="cancel" type="submit">취소</button><button id="confirmChange" value="confirm" type="button">한 번 실행</button></div>
+  </form>
+</dialog>
+</body>
+</html>

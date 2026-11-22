@@ -1,0 +1,3 @@
+# API docs
+- [Responses](https://developers.openai.com/api/docs/guides/responses.md)
+- [Safety](https://developers.openai.com/api/docs/guides/safety-best-practices.md)

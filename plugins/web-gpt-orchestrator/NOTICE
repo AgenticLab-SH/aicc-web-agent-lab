@@ -1,0 +1,7 @@
+Web GPT Orchestrator
+Copyright (c) 2026 AI Control Center contributors
+
+This public Codex plugin contains the AICC-managed web-gpt-orchestrator skill and a local MCP descriptor.
+It does not contain the private Web GPT adapter, credentials, account state, browser profiles, sessions, or route configuration.
+
+The plugin invokes the separately installed `aicc orchestration mcp` runtime. A missing or disabled plugin affects orchestration only and does not change the normal Web GPT, Native Codex, or OCX routes.

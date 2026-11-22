@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "sources": [
+    { "id": "impeccable", "surfaces": ["web", "ui", "dashboard", "cross-media"], "keywords": ["layout", "typography", "color", "polish", "critique", "premium", "세련", "웹", "ui"], "recommendedPaths": [".agent/skills/impeccable/SKILL.md", ".agent/skills/impeccable/references"] },
+    { "id": "shadcn-ui", "surfaces": ["web", "ui", "dashboard"], "keywords": ["component", "dialog", "form", "table", "dashboard", "accessibility", "컴포넌트", "대시보드"], "recommendedPaths": ["apps/v4/registry", "packages", "templates"] },
+    { "id": "open-design", "surfaces": ["web", "ui", "presentation", "diagram", "logo", "cross-media"], "keywords": ["design system", "template", "catalog", "multi-format", "cross-media", "디자인 시스템"], "recommendedPaths": ["plugins", "apps", "packages"] },
+    { "id": "ai-website-cloner-template", "surfaces": ["web", "ui"], "keywords": ["clone", "reconstruct", "url", "screenshot", "reference", "재구성", "스크린샷"], "recommendedPaths": [".agents/skills/clone-website/SKILL.md", "README.md"] },
+    { "id": "presentation-ai", "surfaces": ["presentation", "ppt", "cross-media"], "keywords": ["slide", "ppt", "pptx", "presentation", "theme", "deck", "발표", "프레젠테이션"], "recommendedPaths": ["app", "components", "lib"] },
+    { "id": "diagram-design", "surfaces": ["diagram", "visualization", "cross-media"], "keywords": ["diagram", "architecture", "flow", "svg", "mermaid", "다이어그램", "아키텍처"], "recommendedPaths": ["SKILL.md", "references", "assets", "scripts"] },
+    { "id": "logocreator", "surfaces": ["logo", "brand", "image", "cross-media"], "keywords": ["logo", "brand", "wordmark", "symbol", "favicon", "로고", "브랜드"], "recommendedPaths": ["README.md", "app", "components"], "usageRestriction": "local-reference-only-license-unknown" }
+  ]
+}

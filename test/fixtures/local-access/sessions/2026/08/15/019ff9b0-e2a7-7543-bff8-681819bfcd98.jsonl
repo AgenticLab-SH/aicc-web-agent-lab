@@ -1,0 +1,6 @@
+{"type":"session_meta","timestamp":"2026-08-15T01:00:00.000Z","payload":{"id":"019ff9b0-e2a7-7543-bff8-681819bfcd98","cwd":"/synthetic/project"}}
+{"type":"turn_context","timestamp":"2026-08-15T01:00:01.000Z","payload":{"turn_id":"synthetic-turn-1"}}
+{"type":"response_item","timestamp":"2026-08-15T01:00:02.000Z","payload":{"role":"user","content":"synthetic personal prompt access_token=fixture-user-secret"}}
+{"type":"function_call_output","timestamp":"2026-08-15T01:00:03.000Z","payload":{"output":"Cookie: synthetic-cookie-value command output"}}
+{"type":"response_item","timestamp":"2026-08-15T01:00:04.000Z","payload":{"role":"assistant","content":"Synthetic safe answer api_key=fixture-assistant-secret"}}
+{"type":"event_msg","timestamp":"2026-08-15T01:00:05.000Z","payload":{"status":"completed","summary":"synthetic completion"}}

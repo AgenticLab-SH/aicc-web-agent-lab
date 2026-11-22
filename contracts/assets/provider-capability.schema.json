@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/contracts/assets/provider-capability.schema.json",
+  "title": "AI asset provider adapter capability",
+  "type": "object",
+  "required": ["schemaVersion", "adapterId", "assetKinds", "actions", "hardDeleteInNormalSync", "requiresVisibleVerification"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "adapterId": { "type": "string", "minLength": 1 },
+    "assetKinds": { "type": "array", "items": { "type": "string" }, "uniqueItems": true },
+    "actions": { "type": "array", "items": { "enum": ["inspect", "create", "update", "retire", "delete", "verify"] }, "uniqueItems": true },
+    "hardDeleteInNormalSync": { "const": false },
+    "requiresVisibleVerification": { "type": "boolean" }
+  },
+  "additionalProperties": true
+}

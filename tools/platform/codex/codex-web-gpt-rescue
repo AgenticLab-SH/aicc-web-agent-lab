@@ -1,0 +1,67 @@
+#!/bin/sh
+set -eu
+
+# This executable is deliberately independent of the primary 17841 service,
+# the main Codex Web GPT app, and OCX. The AICC-owned 17842 service must already
+# be ready; this wrapper never restarts or silently replaces another route.
+codex_home=${CODEX_HOME:-"$HOME/.codex"}
+rescue_catalog=${AICC_WEB_GPT_RESCUE_CATALOG:-"$HOME/.ai-control-center/web-gpt-rescue/model-catalog.json"}
+rescue_model=chatgpt-web/temporary/high
+rescue_endpoint=http://127.0.0.1:17842/v1
+rescue_health=http://127.0.0.1:17842/healthz
+
+if [ -n "${AICC_NATIVE_CODEX_EXECUTABLE:-}" ]; then
+  rescue_codex=$AICC_NATIVE_CODEX_EXECUTABLE
+elif [ -x /Applications/ChatGPT.app/Contents/Resources/codex ]; then
+  rescue_codex=/Applications/ChatGPT.app/Contents/Resources/codex
+elif [ -x "$codex_home/packages/standalone/current/bin/codex" ]; then
+  rescue_codex="$codex_home/packages/standalone/current/bin/codex"
+else
+  echo "codex-web-gpt-rescue: an official Codex binary was not found" >&2
+  exit 69
+fi
+
+if [ ! -s "$rescue_catalog" ]; then
+  echo "codex-web-gpt-rescue: dedicated model catalog is unavailable: $rescue_catalog" >&2
+  exit 78
+fi
+case "$rescue_catalog" in
+  *'"'*|*'\'*|*'
+'*)
+    echo "codex-web-gpt-rescue: CODEX_HOME contains characters that cannot be encoded safely" >&2
+    exit 78
+    ;;
+esac
+
+if [ "${1:-}" = "--status" ]; then
+  printf '%s\n' "codex=$rescue_codex"
+  printf '%s\n' "endpoint=$rescue_endpoint"
+  printf '%s\n' "provider=openai"
+  printf '%s\n' "model=$rescue_model"
+  printf '%s\n' "catalog=$rescue_catalog"
+  printf '%s\n' "independent_of=17841,10100,main_web_gpt_app"
+  exit 0
+fi
+
+for argument in "$@"; do
+  case "$argument" in
+    -c|--config|-c=*|--config=*|-p|--profile|-p=*|--profile=*|-m|--model|-m=*|--model=*|--oss|--local-provider|--local-provider=*|--remote|--remote=*|--remote-auth-token-env|--remote-auth-token-env=*)
+      echo "codex-web-gpt-rescue: route/model override is not allowed: $argument" >&2
+      exit 64
+      ;;
+  esac
+done
+
+if ! /usr/bin/curl -fsS --max-time 3 "$rescue_health" \
+  | /usr/bin/python3 -c 'import json,sys; d=json.load(sys.stdin); ok=d.get("status")=="ok" and d.get("accepting_turns") is True and d.get("accepting_browser_turns") is True and all(d.get(k)==0 for k in ("active_http_turns","active_browser_http_turns","active_browser_turns")); raise SystemExit(0 if ok else 1)'
+then
+  echo "codex-web-gpt-rescue: 17842 is not ready and idle; run: aicc web-gpt rescue status" >&2
+  exit 69
+fi
+
+exec "$rescue_codex" \
+  -c "openai_base_url=\"$rescue_endpoint\"" \
+  -c 'model_provider="openai"' \
+  -c "model_catalog_json=\"$rescue_catalog\"" \
+  -m "$rescue_model" \
+  "$@"

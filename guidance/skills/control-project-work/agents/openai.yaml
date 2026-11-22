@@ -1,0 +1,4 @@
+interface:
+  display_name: "AI 작업 커맨더"
+  short_description: "기존 목표와 작성권을 지키며 AI 작업 결과를 회수하고 다음 업무를 이어갑니다"
+  default_prompt: "$control-project-work로 남은 목표와 담당 작업을 이어받아, 먼저 끝난 결과를 회수하고 의존성이 풀린 다음 업무를 진행해줘."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Manage Design Library"
+  short_description: "Collect and classify reusable design references"
+  default_prompt: "Use $manage-design-library to classify these design references into my personal library."

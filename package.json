@@ -1,0 +1,98 @@
+{
+  "name": "open-aicc",
+  "version": "0.1.0",
+  "private": false,
+  "description": "Open, local-first control center for AI accounts, providers, desktop clients, browsers, and workspaces.",
+  "type": "module",
+  "bin": {
+    "aicc": "bin/aicc",
+    "cm": "bin/cm.mjs"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "test:upstream-review": "node --test test/upstream-review-service.test.mjs test/monitoring-job-service.test.mjs",
+    "test:slack-responses": "node --test test/slack-response-inbox.test.mjs test/slack-response-socket.test.mjs",
+    "test:slack-captcha": "node --test test/slack-captcha-state.test.mjs test/slack-captcha-delivery.test.mjs test/slack-captcha-socket.test.mjs test/slack-captcha-secrets.test.mjs test/slack-captcha-consumer.test.mjs test/slack-captcha-loopback.test.mjs test/slack-captcha-wake.test.mjs test/slack-captcha-worker-task.test.mjs test/slack-captcha-manifest.test.mjs",
+    "start": "node src/bootstrap.mjs start",
+    "setup": "node src/bootstrap.mjs setup",
+    "test:user-actions": "node --check src/goals/user-action-ledger.mjs && node --check src/goals/service.mjs && node --check src/server.mjs && node --check src/cli.mjs && node --check public/app.js && node --test test/user-action-ledger.test.mjs test/goal-ledger.test.mjs test/dashboard-homepage.test.mjs",
+    "test:app-server-daemon": "node --check src/adapters/codex-app-server-daemon.mjs && node --check src/codex-callback-safety.mjs && node --check src/codex-foreground-rescue-guardian.mjs && node --check tools/platform/codex/prepare-app-server-contract.mjs && node --check tools/platform/codex/run-shared-daemon-callback-worker.mjs && node --check tools/platform/codex/run-foreground-rescue-guardian.mjs && node --check tools/platform/aicc/run-final-live-repair.mjs && node --test test/codex-app-server-daemon.test.mjs test/codex-app-server-contract.test.mjs test/codex-callback-safety.test.mjs test/codex-foreground-rescue-guardian.test.mjs test/codex-task-callback.test.mjs test/shared-daemon-callback-worker.test.mjs test/web-gpt-watch-callback.test.mjs test/final-live-repair-worker.test.mjs",
+    "test:updates": "node --check src/codex-cli-update.mjs && node --check src/codex-cli-update-command.mjs && node --check src/upstream-monitor.mjs && node --check public/app.js && node --test test/codex-cli-update.test.mjs test/upstream-monitor.test.mjs test/actions.test.mjs && node scripts/run-python-tests.mjs",
+    "check:recovery-gui": "node --check src/aicc-recovery-command.mjs && node --check src/aicc-recovery-status.mjs && node --check src/aicc-recovery-runner.mjs && node --check src/actions.mjs && node --check src/server.mjs && node --check public/app.js",
+    "test:recovery-gui": "node --test test/aicc-recovery-command.test.mjs test/aicc-recovery-status.test.mjs test/actions.test.mjs test/server.test.mjs test/dashboard-homepage.test.mjs",
+    "check:assets": "node --check src/assets/asset-registry.mjs && node --check src/assets/chatgpt-import.mjs && node --check src/assets/chatgpt-catalog.mjs && node --check src/assets/operation-journal.mjs && node --check src/assets/notion-connector.mjs && node --check src/assets/service.mjs && node --check src/assets/scheduled-audit.mjs && node --check src/assets/command.mjs && node --check src/projects/development-notion-sync.mjs && node --test test/asset-control.test.mjs test/chatgpt-catalog.test.mjs test/notion-asset-connector.test.mjs test/asset-server.test.mjs test/development-notion-sync.test.mjs",
+    "precheck": "node --check src/private-home.mjs && node --check src/native-rescue.mjs && node --check src/codex-route-launchers.mjs && node --check src/web-gpt-rescue.mjs && node --check src/aicc-recovery-command.mjs && node --check src/codex-desktop-restart.mjs && node --check src/codex-desktop-transport-diagnostics.mjs && node --check src/codex-callback-safety.mjs && node --check src/codex-foreground-rescue-guardian.mjs && node --check src/recovery-support-worker.mjs && node --check src/recovery-handoff.mjs && node --check src/recovery/attempt-journal.mjs && node --check src/recovery/request-trace.mjs && node --check src/recovery/restore-v2-candidate.mjs && node --check src/workspace-plugin-topology.mjs && node --check src/repair-sequence.mjs && node --check src/codex-work-gate.mjs && node --check src/adapters/codex-app-server.mjs && node --check src/dashboard-product.mjs && node --check src/design-sources.mjs && node --check src/design-source-command.mjs && node --check src/monitoring.mjs && node --check src/monitoring-job-service.mjs && node --check src/local-scheduler.mjs && node --check src/upstream-monitor.mjs && node --check src/project-services.mjs && node --check src/project-service-command.mjs && node --check src/projects/service.mjs && node --check src/local-access/service.mjs && node --check src/knowledge-review/service.mjs && node --check tools/platform/codex/run-foreground-rescue-guardian.mjs && node --check tools/platform/macos/configure-project-services.mjs && node --check tools/platform/dashboard/install-scheduler-launch-agent.mjs && node --check components/workspace-mcp/input-schemas.mjs && node scripts/check-platform-sources.mjs shell tools/platform/codex/codex-native-rescue tools/platform/codex/codex-aicc tools/platform/codex/codex-web tools/platform/codex/codex-ocx",
+    "check": "node --check tools/platform/workspace-mcp/install-windows-task.mjs && node --check bin/cm.mjs && node --check src/web-gpt-watch-callback.mjs && node --check src/account-cli.mjs && node --check src/apps.mjs && node --check src/bootstrap.mjs && node --check src/catalog.mjs && node --check src/config.mjs && node --check src/setup.mjs && node --check src/cli-tools.mjs && node --check src/guidance-root.mjs && node --check src/guidance.mjs && node --check src/codex-task-callback.mjs && node --check src/notification-policy.mjs && node --check src/notifications/outbox-service.mjs && node --check src/notifications/session-bindings.mjs && node --check src/openai-usage.mjs && node --check src/openai-catalog-check.mjs && node --check src/openai-provider-command.mjs && node --check src/server.mjs && node --check src/monitoring-job-service.mjs && node --check src/local-scheduler.mjs && node --check src/knowledge-review/policy.mjs && node --check src/knowledge-review/fetcher.mjs && node --check src/knowledge-review/storage.mjs && node --check src/knowledge-review/crawler.mjs && node --check src/knowledge-review/service.mjs && node --check src/projects/project-collector.mjs && node --check src/projects/project-progress.mjs && node --check src/projects/development-notion-sync.mjs && node --check src/projects/project-priority-outbox.mjs && node --check src/projects/project-service-link.mjs && node --check src/projects/service.mjs && node --check src/local-access/grant-store.mjs && node --check src/local-access/service.mjs && node --check src/workspace-snapshots/service.mjs && node --check src/workspace-snapshots/change-transaction.mjs && node --check src/workspace-snapshots/portable-bundle.mjs && node --check src/workspace-snapshots/command.mjs && node --check src/control-plane/coordinator.mjs && node --check src/control-plane/report-store.mjs && node --check src/control-plane-report-command.mjs && node --check src/status.mjs && node --check src/tasks.mjs && node --check src/tui.mjs && node --check src/cli.mjs && node --check src/actions.mjs && node --check src/monitoring.mjs && node --check src/upstream-monitor.mjs && node --check src/project-services.mjs && node --check src/project-service-command.mjs && node --check tools/platform/macos/configure-project-services.mjs && node --check src/web-gpt-recovery-command.mjs && node --check src/codex-native-recovery-command.mjs && node --check src/ocx-upstream-start-command.mjs && node --check src/ocx-upstream-service-wrapper.mjs && node --check src/ocx-upstream-sync-command.mjs && node --check src/ocx-storage-governance.mjs && node --check src/jobs/durable-store.mjs && node --check src/jobs/job-manager.mjs && node --check src/jobs/status.mjs && node --check src/artifacts/registry.mjs && node --check src/browser/session-broker.mjs && node --check src/browser/cdp-lease-provider.mjs && node --check src/browser/status.mjs && node --check src/remote/durable-writer-authorizer.mjs && node --check src/orchestration/service.mjs && node --check src/orchestration/mcp-server.mjs && node --check src/extensions/registry.mjs && node --check src/extensions/status.mjs && node --check src/compatibility/lab.mjs && node --check src/compatibility/update-coordinator.mjs && node --check src/compatibility/status.mjs && node --check src/agents.mjs && node --check src/workspace-mcp.mjs && node --check src/workspace-publish.mjs && node --check src/workspace-app-lifecycle.mjs && node --check src/workspace-app-topology.mjs && node --check src/workspace-app-status.mjs && node --check src/workspace-app-sync-command.mjs && node --check src/workspace-app-sync-executor.mjs && node --check src/lib/command.mjs && node --check src/lib/fs-status.mjs && node --check src/lib/redact.mjs && node --check src/adapters/accounts.mjs && node --check src/adapters/auth-portal.mjs && node --check src/adapters/codex-routes.mjs && node --check src/adapters/codex-plugins.mjs && node --check src/adapters/guidance-status.mjs && node --check src/adapters/ocx.mjs && node --check src/adapters/web-gpt.mjs && node --check src/adapters/ocx-accounts.mjs && node --check src/adapters/local-tools.mjs && node --check components/workspace-mcp/runtime-integrity.mjs && node --check components/workspace-mcp/runtime-marker.mjs && node --check components/workspace-mcp/server.mjs && node --check components/workspace-mcp/remote-authority.mjs && node --check components/workspace-mcp/fast-read.mjs && node --check components/workspace-mcp/tool-manifest.mjs && node --check components/workspace-mcp/local-access-policy.mjs && node --check components/workspace-mcp/local-read-grant-authority.mjs && node --check components/workspace-mcp/local-source-provider.mjs && node --check components/workspace-mcp/codex-session-provider.mjs && node --check tools/platform/chatgpt/Prepare-AiccWorkspacePublish.mjs && node --check tools/platform/chatgpt/Complete-WebGptFullSetup.mjs && node --check tools/platform/dashboard/install-launch-agent.mjs && node --check tools/platform/ocx/install-upstream-launch-agent.mjs && node --check tools/platform/ocx/cutover-upstream-launch-agent.mjs && node --check tools/platform/codex/audit-codex-home.mjs && node --check tools/platform/codex/install-openai-api-guard.mjs && node --check tools/platform/codex/notification-ack-hook.mjs && node --check tools/platform/codex/install-notification-ack-hook.mjs && node --check tools/platform/inspect/inspect-skill-ecosystem.mjs && node --check tools/platform/inspect/inspect-guidance-maintenance.mjs && node --check tools/private-profile/export-safe-profile.mjs && node --check public/app.js && node --check public/presentation.js && node --check scripts/smoke.mjs && node --check scripts/smoke-durable-jobs.mjs && node --check scripts/smoke-artifact-pipeline.mjs && node --check scripts/smoke-isolated-browser.mjs && node --check scripts/build-web-gpt-orchestrator-plugin.mjs && node --check scripts/smoke-extension-lifecycle.mjs && node --check scripts/smoke-compatibility-canary.mjs && node --check scripts/fixtures/durable-job-worker.mjs && node --check scripts/fixtures/compatibility-listener.mjs && node --check src/supervised-runs/state.mjs && node --check src/supervised-runs/runners.mjs && node --check src/supervised-runs/service.mjs && node --check src/supervised-runs/cli.mjs && node --check public/supervise.js",
+    "test": "node --test examples/lab-server.test.mjs test/mobile-app-catalog.test.mjs test/mobile-control.test.mjs test/mobile-pwa.test.mjs test/portfolio-overview.test.mjs test/public-contracts.test.mjs test/tray-ui-contract.test.mjs",
+    "postcheck": "node --check src/agentic-intervention.mjs && node --check src/agentic-intervention-command.mjs && node --check src/notification-command.mjs && node --check src/slack-bot-transport.mjs && node --check src/notifications/slack-captcha-state.mjs && node --check src/notifications/slack-captcha-delivery.mjs && node --check src/notifications/slack-captcha-secrets.mjs && node --check src/notifications/slack-captcha-socket.mjs && node --check src/notifications/slack-captcha-consumer.mjs && node --check src/notifications/slack-captcha-loopback.mjs && node --check src/notifications/slack-captcha-wake.mjs && node --check tools/platform/slack/store-bot-token.mjs && node --check tools/platform/slack/store-captcha-app-token.mjs && node --check tools/platform/slack/captcha-bridge.mjs && node --check tools/platform/slack/deliver-captcha.mjs && node --check tools/platform/slack/run-captcha-socket-worker.mjs && node --check tools/platform/slack/manage-windows-captcha-worker-task.mjs && node --check tools/platform/slack/inspect-bot-identity.mjs && node --check tools/platform/slack/send-alert.mjs && node scripts/check-platform-sources.mjs swift tools/platform/slack/store-bot-token.swift",
+    "smoke": "node scripts/smoke.mjs",
+    "smoke:jobs": "node scripts/smoke-durable-jobs.mjs",
+    "smoke:artifacts": "node scripts/smoke-artifact-pipeline.mjs",
+    "smoke:browser-isolated": "node scripts/smoke-isolated-browser.mjs",
+    "smoke:extensions": "node scripts/smoke-extension-lifecycle.mjs",
+    "smoke:compatibility": "node scripts/smoke-compatibility-canary.mjs",
+    "test:account-manager": "node scripts/run-python-tests.mjs -s components/account-manager/tests -p test_*.py && node scripts/run-python-tests.mjs -s components/account-manager/ops/local/tests -p test_*.py && node scripts/run-python-tests.mjs -s components/account-manager/ops/auth-portal/tests -p test_*.py",
+    "test:workspace-mcp": "node --check tools/platform/workspace-mcp/run-registered-workspace-canary.mjs && node --test test/workspace-mcp.test.mjs test/workspace-mcp-server.test.mjs test/registered-workspace-canary.test.mjs",
+    "test:guidance": "node --test test/high-risk-skill-contract.test.mjs && pwsh -NoProfile -File tools/platform/test/Test-AiccGuidance.ps1 -AiccRoot . -AsJson",
+    "test:browser": "pwsh -NoProfile -File tools/platform/test/Test-AiccBrowserPolicy.ps1 -AiccRoot . -AsJson && pwsh -NoProfile -File tools/platform/web-automation/tests/Test-CdpChromeSlotLease.ps1 -AsJson",
+    "audit:codex-home": "node tools/platform/codex/audit-codex-home.mjs --json",
+    "inventory:skills": "node tools/platform/inspect/inspect-skill-ecosystem.mjs",
+    "profile:export": "node tools/private-profile/export-safe-profile.mjs",
+    "verify:mac": "bash scripts/verify-macos.sh",
+    "verify:windows": "pwsh -NoProfile -File examples/verify-windows.ps1",
+    "test:distribution": "npm pack --dry-run --json --ignore-scripts",
+    "preview": "node examples/lab-server.mjs",
+    "check:lab": "node --check examples/lab-server.mjs && node --check public/mobile.js && node --check public/mobile-tools.js && node --check src/server.mjs"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.30.0",
+    "@slack/socket-mode": "3.0.1",
+    "@slack/web-api": "8.1.1",
+    "acorn": "8.18.0",
+    "zod": "4.4.3"
+  },
+  "license": "MIT",
+  "files": [
+    ".env.example",
+    "AGENTS.md",
+    "CONTRIBUTING.md",
+    "LICENSE",
+    "README.md",
+    "SECURITY.md",
+    "bin",
+    "compatibility",
+    "components",
+    "contracts",
+    "docs",
+    "extensions",
+    "guidance",
+    "install.ps1",
+    "install.sh",
+    "npm-shrinkwrap.json",
+    "plugins",
+    "public",
+    "scripts",
+    "src",
+    "tools",
+    "!tools/**/tests/**",
+    "!**/__pycache__/**",
+    "!**/*.pyc",
+    "!**/*.pyo",
+    "!**/.DS_Store",
+    "!**/*.log",
+    "examples"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AgenticLab-SH/aicc-web-agent-lab-web-agent-lab.git"
+  },
+  "bugs": {
+    "url": "https://github.com/AgenticLab-SH/aicc-web-agent-lab/issues"
+  },
+  "homepage": "https://github.com/AgenticLab-SH/aicc-web-agent-lab#readme"
+}

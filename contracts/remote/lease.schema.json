@@ -1,0 +1,121 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/contracts/remote/lease.schema.json",
+  "title": "Authenticated remote workspace lease",
+  "description": "Persistent Workspace MCP remote lease. Out-of-band operations adapters use a separate contract and do not share this identity or Tunnel.",
+  "type": "object",
+  "required": [
+    "contractVersion",
+    "leaseId",
+    "workspaceId",
+    "identityBinding",
+    "correlationId",
+    "mode",
+    "approvalRef",
+    "jobId",
+    "attemptId",
+    "writerLeaseRef",
+    "capabilityHash",
+    "state",
+    "issuedAt",
+    "expiresAt",
+    "terminalReason"
+  ],
+  "properties": {
+    "contractVersion": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 2
+    },
+    "leaseId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "workspaceId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "identityBinding": {
+      "type": "string",
+      "minLength": 1
+    },
+    "correlationId": {
+      "type": "string",
+      "minLength": 8
+    },
+    "mode": {
+      "enum": [
+        "read-only",
+        "write"
+      ]
+    },
+    "approvalRef": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "jobId": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "attemptId": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "writerLeaseRef": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "writerConflictWorkspaceIds": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    },
+    "capabilityHash": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "authorityInstanceId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "ownerPid": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "state": {
+      "enum": [
+        "leased",
+        "released",
+        "stale",
+        "quarantined"
+      ]
+    },
+    "issuedAt": {
+      "type": "string"
+    },
+    "expiresAt": {
+      "type": "string"
+    },
+    "releasedAt": {
+      "type": "string"
+    },
+    "terminalReason": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "additionalProperties": true
+}

@@ -1,0 +1,61 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/contracts/orchestration/web-gpt-session.schema.json",
+  "title": "Web GPT orchestration session boundary",
+  "type": "object",
+  "required": ["contractVersion", "authority", "surfaces", "limits", "failurePolicy", "shadowRun"],
+  "properties": {
+    "contractVersion": { "type": "integer", "minimum": 1 },
+    "authority": { "const": "deterministic-session-broker" },
+    "surfaces": {
+      "type": "array",
+      "minItems": 2,
+      "items": {
+        "type": "object",
+        "required": ["id", "localToolPolicy", "browserPolicy", "installedSkillsInherited"],
+        "properties": {
+          "id": { "enum": ["full", "browser-only"] },
+          "localToolPolicy": { "type": "string", "minLength": 1 },
+          "browserPolicy": { "type": "string", "minLength": 1 },
+          "installedSkillsInherited": { "const": false }
+        },
+        "additionalProperties": true
+      }
+    },
+    "limits": {
+      "type": "object",
+      "required": ["defaultFanOut", "hardActiveCap", "minimumConversationCadenceMs"],
+      "properties": {
+        "defaultFanOut": { "type": "integer", "minimum": 2 },
+        "hardActiveCap": { "type": "integer", "minimum": 2 },
+        "minimumConversationCadenceMs": { "type": "integer", "minimum": 30000 }
+      },
+      "additionalProperties": true
+    },
+    "failurePolicy": {
+      "type": "object",
+      "required": ["identityScopedQuarantine", "providerAutoSwitch", "proAutoSelect", "nativeRestart", "ocxRestart"],
+      "properties": {
+        "identityScopedQuarantine": { "const": true },
+        "providerAutoSwitch": { "const": false },
+        "proAutoSelect": { "const": false },
+        "nativeRestart": { "const": false },
+        "ocxRestart": { "const": false }
+      },
+      "additionalProperties": true
+    },
+    "shadowRun": {
+      "type": "object",
+      "required": ["rootCount", "childCount", "allReadOnly", "writerEnforcementPhase", "rawTranscriptStored"],
+      "properties": {
+        "rootCount": { "const": 1 },
+        "childCount": { "const": 1 },
+        "allReadOnly": { "const": true },
+        "writerEnforcementPhase": { "const": "07" },
+        "rawTranscriptStored": { "const": false }
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": true
+}

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Diagram Design"
+  short_description: "Create editorial HTML and SVG diagrams"
+  default_prompt: "Use $diagram-design to turn this system or process into an accessible editorial diagram."

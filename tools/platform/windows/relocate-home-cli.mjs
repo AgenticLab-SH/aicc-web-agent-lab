@@ -1,0 +1,35 @@
+import fs from 'node:fs';
+import path from 'node:path';
+import os from 'node:os';
+import crypto from 'node:crypto';
+import {spawnSync} from 'node:child_process';
+import {fileURLToPath} from 'node:url';
+import {createInstalledCliRouteAdapter,verifyInstalledCliCandidate} from '../../../src/recovery/installed-cli-route-adapter.mjs';
+const home=path.resolve(process.env.AICC_STATE_ROOT||path.join(os.homedir(),'.ai-control-center'));
+const registryFile=path.join(home,'runtime/components.json');
+const before=fs.readFileSync(registryFile,'utf8'),registry=JSON.parse(before),cli=registry.components?.cli;
+if(registry.schemaVersion!==1||path.resolve(registry.root)!==home||cli?.location!=='managed')throw Error('Managed home CLI required');
+const candidate=path.resolve(cli.releaseRoot),entry=path.join(path.dirname(cli.runtime),'node_modules/open-aicc');
+const current=fs.realpathSync.native(entry);
+if(current===candidate){console.log(JSON.stringify({terminal:'PASS',alreadyCurrent:true}));process.exit(0);}
+const oldRoot=path.join(os.homedir(),'.codex/releases/open-aicc');
+if(!current.startsWith(oldRoot+path.sep)||!candidate.startsWith(path.join(home,'releases/cli')+path.sep))throw Error('Exact legacy-to-home relocation required');
+const original=verifyInstalledCliCandidate(current),replacement=verifyInstalledCliCandidate(candidate);
+if(!original.ok||!replacement.ok||original.manifestHash!==replacement.manifestHash)throw Error('Relocation requires byte-identical sealed code');
+const active=spawnSync('pwsh.exe',['-NoProfile','-NonInteractive','-Command',"$rows=Get-CimInstance Win32_Process | Where-Object {$_.CommandLine -and $_.CommandLine.IndexOf($env:AICC_RELOCATION_SOURCE,[StringComparison]::OrdinalIgnoreCase) -ge 0}; if($rows){exit 12}"],{env:{...process.env,AICC_RELOCATION_SOURCE:current},windowsHide:true,encoding:'utf8',timeout:15000});
+if(active.status!==0)throw Error('Legacy CLI still in use; preserved');
+const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'../../..');
+const wrappers=['aicc.cmd','aicc.ps1','aicc'].map(name=>path.join(path.dirname(cli.runtime),name));
+const adapter=createInstalledCliRouteAdapter({entryPath:entry,candidatePath:candidate,wrapperPaths:wrappers,backupRoot:path.join(home,'backups/runtime-layout'),recoveryScriptPath:path.join(root,'tools/platform/aicc/restore-installed-cli-route.ps1')});
+const inspection=await adapter.inspect();
+if(!inspection.fingerprintVerified)throw Error('Relocation preview refused');
+const scope={operationId:'aicc-home-identical-cli',attemptId:crypto.randomUUID(),expectedGeneration:inspection.fingerprintHash};
+const backup=await adapter.backup(scope);
+if(!backup.verified)throw Error('Relocation recovery incomplete');
+if(fs.readFileSync(registryFile,'utf8')!==before)throw Error('Home registry changed; preserved');
+const dispatched=await adapter.apply(scope);
+const result=await adapter.verify();
+if(!result.ok){await adapter.rollback(scope);throw Error('Relocation unconfirmed; original entry restored');}
+const receipt={schemaVersion:1,terminal:'PASS',operation:'identical-cli-home-relocation',source:current,candidate,manifestHash:replacement.manifestHash,backup:scope,acknowledged:dispatched.acknowledged,wrappersChanged:false,accountRoutesChanged:false};
+fs.writeFileSync(path.join(home,'receipts/cli-home-relocation-'+scope.attemptId+'.json'),JSON.stringify(receipt,null,2)+'\n',{flag:'wx',mode:0o600});
+console.log(JSON.stringify({terminal:'PASS',candidate,byteIdentical:true,wrappersChanged:false,accountRoutesChanged:false}));

@@ -1,0 +1,63 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/contracts/remote/oob-adapter.schema.json",
+  "title": "Out-of-band operations adapter descriptor",
+  "description": "Descriptor for an operations/recovery adapter that remains a separate failure domain from Workspace MCP and is never a silent normal-work fallback.",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "adapterId",
+    "routeClass",
+    "transport",
+    "defaultMode",
+    "normalFallback",
+    "recoveryOnly",
+    "sharesWorkspaceTunnel",
+    "sharesWorkspaceIdentity",
+    "storesRawCredentials",
+    "capabilities"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": 1
+    },
+    "adapterId": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+    },
+    "routeClass": {
+      "const": "oob_ops"
+    },
+    "transport": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+    },
+    "defaultMode": {
+      "const": "read-only"
+    },
+    "normalFallback": {
+      "const": false
+    },
+    "recoveryOnly": {
+      "type": "boolean"
+    },
+    "sharesWorkspaceTunnel": {
+      "const": false
+    },
+    "sharesWorkspaceIdentity": {
+      "const": false
+    },
+    "storesRawCredentials": {
+      "const": false
+    },
+    "capabilities": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+      },
+      "uniqueItems": true
+    }
+  },
+  "additionalProperties": false
+}

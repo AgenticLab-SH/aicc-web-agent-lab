@@ -1,0 +1,20 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
+import test from 'node:test';
+import { createServer } from '../src/server.mjs';
+test('owner-local selection API rejects cross-origin writes and never creates raw automation', async t => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'web-supervisor-api-'));
+  const server = createServer({ webJjonkuMonitorConfig: { ownerRoot: root, resolveBinding: role => ({ role, status: 'active', accountAlias: 'registered', workspaceAlias: 'business', identityHash: 'a'.repeat(64), workspaceIdentityHash: 'b'.repeat(64) }) } });
+  await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
+  t.after(async () => { await new Promise(resolve => server.close(resolve)); fs.rmSync(root, { recursive: true, force: true }); });
+  const url = 'http://127.0.0.1:' + server.address().port + '/api/web-jjonku-monitor/config';
+  const initial = await fetch(url).then(r => r.json()); assert.deepEqual(initial.config.targets, []);
+  const body = { ...initial.config, expectedRevision: initial.revision, enabled: true, targets: [{ id: 'chosen', enabled: true, autoResume: true, autoResumeMode: 'response-only', role: 'secondary', conversationUrl: 'https://chat.example.invalid/c/demo' }] };
+  const cross = await fetch(url, { method: 'POST', headers: { origin: 'https://example.com', 'content-type': 'application/json' }, body: JSON.stringify(body) }); assert.equal(cross.status, 403);
+  const response = await fetch(url, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body) });
+  assert.equal(response.status, 200); const saved = await response.json(); assert.equal(saved.config.targets.length, 1);
+  assert.equal(saved.runner.rawAutomationWrites, false); assert.equal(saved.runner.liveStatus, 'execution-not-observed');
+  const stale = await fetch(url, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body) }); assert.equal(stale.status, 400);
+});

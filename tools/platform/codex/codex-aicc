@@ -1,0 +1,56 @@
+#!/bin/sh
+set -eu
+
+# Explicit Integrated AICC route. It never changes the caller's base config and
+# never falls back to Native, direct Web GPT, or OCX.
+codex_home=${CODEX_HOME:-"$HOME/.codex"}
+state_root=${AICC_STATE_ROOT:-"$HOME/.ai-control-center"}
+route_catalog="$state_root/route-launchers/aicc.models.json"
+route_model=${AICC_INTEGRATED_MODEL:-chatgpt-web/saved/high}
+route_endpoint=http://127.0.0.1:17841/v1
+route_health=http://127.0.0.1:17841/healthz
+
+for argument in "$@"; do
+  case "$argument" in
+    -c|--config|-c=*|--config=*|-p|--profile|-p=*|--profile=*|-m|--model|-m=*|--model=*|--oss|--local-provider|--local-provider=*|--remote|--remote=*|--remote-auth-token-env|--remote-auth-token-env=*)
+      echo "codex-aicc: route/model override is not allowed: $argument" >&2
+      exit 64
+      ;;
+  esac
+done
+
+if [ -n "${AICC_NATIVE_CODEX_EXECUTABLE:-}" ]; then
+  route_codex=$AICC_NATIVE_CODEX_EXECUTABLE
+elif [ -x /Applications/ChatGPT.app/Contents/Resources/codex ]; then
+  route_codex=/Applications/ChatGPT.app/Contents/Resources/codex
+elif [ -x "$codex_home/packages/standalone/current/bin/codex" ]; then
+  route_codex="$codex_home/packages/standalone/current/bin/codex"
+else
+  echo "codex-aicc: an official Codex binary was not found" >&2
+  exit 69
+fi
+
+if [ "${1:-}" = "--status" ]; then
+  printf '%s\n' "codex=$route_codex" "endpoint=$route_endpoint" "provider=openai" \
+    "model=$route_model" "catalog=$route_catalog" "independent_of=17842,10100,native"
+  exit 0
+fi
+
+if [ ! -s "$route_catalog" ]; then
+  echo "codex-aicc: dedicated model catalog is unavailable; run: aicc route-launchers install" >&2
+  exit 78
+fi
+
+if ! /usr/bin/curl -fsS --max-time 3 "$route_health" \
+  | /usr/bin/python3 -c 'import json,sys; d=json.load(sys.stdin); keys=("active_http_turns","active_browser_http_turns","active_browser_turns"); ok=d.get("status")=="ok" and d.get("accepting_turns") is True and d.get("accepting_browser_turns") is True and all(type(d.get(k)) is int and d.get(k)==0 for k in keys); raise SystemExit(0 if ok else 1)'
+then
+  echo "codex-aicc: 17841 is not browser-ready and exact-idle; use Native or inspect AICC" >&2
+  exit 69
+fi
+
+exec "$route_codex" \
+  -c "openai_base_url=\"$route_endpoint\"" \
+  -c 'model_provider="openai"' \
+  -c "model_catalog_json=\"$route_catalog\"" \
+  -m "$route_model" \
+  "$@"

@@ -1,0 +1,40 @@
+# Copy to ~/.ai-control-center/guidance/port-registry.toml.
+# Keep personal account aliases and machine paths only in the private copy.
+
+[[services]]
+port = 17841
+name = "web-gpt-bridge"
+owner = "AICC"
+purpose = "Codex chatgpt-web route"
+bind = "loopback"
+lifecycle = "launch-agent"
+expected_process_contains = ["codex-chatgpt-web", "serve"]
+
+[[services]]
+port = 17842
+name = "web-gpt-rescue"
+owner = "AICC Web GPT rescue"
+purpose = "browser-only Web GPT rescue independent of the primary app and 17841"
+bind = "loopback"
+lifecycle = "launch-agent"
+expected_process_contains = ["web-gpt-rescue/releases", "codex-chatgpt-web", "serve"]
+
+[[services]]
+port = 10100
+name = "ocx"
+owner = "OpenCodex"
+purpose = "OpenCodex local proxy"
+bind = "loopback"
+lifecycle = "launch-agent"
+expected_process_contains = ["opencodex", "10100"]
+
+[[services]]
+port = 9222
+name = "authenticated-cdp-slot-1"
+owner = "AICC browser coordination"
+purpose = "registered authenticated browser automation"
+bind = "loopback"
+lifecycle = "persistent-on-demand"
+account_alias = "private-account-a"
+workspace = "private-workspace-a"
+expected_process_contains = ["Google Chrome", "9222/UserData", "--remote-debugging-port=9222"]

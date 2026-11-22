@@ -1,0 +1,35 @@
+{
+  "name": "web-gpt-orchestrator",
+  "version": "0.1.0",
+  "description": "Coordinate bounded Web GPT role DAGs with explicit capabilities, structured results, exact browser ownership, and one local writer.",
+  "author": {
+    "name": "AgenticLab"
+  },
+  "homepage": "https://github.com/AgenticLab-SH/aicc-web-agent-lab",
+  "repository": "https://github.com/AgenticLab-SH/aicc-web-agent-lab",
+  "license": "MIT",
+  "keywords": [
+    "codex",
+    "web-gpt",
+    "orchestration",
+    "multi-agent",
+    "mcp"
+  ],
+  "skills": "./skills/",
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "Web GPT Orchestrator",
+    "shortDescription": "Bounded Web GPT roles with one local writer",
+    "longDescription": "Plan and coordinate researcher, critic, solver, merger, writer and verifier roles through a durable AICC run. The plugin uses only current-turn advertised tools, enforces bounded fan-out and keeps browser, provider and workspace ownership explicit.",
+    "developerName": "AgenticLab",
+    "category": "Developer Tools",
+    "capabilities": [
+      "Interactive",
+      "Write"
+    ],
+    "websiteURL": "https://github.com/AgenticLab-SH/aicc-web-agent-lab",
+    "defaultPrompt": [
+      "Split this task into Web GPT researcher, critic, writer, and verifier roles."
+    ]
+  }
+}

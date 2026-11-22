@@ -1,0 +1,4 @@
+interface:
+  display_name: "Agentic Website Maker"
+  short_description: "AgenticFabWorks 사이트 배포·도메인·공개 경계"
+  default_prompt: "Use $agentic-website-maker to release this AgenticFabWorks site through its recorded provider, verify the public URL, and record only verified state."

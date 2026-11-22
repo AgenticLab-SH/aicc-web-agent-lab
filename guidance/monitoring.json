@@ -1,0 +1,109 @@
+{
+  "schemaVersion": 1,
+  "policy": {
+    "automaticApply": false,
+    "upstreamPrimary": "local-aicc-direct",
+    "localScanIntervalHours": 24,
+    "localStartupDelaySeconds": 15,
+    "localSignalStaleAfterHours": 30,
+    "oracleAdapterDefault": "disabled"
+  },
+  "layers": [
+    {
+      "id": "authority",
+      "order": 1,
+      "label": "정본과 정책",
+      "owner": "open-AICC",
+      "location": "local-source",
+      "summary": "무엇을 감시하고 어떤 변경만 허용할지 AICC가 선언합니다."
+    },
+    {
+      "id": "sensors",
+      "order": 2,
+      "label": "관찰자",
+      "owner": "local AICC",
+      "location": "local-control-plane",
+      "summary": "AICC가 로컬 Git 인증과 npm 공개 메타데이터로 업스트림을 직접 관찰합니다."
+    },
+    {
+      "id": "signal",
+      "order": 3,
+      "label": "로컬 상태 기록",
+      "owner": "AICC monitoring",
+      "location": "owner-local-state",
+      "summary": "검사 결과를 소유자 전용 캐시에 기록하고 Oracle 왕복 없이 즉시 화면에 반영합니다."
+    },
+    {
+      "id": "review",
+      "order": 4,
+      "label": "검토와 선택",
+      "owner": "local-user",
+      "location": "dashboard",
+      "summary": "업데이트·실패·오래된 신호를 비교하고 적용할 항목만 고릅니다."
+    },
+    {
+      "id": "apply",
+      "order": 5,
+      "label": "제한된 적용",
+      "owner": "allowlisted-actions",
+      "location": "local-control-plane",
+      "summary": "전용 적용기가 있는 항목만 미리보기, 전제조건, 한 번 쓰는 확인 토큰과 rollback으로 변경합니다."
+    },
+    {
+      "id": "evidence",
+      "order": 6,
+      "label": "증거와 복구",
+      "owner": "AICC state",
+      "location": "local-and-remote-state",
+      "summary": "관측 시각, exact revision, 실행 결과와 이전 상태를 남겨 다음 판단과 복구에 사용합니다."
+    }
+  ],
+  "launchAgentRoles": [
+    {
+      "label": "com.agenticlab.aicc-dashboard",
+      "group": "aicc-core",
+      "role": "로컬 제어면",
+      "need": "AICC 웹 화면을 사용할 때 필요"
+    },
+    {
+      "label": "com.agenticlab.aicc-workspace-tunnel",
+      "group": "aicc-core",
+      "role": "원격 Workspace 연결",
+      "need": "사용자가 상시 사용하는 외부 Workspace 경로"
+    },
+    {
+      "label": "com.agenticlab.aicc.web-gpt-rescue",
+      "group": "aicc-safety",
+      "role": "Web GPT 복구 경로",
+      "need": "17841 장애 시 독립 복구를 유지하려면 필요"
+    },
+    {
+      "label": "io.github.codex-chatgpt-web.daemon",
+      "group": "aicc-core",
+      "role": "Web GPT 17841",
+      "need": "Codex Web 모델을 사용할 때 필요"
+    },
+    {
+      "label": "com.opencodex.proxy",
+      "group": "aicc-core",
+      "role": "OCX 10100",
+      "need": "사용자가 상시 사용하는 비 Web 모델 upstream"
+    },
+    {
+      "label": "com.codex-account-manager.auth-sync",
+      "group": "aicc-scheduled",
+      "role": "계정 인증 동기화",
+      "need": "15분마다 잠깐 실행하고 실행 사이에는 상주하지 않음"
+    },
+    {
+      "label": "com.aicc.codex-default-profile-env",
+      "group": "aicc-oneshot",
+      "role": "기본 profile 환경 등록",
+      "need": "로그인 때 한 번 실행하고 상주하지 않음"
+    }
+  ],
+  "projectOwnedLabelPrefixes": [
+    "com.agenticfabworks.",
+    "com.agenticlab.youtube-"
+  ]
+}

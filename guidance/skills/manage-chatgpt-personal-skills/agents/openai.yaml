@@ -1,0 +1,7 @@
+interface:
+  display_name: "웹 개인 스킬 관리"
+  short_description: "개인 웹 스킬 목록·업로드·본문 수정·삭제 관리"
+  default_prompt: "Use the manage-chatgpt-personal-skills workflow to inspect my exact personal skill and safely run the requested verified operation."
+
+policy:
+  allow_implicit_invocation: true

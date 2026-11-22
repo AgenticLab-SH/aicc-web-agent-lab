@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/contracts/orchestration/result-record.schema.json",
+  "title": "Structured orchestration result record",
+  "type": "object",
+  "required": ["contractVersion", "resultId", "jobId", "attemptId", "claim", "evidence", "counterexample", "unknown", "recommendation", "artifactRefs", "validatorStatus"],
+  "properties": {
+    "contractVersion": { "type": "integer", "minimum": 1 },
+    "resultId": { "type": "string", "minLength": 1 },
+    "jobId": { "type": "string", "minLength": 1 },
+    "attemptId": { "type": "string", "minLength": 1 },
+    "claim": { "type": "string", "minLength": 1 },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["ref", "sha256"],
+        "properties": {
+          "ref": { "type": "string", "minLength": 1 },
+          "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" }
+        },
+        "additionalProperties": true
+      }
+    },
+    "counterexample": { "type": ["string", "null"] },
+    "unknown": { "type": ["string", "null"] },
+    "recommendation": { "type": ["string", "null"] },
+    "artifactRefs": { "type": "array", "items": { "type": "string" } },
+    "validatorStatus": { "enum": ["pending", "pass", "fail", "unknown"] }
+  },
+  "additionalProperties": true
+}

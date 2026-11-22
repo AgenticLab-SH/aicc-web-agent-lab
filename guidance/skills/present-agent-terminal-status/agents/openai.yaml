@@ -1,0 +1,4 @@
+interface:
+  display_name: "에이전트 터미널 상태 표시"
+  short_description: "백그라운드 창을 숨기고 보이는 작업은 한국어 진행 상태를 표시"
+  default_prompt: "Use $present-agent-terminal-status to keep protocol work hidden and show Korean status only in an agent-owned foreground terminal."

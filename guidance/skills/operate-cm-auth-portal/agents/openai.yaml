@@ -1,0 +1,4 @@
+interface:
+  display_name: "Operate CM Auth Portal"
+  short_description: "Safely operate Oracle, Cloudflare, Firebase, Mac auth sync"
+  default_prompt: "Use $operate-cm-auth-portal to resume, deploy, repair, and verify the CM authentication portal without exposing credentials or changing unrelated accounts."

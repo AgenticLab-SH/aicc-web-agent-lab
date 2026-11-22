@@ -1,0 +1,4 @@
+interface:
+  display_name: "학습 근거 판단"
+  short_description: "실제 근거로 학습과 포트폴리오 상태를 판단합니다"
+  default_prompt: "Use $capture-learning-evidence to judge what was genuinely learned or demonstrated and write an evidence-backed record."

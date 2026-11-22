@@ -1,0 +1,66 @@
+#!/bin/sh
+set -eu
+
+# This executable is deliberately self-contained. It must remain usable when
+# AICC, OCX, the 17841 router, or either desktop UI is unavailable.
+codex_home=${CODEX_HOME:-"$HOME/.codex"}
+state_root=${AICC_STATE_ROOT:-"$HOME/.ai-control-center"}
+native_catalog="$state_root/native-rescue/models.json"
+native_model=${AICC_NATIVE_RESCUE_MODEL:-gpt-5.6-sol}
+native_endpoint=https://chatgpt.com/backend-api/codex
+
+if [ -n "${AICC_NATIVE_CODEX_EXECUTABLE:-}" ]; then
+  native_codex=$AICC_NATIVE_CODEX_EXECUTABLE
+elif [ -x /Applications/ChatGPT.app/Contents/Resources/codex ]; then
+  native_codex=/Applications/ChatGPT.app/Contents/Resources/codex
+elif [ -x "$codex_home/packages/standalone/current/bin/codex" ]; then
+  native_codex="$codex_home/packages/standalone/current/bin/codex"
+else
+  echo "codex-native-rescue: an official Codex binary was not found" >&2
+  exit 69
+fi
+
+if [ ! -x "$native_codex" ]; then
+  echo "codex-native-rescue: official Codex binary is not executable: $native_codex" >&2
+  exit 69
+fi
+if [ ! -s "$native_catalog" ]; then
+  echo "codex-native-rescue: AICC-owned native catalog is unavailable: $native_catalog" >&2
+  exit 78
+fi
+case "$native_catalog" in
+  *'"'*|*'\'*|*'
+'*)
+    echo "codex-native-rescue: CODEX_HOME contains characters that cannot be encoded safely" >&2
+    exit 78
+    ;;
+esac
+
+if [ "${1:-}" = "--status" ]; then
+  printf '%s\n' "native_codex=$native_codex"
+  printf '%s\n' "endpoint=$native_endpoint"
+  printf '%s\n' "provider=openai"
+  printf '%s\n' "model=$native_model"
+  printf '%s\n' "catalog=$native_catalog"
+  printf '%s\n' "independent_of=17841,10100"
+  exit 0
+fi
+
+# The fixed overrides are higher precedence than base config and profiles. Do
+# not allow a caller to append a second provider, endpoint, profile, model, or
+# remote app-server option that would make the rescue label untruthful.
+for argument in "$@"; do
+  case "$argument" in
+    -c|--config|-c=*|--config=*|-p|--profile|-p=*|--profile=*|-m|--model|-m=*|--model=*|--oss|--local-provider|--local-provider=*|--remote|--remote=*|--remote-auth-token-env|--remote-auth-token-env=*)
+      echo "codex-native-rescue: route/model override is not allowed: $argument" >&2
+      exit 64
+      ;;
+  esac
+done
+
+exec "$native_codex" \
+  -c "openai_base_url=\"$native_endpoint\"" \
+  -c 'model_provider="openai"' \
+  -c "model_catalog_json=\"$native_catalog\"" \
+  -m "$native_model" \
+  "$@"

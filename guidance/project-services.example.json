@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "policy": {
+    "mode": "manual-on-demand",
+    "autoStop": false,
+    "stopRequiresNoActiveConnections": true,
+    "requiredCoreLabels": [
+      "com.agenticlab.aicc-dashboard",
+      "com.agenticlab.aicc-workspace-tunnel",
+      "io.github.codex-chatgpt-web.daemon",
+      "com.agenticlab.aicc.web-gpt-rescue",
+      "com.opencodex.proxy"
+    ]
+  },
+  "projects": []
+}

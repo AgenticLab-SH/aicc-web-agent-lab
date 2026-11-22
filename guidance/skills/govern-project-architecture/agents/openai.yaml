@@ -1,0 +1,4 @@
+interface:
+  display_name: "Project Architecture Governor"
+  short_description: "Align project purpose, structure, authority, and agent guides"
+  default_prompt: "Use $govern-project-architecture to align this project purpose, structure, source-of-truth map, and agent guidance."

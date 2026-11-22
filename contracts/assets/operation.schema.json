@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/contracts/assets/operation.schema.json",
+  "title": "Guarded AI asset operation",
+  "type": "object",
+  "required": ["schemaVersion", "operationId", "assetId", "action", "adapterId", "expectedFingerprint", "risk", "state"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "operationId": { "type": "string", "pattern": "^asset-op-" },
+    "assetId": { "type": "string" },
+    "action": { "enum": ["create", "update", "retire", "delete"] },
+    "adapterId": { "type": "string" },
+    "expectedFingerprint": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "risk": { "enum": ["R2", "R3", "R4"] },
+    "state": { "enum": ["APPROVED", "APPLYING", "APPLIED", "FAILED", "UNKNOWN"] },
+    "rollbackRef": { "type": ["string", "null"] }
+  },
+  "additionalProperties": true
+}

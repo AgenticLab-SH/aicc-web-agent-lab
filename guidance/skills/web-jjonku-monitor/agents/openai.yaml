@@ -1,0 +1,4 @@
+interface:
+  display_name: "웹쫀쿠 GPT 그룹 탭 감시·재개"
+  short_description: "Chrome의 GPT 그룹에서 지정 대화 탭 7개를 확인하고 안전하게 재개"
+  default_prompt: "$web-jjonku-monitor로 Chrome의 GPT 탭 그룹에서 지정 대화 7개를 확인하고, 필요한 대화만 안전하게 재개해."

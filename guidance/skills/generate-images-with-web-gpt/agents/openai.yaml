@@ -1,0 +1,6 @@
+interface:
+  display_name: "Web GPT Image Generation"
+  short_description: "명시 요청 시 Web GPT 우선 이미지 생성"
+  default_prompt: "Use $generate-images-with-web-gpt to create grounded image concepts from my references."
+policy:
+  allow_implicit_invocation: false

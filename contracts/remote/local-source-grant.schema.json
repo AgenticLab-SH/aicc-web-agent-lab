@@ -1,0 +1,83 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/contracts/remote/local-source-grant.schema.json",
+  "title": "AICC local UI exact-root read grant",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "grantRef",
+    "sourceId",
+    "sourceType",
+    "label",
+    "root",
+    "canonicalRoot",
+    "includes",
+    "denies",
+    "policy",
+    "budgets",
+    "preview",
+    "correlationId",
+    "approvedAt",
+    "expiresAt",
+    "policyHash",
+    "auditHash"
+  ],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "grantRef": { "type": "string", "pattern": "^local_grant_[A-Za-z0-9_-]{16,96}$" },
+    "sourceId": { "type": "string", "pattern": "^local_source_[a-f0-9]{24}$" },
+    "sourceType": { "enum": ["local", "codex-sessions"] },
+    "label": { "type": "string", "minLength": 1, "maxLength": 128 },
+    "root": { "type": "string", "minLength": 1, "description": "Exact absolute root selected in the owner-local UI; never a convenience alias." },
+    "canonicalRoot": { "type": "string", "minLength": 1, "description": "realpath(root) captured by the owner-local UI and revalidated on open." },
+    "includes": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 256,
+      "uniqueItems": true,
+      "items": { "type": "string", "minLength": 1, "maxLength": 1024 }
+    },
+    "denies": {
+      "type": "array",
+      "maxItems": 256,
+      "uniqueItems": true,
+      "items": { "type": "string", "minLength": 1, "maxLength": 1024 }
+    },
+    "policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["wholeHomeApproved", "applicationSupportApproved"],
+      "properties": {
+        "wholeHomeApproved": { "type": "boolean", "default": false },
+        "applicationSupportApproved": { "type": "boolean", "default": false }
+      }
+    },
+    "budgets": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["maxFiles", "maxFileBytes", "maxReadBytes", "maxRunBytes", "maxMatches"],
+      "properties": {
+        "maxFiles": { "type": "integer", "minimum": 1, "maximum": 100000 },
+        "maxFileBytes": { "type": "integer", "minimum": 1, "maximum": 16777216 },
+        "maxReadBytes": { "type": "integer", "minimum": 1, "maximum": 16777216 },
+        "maxRunBytes": { "type": "integer", "minimum": 1, "maximum": 67108864 },
+        "maxMatches": { "type": "integer", "minimum": 1, "maximum": 10000 }
+      }
+    },
+    "preview": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["fileCount", "policyHash"],
+      "properties": {
+        "fileCount": { "type": "integer", "minimum": 0, "maximum": 10000000 },
+        "policyHash": { "type": "string", "pattern": "^[a-f0-9]{64}$" }
+      }
+    },
+    "correlationId": { "type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{7,127}$" },
+    "approvedAt": { "type": "string", "format": "date-time" },
+    "expiresAt": { "type": "string", "format": "date-time" },
+    "policyHash": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "auditHash": { "type": "string", "pattern": "^[a-f0-9]{64}$" }
+  }
+}

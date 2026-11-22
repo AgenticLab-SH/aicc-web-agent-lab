@@ -1,0 +1,4 @@
+interface:
+  display_name: "AgenticFabWorks Web Design"
+  short_description: "AFW 웹 디자인을 설계하고 95점까지 검증합니다"
+  default_prompt: "Use $agenticfabworks-web-design to design and validate an AgenticFabWorks web experience."

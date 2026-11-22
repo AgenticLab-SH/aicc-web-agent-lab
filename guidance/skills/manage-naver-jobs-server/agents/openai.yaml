@@ -1,0 +1,4 @@
+interface:
+  display_name: "NAVER Jobs Server"
+  short_description: "Manage NAVER Jobs server access safely"
+  default_prompt: "Use $manage-naver-jobs-server to verify and reconnect the existing NAVER Jobs server safely."

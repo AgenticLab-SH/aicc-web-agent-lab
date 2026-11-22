@@ -1,0 +1,4 @@
+interface:
+  display_name: "High-Risk Change"
+  short_description: "비가역 운영 변경의 짧은 실행·복구 계약"
+  default_prompt: "Use $high-risk-change to define a short execution and recovery contract for this irreversible production change, then proceed within it."

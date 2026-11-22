@@ -1,0 +1,737 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>open-AICC</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="/dashboard-workspace.css">
+  <link rel="manifest" href="/aicc.webmanifest">
+</head>
+<body>
+  <a class="skip-link" href="#mainContent">본문으로 이동</a>
+  <div class="ambient-grid" aria-hidden="true"></div>
+  <div class="app-shell">
+    <aside id="primarySidebar" class="sidebar" aria-label="주요 메뉴">
+      <a class="brand" href="#home" aria-label="open-AICC 홈"><span class="brand-mark">A</span><span><strong>open-AICC</strong><small>Open AI Control Center</small></span></a>
+      <nav>
+        <span class="nav-group-label">WORK</span>
+        <a class="nav-link" href="#ai-reports">에이전트 보고</a>
+        <a class="nav-link" href="#ai-work">작업</a>
+        <a class="nav-link" href="#ai-queue">Queue &amp; Goal</a>
+        <span class="nav-group-label">운영 / 설정</span>
+        <a class="nav-link active" href="#home"><span aria-hidden="true">⌂</span>홈</a>
+        <a class="nav-link" href="#goals"><span aria-hidden="true">☑</span>목표 원장</a>
+        <a class="nav-link" href="#projects"><span aria-hidden="true">▤</span>프로젝트</a>
+        <a class="nav-link" href="#manual-reviews"><span aria-hidden="true">✓</span>수동 검토</a>
+        <a class="nav-link" href="#guide"><span aria-hidden="true">▶</span>작업 시작</a>
+        <a class="nav-link" href="#recipes"><span aria-hidden="true">✦</span>사용 예시</a>
+        <a class="nav-link" href="#activity"><span aria-hidden="true">≋</span>실행 현황</a>
+        <a class="nav-link" href="#troubleshoot"><span aria-hidden="true">!</span>복구</a>
+        <span class="nav-group-label">MANAGE</span>
+        <a class="nav-link" href="#monitoring"><span aria-hidden="true">◎</span>감시 센터</a>
+        <a class="nav-link" href="#design-sources"><span aria-hidden="true">◫</span>디자인 원본</a>
+        <a class="nav-link" href="#system"><span aria-hidden="true">◇</span>운영 관리</a>
+        <a class="nav-link" href="#architecture"><span aria-hidden="true">⌘</span>구조</a>
+        <a class="nav-link" href="#tools"><span aria-hidden="true">⌕</span>도구</a>
+      </nav>
+      <div class="local-note"><span class="status-dot"></span><span><strong>대시보드는 로컬 전용</strong><small>외부 작업은 Secure Tunnel 사용</small></span></div>
+    </aside>
+
+    <main id="mainContent">
+      <header class="topbar" id="home">
+        <button id="menuToggle" class="menu-toggle icon-button" type="button" aria-label="메뉴 열기" aria-controls="primarySidebar" aria-expanded="false">☰</button>
+        <div class="hero-copy"><p class="eyebrow">LOCAL CONTROL LEDGER</p><h1>open-AICC 운영 원장</h1><p class="lead">프로젝트, 실행 경로, 현재 근거와 승인 대기 작업을 한 흐름에서 분리해 확인합니다.</p></div>
+        <section class="summary-board" aria-labelledby="summaryTitle">
+          <div class="summary-copy"><p id="summaryTitle">현재 상태</p><strong id="summaryCount">확인 중</strong><span id="summaryHint">연결 상태를 확인하고 있습니다.</span></div>
+          <div class="summary-meter" aria-hidden="true"><svg viewBox="0 0 42 42"><circle class="meter-track" cx="21" cy="21" r="15.9"></circle><circle id="summaryRing" class="meter-value" cx="21" cy="21" r="15.9"></circle></svg><span id="summaryPercent">–</span></div>
+          <span id="updatedAt" class="updated-at"></span>
+        </section>
+        <button id="refresh" class="icon-button refresh-button" type="button" aria-label="모든 상태 새로 확인" title="상태 새로 확인">↻</button>
+      </header>
+
+      <div id="aiWorkspace" class="ai-workspace" aria-label="AI 통합 대시보드"></div>
+      <section class="command-search" aria-labelledby="searchTitle">
+        <label for="toolSearch" id="searchTitle"><span aria-hidden="true">⌕</span><span class="sr-only">도구 검색</span></label>
+        <input id="toolSearch" type="search" autocomplete="off" placeholder="예: 계정 바꾸기, 지침 점검, 로컬 작업공간" aria-controls="searchResults" aria-expanded="false" aria-autocomplete="list">
+        <kbd>⌘ K</kbd>
+        <div id="searchResults" class="search-results" role="listbox" aria-label="검색 결과" hidden></div>
+      </section>
+
+      <section id="goals" class="anchor-section ledger-section goal-ledger-section" aria-labelledby="goalsTitle">
+        <div class="section-title compact">
+          <div><p class="eyebrow">00 · MASTER GOALS</p><h2 id="goalsTitle">누적 목표 원장</h2></div>
+          <strong id="goalLedgerSummary" class="ledger-verdict">목표 확인 중</strong>
+        </div>
+        <div class="goal-ledger-meta">
+          <p id="goalLedgerMeta">정본 목표와 개인 검토 기록을 분리해 불러오고 있습니다.</p>
+          <p class="goal-check-contract">체크는 개인 검토 표시이며 운영 상태를 바꾸지 않습니다.</p>
+        </div>
+        <div class="coordination-overview">
+          <article class="user-help-card" aria-labelledby="userHelpTitle">
+            <div class="coordination-card-head"><div><p class="eyebrow">YOUR TURN</p><h3 id="userHelpTitle">놓치면 안 되는 내 할 일</h3></div><strong id="userHelpSummary">확인 중</strong></div>
+            <p class="user-help-contract">완료하기 전까지 파트별로 남습니다. 다른 일을 못 할 만큼 꼭 필요해지면 맨 위에서 알려드립니다.</p>
+            <div id="userHelpList" class="user-help-list" aria-live="polite"><p class="empty">지금 필요한 일을 쉬운 말로 정리하고 있습니다.</p></div>
+          </article>
+          <article class="notion-sync-card" aria-labelledby="notionSyncTitle">
+            <div class="coordination-card-head"><div><p class="eyebrow">NOTION ↔ LOCAL</p><h3 id="notionSyncTitle">개발 기록 연결</h3></div><strong id="notionSyncState">확인 중</strong></div>
+            <p id="notionSyncSummary">노션과 로컬 코드의 연결 상태를 확인하고 있습니다.</p>
+            <dl id="notionSyncFacts" class="notion-sync-facts"></dl>
+            <a id="notionSyncLink" class="text-link" href="#" target="_blank" rel="noreferrer" hidden>노션 개발 페이지 열기</a>
+          </article>
+        </div>
+        <section class="session-ledger" aria-labelledby="sessionLedgerTitle">
+          <div class="session-ledger-head"><div><p class="eyebrow">01~11 TASKS</p><h3 id="sessionLedgerTitle">어떤 작업이 무엇을 하는지</h3></div><strong id="sessionLedgerSummary">작업 확인 중</strong></div>
+          <div id="sessionList" class="session-list" aria-live="polite"><p class="empty">번호별 작업을 불러오고 있습니다.</p></div>
+          <div class="thread-decision-table-wrap">
+            <table class="thread-decision-table" aria-label="번호별 작업 목표와 다음 판단">
+              <thead><tr><th>번호</th><th>목표</th><th>진행된 내용</th><th>남은 일</th><th>판단</th></tr></thead>
+              <tbody id="threadDecisionRows"><tr><td colspan="5">작업별 최종 보고를 확인하고 있습니다.</td></tr></tbody>
+            </table>
+          </div>
+        </section>
+        <div class="goal-toolbar" aria-label="목표 원장 정렬과 필터">
+          <label><span>찾기</span><input id="goalSearch" type="search" autocomplete="off" placeholder="목표, 담당 작업, 다음 행동"></label>
+          <label><span>상태</span><select id="goalStatusFilter"><option value="all">모든 상태</option></select></label>
+          <label><span>정렬</span><select id="goalSort"><option value="priority">운영 우선순위</option><option value="unchecked">미체크 먼저</option><option value="status">상태</option><option value="title">이름</option></select></label>
+        </div>
+        <div id="goalStatusCounts" class="goal-status-counts" aria-label="운영 상태 집계"></div>
+        <div id="goalList" class="goal-list" aria-live="polite" aria-busy="true">
+          <p class="empty-state"><strong>누적 목표를 읽는 중</strong><span>운영 상태와 개인 체크 기록을 함께 표시합니다.</span></p>
+        </div>
+        <p id="goalMessage" class="action-message goal-message" role="status" aria-live="polite"></p>
+      </section>
+
+      <div class="first-viewport" aria-label="오늘의 운영 원장">
+        <section id="projects" class="ledger-section projects-ledger" aria-labelledby="projectsTitle">
+          <div class="section-title compact"><div><p class="eyebrow">01 · PROJECTS</p><h2 id="projectsTitle">프로젝트 원장</h2></div><strong id="projectCatalogSummary" class="ledger-verdict">카탈로그 확인 중</strong></div>
+          <div class="ledger-context"><p id="projectCatalogMeta">Notion 우선순위와 로컬 프로젝트 근거를 각각 불러오고 있습니다.</p><div id="projectFilters" class="filter-row" role="group" aria-label="프로젝트 필터"></div></div>
+          <div id="projectList" class="project-list" aria-live="polite" aria-busy="true"><p class="empty-state"><strong>프로젝트 원장을 읽는 중</strong><span>수명주기, 우선순위, 로컬 근거와 DRIFT를 분리해 표시합니다.</span></p></div>
+          <p id="projectMessage" class="action-message" role="status" aria-live="polite"></p>
+        </section>
+
+        <section class="ledger-section route-ledger-section" aria-labelledby="coreRoutesTitle">
+          <div class="section-title compact"><div><p class="eyebrow">02 · CORE ROUTES</p><h2 id="coreRoutesTitle">독립 생존 경로</h2></div><span>구성 · 설치 · live · active gate · browser · 수용 근거</span></div>
+          <div id="coreRouteLedger" class="core-route-ledger" aria-live="polite" aria-busy="true">
+            <div class="route-ledger-row ledger-head" aria-hidden="true"><span>경로</span><span>구성 소스</span><span>설치 런타임</span><span>Live health</span><span>Active gate</span><span>Browser/harness</span><span>수용 근거</span></div>
+            <div class="route-ledger-row"><strong>Integrated Web GPT · 17841</strong><span>확인 중</span><span>확인 중</span><span class="status-text unknown">UNKNOWN</span><span>UNKNOWN</span><span>UNKNOWN</span><span>현재 근거 없음</span></div>
+            <div class="route-ledger-row"><strong>Web GPT direct · 17842</strong><span>확인 중</span><span>확인 중</span><span class="status-text unknown">UNKNOWN</span><span>UNKNOWN</span><span>UNKNOWN</span><span>현재 근거 없음</span></div>
+            <div class="route-ledger-row"><strong>OCX direct · 10100</strong><span>확인 중</span><span>확인 중</span><span class="status-text unknown">UNKNOWN</span><span>UNKNOWN</span><span>해당 없음</span><span>현재 근거 없음</span></div>
+            <div class="route-ledger-row"><strong>Native direct</strong><span>확인 중</span><span>확인 중</span><span class="status-text unknown">UNKNOWN</span><span>해당 없음</span><span>해당 없음</span><span>현재 근거 없음</span></div>
+          </div>
+        </section>
+
+        <section id="attention" class="ledger-section attention-section" aria-labelledby="attentionTitle">
+          <div class="section-title compact"><div><p class="eyebrow">03 · ATTENTION</p><h2 id="attentionTitle">지금 확인할 항목</h2></div><span id="attentionSummary">실시간 상태에서 안전한 다음 조치를 계산합니다.</span></div>
+          <div id="attentionQueue" class="attention-queue" aria-live="polite"><article class="attention-placeholder"><span class="scan-line"></span><strong>운영 상태를 읽는 중</strong><p>정상 구역은 그대로 두고 확인이 필요한 항목만 선별합니다.</p></article></div>
+        </section>
+
+        <section id="repair-sequence" class="ledger-section repair-sequence" aria-labelledby="repairSequenceTitle">
+          <div class="section-title compact"><div><p class="eyebrow">04 · SAFE ORDER</p><h2 id="repairSequenceTitle">한 번에 하나씩 수리</h2></div><strong id="repairGateState" class="ledger-verdict unknown">안전 게이트 확인 중</strong></div>
+          <div id="repairGateDetail" class="repair-gate-detail" role="status" aria-live="polite">다른 작업의 ACTIVE와 UNKNOWN을 읽고 있습니다. 확인 전에는 live 변경을 허용하지 않습니다.</div>
+          <ol id="repairSequenceList" class="repair-sequence-list" aria-label="AICC 수리 순서" aria-busy="true"><li class="repair-stage waiting"><span>01</span><div><strong>순서를 불러오는 중</strong><p>확인된 한 단계만 다음 작업으로 표시합니다.</p></div><em>대기</em></li></ol>
+          <div class="repair-sequence-footer"><span id="repairScope">지금 가능: 소스·테스트·문서</span><a href="#troubleshoot">복구 상세 보기</a></div>
+        </section>
+
+        <section class="ledger-section evidence-ledger" aria-labelledby="recentEvidenceTitle">
+          <div class="section-title compact"><div><p class="eyebrow">05 · RECENT EVIDENCE</p><h2 id="recentEvidenceTitle">최근 근거</h2></div><a href="#activity">전체 실행 현황</a></div>
+          <div id="recentEvidence" class="recent-evidence" aria-live="polite" aria-busy="true"><p class="empty-state"><strong>최근 근거를 읽는 중</strong><span>명령 성공, 과거 기록과 현재 PASS를 같은 상태로 합치지 않습니다.</span></p></div>
+        </section>
+
+        <section id="manual-reviews" class="ledger-section manual-reviews" aria-labelledby="manualReviewsTitle">
+          <div class="section-title compact"><div><p class="eyebrow">06 · MANUAL REVIEWS</p><h2 id="manualReviewsTitle">승인 대기 검토</h2></div><span>미리보기 → 명시 확인 → durable queue</span></div>
+          <div class="manual-review-list">
+            <article class="review-row knowledge-review-row" aria-labelledby="knowledgeReviewTitle">
+              <div class="review-row-heading"><div><h3 id="knowledgeReviewTitle">공식 AI 지식 점검</h3><p>공식 OpenAI·Anthropic 소스의 변경만 조건부로 확인합니다.</p></div><strong id="knowledgeReviewState" class="status-text unknown">확인 중</strong></div>
+              <dl class="review-metadata"><div><dt>소스</dt><dd><ul id="knowledgeReviewSources" class="knowledge-review-sources"><li>확인 중</li></ul></dd></div><div><dt>마지막 실행</dt><dd id="knowledgeReviewLastRun">기록 확인 중</dd></div></dl>
+              <div class="button-row"><button id="previewKnowledgeReview" type="button" class="secondary">점검 미리보기</button><button id="enqueueKnowledgeReview" type="button" disabled>확인 후 작업 대기열에 추가</button></div>
+              <p id="knowledgeReviewMessage" class="action-message" role="status" aria-live="polite"></p>
+            </article>
+
+            <article class="review-row priority-review-row" aria-labelledby="priorityReviewTitle">
+              <div class="review-row-heading"><div><h3 id="priorityReviewTitle">Notion 우선순위 outbox</h3><p>로컬 제안은 자동 덮어쓰기 없이 미전송 outbox로만 저장합니다.</p></div><span class="status-text partial">MANUAL</span></div>
+              <p class="review-qualification">우선순위 정본은 Notion입니다. 충돌은 DRIFT로 유지하고 별도 승인 전에는 동기화하지 않습니다.</p>
+            </article>
+
+            <article class="review-row local-access-row" aria-labelledby="localAccessTitle">
+              <div class="review-row-heading"><div><h3 id="localAccessTitle">승인형 로컬 읽기</h3><p>편의 별칭 없이 사용자가 입력한 하나의 정확한 절대 루트만 검토합니다.</p></div><span class="status-text blocked">EXPLICIT GRANT</span></div>
+              <form id="localAccessForm" class="local-access-form">
+                <label class="wide" for="localAccessRoot">정확한 절대 루트<input id="localAccessRoot" name="root" type="text" inputmode="url" autocomplete="off" spellcheck="false" placeholder="/absolute/path/to/approved-root" required></label>
+                <label for="localAccessSourceType">소스 유형<select id="localAccessSourceType" name="sourceType"><option value="local">로컬 소스</option><option value="codex-sessions">Codex sessions 전용 루트</option></select></label>
+                <label for="localAccessTtl">TTL (초)<input id="localAccessTtl" name="ttlSeconds" type="number" min="60" max="86400" step="60" value="3600" required></label>
+                <label class="wide" for="localAccessIncludes">포함 경로<textarea id="localAccessIncludes" name="includes" rows="2" placeholder="docs/**, src/**" required></textarea></label>
+                <label class="wide" for="localAccessDenies">추가 거부 경로<textarea id="localAccessDenies" name="denies" rows="2" placeholder="**/.env*, **/secrets/**"></textarea></label>
+                <label class="wide explicit-check" for="localAccessWholeHomeApproved"><input id="localAccessWholeHomeApproved" name="wholeHomeApproved" type="checkbox"><span><strong>whole-home exact root를 별도로 승인합니다.</strong> 이 선택은 편의 별칭을 만들지 않으며, 정확한 절대 루트와 비어 있지 않은 denylist가 함께 있어야만 미리볼 수 있습니다.</span></label>
+                <div class="button-row wide"><button id="previewLocalGrant" type="submit" class="secondary">권한 범위 미리보기</button><button id="confirmLocalGrant" type="button" disabled>정확한 범위 승인</button></div>
+              </form>
+              <p class="security-copy"><strong>TTL · denylist · redaction이 먼저입니다.</strong> 경로 탈출, symlink, TCC·Keychain·브라우저·인증 자료와 민감 파일은 fallback이나 권한 우회 없이 거부합니다.</p>
+              <details class="session-approval-note"><summary>Codex session 발췌 승인</summary><p>sessions 전용 루트 grant와 검색 결과만으로 원문을 열 수 없습니다. 승인은 하나의 source grant·session UUID·correlation에 일회용으로 묶이며 prompt, tool 입력, command output의 민감값을 redaction한 발췌만 허용합니다.</p>
+                <form id="sessionApprovalForm" class="session-approval-form">
+                  <label class="wide" for="sessionGrantRef">sessions grant 참조<select id="sessionGrantRef" name="grantRef" required><option value="">sessions grant 선택</option></select></label>
+                  <label class="wide" for="sessionUuid">정확한 session UUID<input id="sessionUuid" name="sessionUuid" type="text" autocomplete="off" spellcheck="false" required></label>
+                  <label for="sessionMaxLines">최대 줄 수<input id="sessionMaxLines" name="maxLines" type="number" min="1" max="200" value="120" required></label>
+                  <label for="sessionMaxTurns">최대 turn 수<input id="sessionMaxTurns" name="maxTurns" type="number" min="1" max="20" value="20" required></label>
+                  <label for="sessionMaxBytes">최대 bytes<input id="sessionMaxBytes" name="maxBytes" type="number" min="1024" max="262144" step="1024" value="32768" required></label>
+                  <div class="button-row wide"><button id="previewSessionApproval" type="submit" class="secondary">발췌 범위 미리보기</button><button id="confirmSessionApproval" type="button" disabled>일회용 발췌 승인</button></div>
+                </form>
+                <p id="sessionApprovalMessage" class="action-message" role="status" aria-live="polite"></p>
+              </details>
+              <p id="localAccessMessage" class="action-message" role="status" aria-live="polite"></p>
+              <div id="localAccessGrants" class="local-access-grants" aria-live="polite"><p class="empty-state"><strong>활성 grant 없음</strong><span>미리보기와 명시 확인을 통과한 제한된 grant만 여기에 표시됩니다.</span></p></div>
+            </article>
+          </div>
+        </section>
+      </div>
+
+      <section id="guide" class="anchor-section guide-section scroll-chapter" aria-labelledby="guideTitle" data-chapter="02" data-chapter-label="작업 시작">
+        <div class="guide-intro">
+          <div><p class="eyebrow">GUIDED WORKFLOW</p><h2 id="guideTitle">지금 하려는 일을 선택하세요</h2><p>선택한 목적에 필요한 단계만 01부터 다시 정렬합니다. 전체 기능은 그대로 유지하되, 평소에는 관련 없는 설정과 관리 절차를 숨깁니다.</p></div>
+          <div class="guide-stats"><span><b id="guideJourneyCount">–</b>현재 단계</span><span><b id="guideToolCount">–</b>전체 도구</span><span><b id="guideActionCount">–</b>안전 조치</span></div>
+        </div>
+        <div id="flowSelector" class="flow-selector" role="group" aria-label="작업 목적 선택"></div>
+        <div id="activeFlowSummary" class="active-flow-bar" aria-live="polite"></div>
+        <article id="task-planner" class="task-composer" aria-labelledby="taskComposerTitle">
+          <div><p class="eyebrow">TASK COMPOSER</p><h3 id="taskComposerTitle">원하는 결과를 한 문장으로 적으세요</h3><p>선택한 흐름의 경계와 성공 조건을 포함한 시작 요청을 만들어 Codex에 붙여넣을 수 있습니다.</p></div>
+          <label for="taskBrief">작업 내용</label>
+          <textarea id="taskBrief" rows="3" placeholder="예: 이 저장소의 로그인 오류를 조사하고, 정상 경로는 건드리지 않은 채 원인을 고쳐줘."></textarea>
+          <div class="task-composer-actions"><button id="copyPlannedPrompt" type="button">안전한 시작 요청 복사</button><span id="planPromptMessage" aria-live="polite">입력 내용은 저장하지 않습니다.</span></div>
+        </article>
+        <div id="capabilityGuide" class="capability-guide" aria-live="polite"></div>
+        <details class="glossary-panel"><summary><span>용어가 헷갈리나요?</span><strong>핵심 용어 1분 정리</strong></summary><div id="glossaryGrid" class="glossary-grid"></div></details>
+      </section>
+
+      <section id="recipes" class="anchor-section scroll-chapter" aria-labelledby="recipesTitle" data-chapter="03" data-chapter-label="Codex Desktop 예시">
+        <div class="section-title"><div><p class="eyebrow">CODEX DESKTOP RECIPES</p><h2 id="recipesTitle">바로 복사해 시작하는 Web GPT 예시</h2></div><span>비-Pro · 현재 프로젝트 경계 유지</span></div>
+        <div class="recipe-filter" role="group" aria-label="사용 예시 분류">
+          <button type="button" class="active" data-recipe-filter="all" aria-pressed="true">전체</button>
+          <button type="button" data-recipe-filter="build" aria-pressed="false">코딩</button>
+          <button type="button" data-recipe-filter="solve" aria-pressed="false">문제 해결</button>
+          <button type="button" data-recipe-filter="team" aria-pressed="false">여러 Web GPT</button>
+          <button type="button" data-recipe-filter="operate" aria-pressed="false">웹·원격</button>
+        </div>
+        <div id="recipeGrid" class="recipe-grid" aria-live="polite"></div>
+        <p id="recipeMessage" class="recipe-message" aria-live="polite">카드의 요청을 복사한 뒤 Codex Desktop 새 작업에 붙여넣으세요.</p>
+      </section>
+
+      <section id="activity" class="anchor-section scroll-chapter" aria-labelledby="activityTitle" data-chapter="04" data-chapter-label="실행 현황">
+        <div class="section-title"><div><p class="eyebrow">ACTIVITY & EVIDENCE</p><h2 id="activityTitle">실행 현황과 완료 근거</h2></div><span>진행 중 작업 · writer · agent · browser lease · 확장 무결성</span></div>
+        <div id="activitySummary" class="activity-grid" aria-live="polite"><article class="activity-card"><span>LOADING</span><strong>작업 상태 확인 중</strong><p>현재 소유 작업과 정리 상태를 읽고 있습니다.</p></article></div>
+        <div class="activity-actions"><button type="button" class="secondary" data-tool-run="orchestration-status">협업 작업 확인</button><button type="button" class="secondary" data-tool-run="browser-status">브라우저 lease 확인</button><button type="button" class="secondary" data-tool-run="codex-agents">에이전트 확인</button></div>
+      </section>
+
+      <section class="operations-overview" aria-labelledby="operationsTitle">
+        <div class="section-title compact"><div><p class="eyebrow">LIVE ROUTES</p><h2 id="operationsTitle">현재 작업 경로</h2></div><span>각 경로의 추론·도구·연결 역할을 분리</span></div>
+        <div class="route-grid">
+          <article class="route-card" data-route-card="web-gpt"><div><span class="route-badge web">W</span><span><strong>Codex Web 모델</strong><small>Codex에서 시작 · ChatGPT Web 추론</small></span></div><b id="webGptRouteState">확인 중</b><p id="webGptRouteDetail">모델 브리지 상태를 읽고 있습니다.</p></article>
+          <article class="route-card" data-route-card="ocx"><div><span class="route-badge ocx">O</span><span><strong>OCX 모델 경로</strong><small>Codex에서 시작 · 선택 provider 추론</small></span></div><b id="ocxRouteState">확인 중</b><p id="ocxRouteDetail">OCX 상태를 읽고 있습니다.</p></article>
+          <article class="route-card" data-route-card="workspace"><div><span class="route-badge workspace">M</span><span><strong>원격 Workspace MCP</strong><small>ChatGPT에서 시작 · 등록 프로젝트 실행</small></span></div><b id="workspaceRouteState">확인 중</b><p id="workspaceRouteDetail">Secure Tunnel 상태를 읽고 있습니다.</p></article>
+        </div>
+      </section>
+
+      <section aria-labelledby="quickTitle">
+        <div class="section-title"><div><p class="eyebrow">QUICK START</p><h2 id="quickTitle">자주 쓰는 기능</h2></div><a href="#tools">모두 보기</a></div>
+        <div id="quickTools" class="quick-grid" aria-live="polite"></div>
+      </section>
+
+      <section id="architecture" class="anchor-section scroll-chapter" aria-labelledby="architectureTitle" data-chapter="12" data-chapter-label="구조와 도구">
+        <div class="section-title"><div><p class="eyebrow">SYSTEM CANVAS</p><h2 id="architectureTitle">AICC 전체 구조 지도</h2></div><span>누가 추론하고 · 어디로 연결되고 · 무엇을 실행하는지</span></div>
+        <div class="mcp-choice-grid" aria-label="MCP 용도 비교">
+          <article class="mcp-choice web-choice">
+            <div class="choice-heading"><span>1</span><div><p class="eyebrow">CODEX에서 시작</p><h3>Web GPT 작업 하네스 MCP</h3></div></div>
+            <p>Codex Desktop에서 <strong>Web / 임시·저장 / 추론 수준</strong> 모델을 선택할 때 씁니다. ChatGPT Web이 추론하고, 현재 Codex 작업이 가진 파일·터미널·브라우저 도구를 호출합니다.</p>
+            <dl><div><dt>작업 범위</dt><dd>현재 Codex 프로젝트</dd></div><div><dt>도구 형태</dt><dd>매 turn 동적 하네스</dd></div><div><dt>현재 상태</dt><dd data-live-detail="web-harness">Full 하네스 확인 중</dd></div></dl>
+            <small class="legacy-name">이전 이름: Codex Native MCP · 네이티브 모델과 무관</small>
+          </article>
+          <article class="mcp-choice workspace-choice">
+            <div class="choice-heading"><span>2</span><div><p class="eyebrow">CHATGPT에서 시작</p><h3>AICC 원격 작업공간 MCP</h3></div></div>
+            <p>폰이나 웹 ChatGPT에서 이 Mac의 등록 프로젝트를 열 때 씁니다. 현재 ChatGPT 대화가 추론하고, 배포 후보 22개 고정 도구와 만료 lease로 허용된 작업공간만 다룹니다. 실제 게시 수는 현재 상태에서 별도로 확인합니다.</p>
+            <dl><div><dt>작업 범위</dt><dd>등록한 Git 작업공간</dd></div><div><dt>도구 형태</dt><dd>배포 후보 22개 고정 도구</dd></div><div><dt>현재 상태</dt><dd data-live-detail="workspace-tunnel">Tunnel 확인 중</dd></div></dl>
+            <small class="legacy-name">ChatGPT 앱 표시 이름: AICC Workspace</small>
+          </article>
+        </div>
+        <article class="panel architecture-panel">
+          <div class="canvas-toolbar">
+            <div class="map-filters" role="group" aria-label="구조 지도 경로 필터">
+              <button type="button" class="map-filter active" data-architecture-filter="all" aria-pressed="true">전체</button>
+              <button type="button" class="map-filter" data-architecture-filter="web">Codex Web</button>
+              <button type="button" class="map-filter" data-architecture-filter="workspace">외부 ChatGPT</button>
+              <button type="button" class="map-filter" data-architecture-filter="routes">OCX·Native</button>
+              <button type="button" class="map-filter" data-architecture-filter="sources">원본 계보</button>
+            </div>
+            <div class="map-legend" aria-label="구조 지도 범례"><span class="interface">사용 화면</span><span class="inference">추론</span><span class="transport">연결</span><span class="execution">실행</span></div>
+          </div>
+
+          <div class="system-canvas" aria-label="AICC 시스템 연결 흐름">
+            <article class="flow-lane" data-map-groups="web">
+              <header><span class="lane-index">01</span><div><strong>Codex Desktop에서 Web 모델</strong><small>ChatGPT Web만 추론하고 현재 Codex 프로젝트 도구를 실행</small></div><span class="live-pill" data-live-state="web-bridge">확인 중</span></header>
+              <div class="flow-track">
+                <div class="map-node interface"><span>작업 화면</span><strong>Codex Desktop</strong><small>문맥 · 승인 · 도구 스키마</small></div><i aria-hidden="true">→</i>
+                <div class="map-node transport"><span>로컬 브리지</span><strong>17841</strong><small>Web 모델 분기</small></div><i aria-hidden="true">→</i>
+                <div class="map-node inference"><span>유일한 추론 주체</span><strong>ChatGPT Web</strong><small>임시·저장 / 낮음~매우 높음</small></div><i aria-hidden="true">→</i>
+                <div class="map-node transport"><span>전용 Secure Tunnel</span><strong>Web GPT 작업 하네스 Tunnel</strong><small data-live-detail="web-harness">Full 하네스 상태 확인 중</small></div><i aria-hidden="true">→</i>
+                <div class="map-node execution"><span>실행 경계</span><strong>현재 Codex 프로젝트</strong><small>파일 · 터미널 · 설치된 도구</small></div>
+              </div>
+            </article>
+
+            <article class="flow-lane" data-map-groups="workspace">
+              <header><span class="lane-index">02</span><div><strong>폰·웹 ChatGPT에서 이 Mac 사용</strong><small>등록한 작업공간만 lease로 열어 고정 도구 실행</small></div><span class="live-pill" data-live-state="workspace-tunnel">확인 중</span></header>
+              <div class="flow-track">
+                <div class="map-node interface"><span>외부 화면</span><strong>ChatGPT Business</strong><small>폰 · 다른 컴퓨터 · 웹</small></div><i aria-hidden="true">→</i>
+                <div class="map-node inference"><span>유일한 추론 주체</span><strong>현재 ChatGPT 대화</strong><small>Codex·OCX 모델 불사용</small></div><i aria-hidden="true">→</i>
+                <div class="map-node transport"><span>전용 Secure Tunnel</span><strong>AICC 원격 작업공간 Tunnel</strong><small data-live-detail="workspace-tunnel">Tunnel 상태 확인 중</small></div><i aria-hidden="true">→</i>
+                <div class="map-node execution"><span>고정 MCP 서버</span><strong>AICC 원격 작업공간 MCP</strong><small>배포 후보 22개 경계 도구 · live 별도 확인</small></div><i aria-hidden="true">→</i>
+                <div class="map-node execution"><span>실행 경계</span><strong>등록 Git 작업공간</strong><small>workspace_id + 만료 lease</small></div>
+              </div>
+            </article>
+
+            <article class="flow-lane compact-lane" data-map-groups="routes">
+              <header><span class="lane-index">03</span><div><strong>독립 모델 복구 경로</strong><small>Web GPT와 섞지 않고 각각의 provider·상태를 유지</small></div><span class="live-pill" data-live-state="ocx">확인 중</span></header>
+              <div class="route-pairs">
+                <div class="route-pair"><div class="map-node interface"><strong>Codex Desktop</strong></div><i>→</i><div class="map-node transport"><strong>17841 통과</strong><small>Web 외 모델</small></div><i>→</i><div class="map-node inference"><strong>OCX 10100</strong><small>선택 provider</small></div></div>
+                <div class="route-pair"><div class="map-node interface"><strong>codex-native 프로필</strong></div><i>→</i><div class="map-node inference"><strong>OpenAI 공식 Codex</strong><small>브리지 장애 복구</small></div></div>
+              </div>
+            </article>
+          </div>
+
+          <div class="tunnel-decision" data-map-groups="web workspace">
+            <span class="decision-mark">≠</span><div><strong>두 MCP는 AICC에서 함께 관리하지만, 시작점과 권한 경계가 달라 전송 경로는 분리합니다.</strong><p>Web GPT 작업 하네스는 Codex가 시작한 매 turn의 동적 도구를 중계하고, AICC 원격 작업공간은 ChatGPT가 시작한 대화에 배포 후보 22개 고정 도구를 게시합니다. 실제 live 게시 수는 상태 응답으로 따로 확인하며, 하나로 합치면 현재 프로젝트 권한과 원격 등록 작업공간 권한이 섞입니다.</p></div>
+            <a class="button-link secondary" href="/aicc-architecture.canvas" download>Obsidian Canvas 받기</a>
+          </div>
+        </article>
+
+        <article class="panel lineage-panel" data-map-groups="sources" aria-labelledby="lineageTitle">
+          <div class="panel-title"><div><p class="eyebrow">SOURCE LINEAGE</p><h3 id="lineageTitle">어떤 원본이 어디에 반영됐나</h3></div><span class="capability">코드 채택과 아이디어 참고를 구분</span></div>
+          <div class="lineage-table-wrap"><table class="lineage-table"><thead><tr><th>원본</th><th>채택 방식</th><th>AICC에 융합된 결과</th><th>업데이트 정책</th></tr></thead><tbody>
+            <tr><td><a href="https://github.com/miuuyy/codex-chatgpt-web" target="_blank" rel="noopener">codex-chatgpt-web</a></td><td><span class="source-tag fork">Fork</span></td><td>ChatGPT 웹 자동화 + Responses 브리지 → 17841, 한국어 모델명, 복구, Full 하네스 확장</td><td>원본 릴리스 비교 후 AICC fork에 선택 반영</td></tr>
+            <tr><td><a href="https://github.com/lidge-jun/opencodex" target="_blank" rel="noopener">OpenCodex</a></td><td><span class="source-tag pinned">Pinned submodule</span></td><td>10100 provider 라우팅 → AICC 상태·계정·운영 요약과 안전 제어</td><td>고정 커밋 검증 후 갱신</td></tr>
+            <tr><td><a href="https://github.com/openai/tunnel-client" target="_blank" rel="noopener">Secure MCP Tunnel</a></td><td><span class="source-tag binary">Pinned binary</span></td><td>방화벽 뒤 로컬 MCP의 outbound HTTPS 연결 → 역할별 두 Tunnel</td><td>보안 릴리스 우선 검증</td></tr>
+            <tr><td><a href="https://github.com/AgenticLab-SH/aicc-web-agent-lab" target="_blank" rel="noopener">open-AICC 자체 구현</a></td><td><span class="source-tag owned">Owned</span></td><td>원격 작업공간 registry·lease·seatbelt·배포 후보 22개 도구·통합 대시보드</td><td>open-AICC 테스트와 공개 안전성 CI로 유지</td></tr>
+            <tr><td><a href="https://github.com/Waishnav/devspace" target="_blank" rel="noopener">Waishnav/devspace</a></td><td><span class="source-tag reference">Reference</span></td><td>범용 workspace UX·경계 아이디어만 비교, 실행 코드와 프로세스는 미채택</td><td>자동 추적 안 함 · 새 아이디어 조사 때만 재검토</td></tr>
+            <tr><td><a href="https://jsoncanvas.org/" target="_blank" rel="noopener">Obsidian JSON Canvas</a></td><td><span class="source-tag reference">Format</span></td><td>카드·그룹·연결선 표현과 공개 .canvas 내보내기</td><td>런타임 의존성 없음</td></tr>
+          </tbody></table></div>
+          <p class="panel-footnote lineage-note">실행 코드인 Codex CLI, codex-chatgpt-web, OpenCodex, tunnel-client와 MCP SDK는 적용 정책과 함께 추적합니다. CodexPro와 DevSpace는 미설치 참고 신호만 관측하며 자동 설치·업데이트하지 않습니다.</p>
+        </article>
+      </section>
+
+      <section id="tools" class="anchor-section" aria-labelledby="toolsTitle">
+        <div class="section-title"><div><p class="eyebrow">TOOL LIBRARY</p><h2 id="toolsTitle">모든 도구</h2></div><span>하나의 목록에서 찾고 실행</span></div>
+        <div id="toolFilters" class="filter-row" role="group" aria-label="도구 분류"></div>
+        <div id="toolLibrary" class="tool-library" aria-live="polite"></div>
+      </section>
+
+      <section id="web-gpt" class="anchor-section scroll-chapter" aria-labelledby="webGptTitle" data-chapter="05" data-chapter-label="Web GPT">
+        <div class="section-title"><div><p class="eyebrow">CHATGPT WEB MODELS</p><h2 id="webGptTitle">Web GPT 모델 운영</h2></div><span>추론은 ChatGPT Web · 실행은 현재 Codex 하네스</span></div>
+        <div class="web-gpt-layout">
+          <article class="panel web-gpt-control">
+            <div class="web-gpt-heading"><span id="webGptIndicator" class="large-status offline"></span><div><h3>Codex 모델 브리지</h3><p id="webGptDetail">Web GPT 상태 확인 중</p></div></div>
+            <dl class="metric-list">
+              <div><dt>버전</dt><dd id="webGptVersion">–</dd></div>
+              <div><dt>실행 모드</dt><dd id="webGptMode">–</dd></div>
+              <div><dt>17841 라우터</dt><dd id="webGptRouterOwner">–</dd></div>
+              <div><dt>Codex 도구 하네스</dt><dd id="webGptHarness">–</dd></div>
+              <div><dt>전용 MCP Tunnel</dt><dd id="webGptTunnel">–</dd></div>
+              <div><dt>ChatGPT 커넥터</dt><dd id="webGptConnector">–</dd></div>
+              <div><dt>활성 브라우저 턴</dt><dd id="webGptTurns">–</dd></div>
+              <div><dt>현재 bundle 6모드 실측</dt><dd id="webGptVerification">–</dd></div>
+              <div><dt>모델 추론 토큰</dt><dd>ChatGPT Web만 사용</dd></div>
+            </dl>
+            <div class="button-row"><button id="openWebGpt" type="button">Codex Web GPT 열기</button><button id="refreshWebGpt" type="button" class="secondary">상태 새로 확인</button></div>
+          </article>
+          <article class="panel model-surface">
+            <div class="panel-title"><div><p class="eyebrow">MODEL PICKER</p><h3>노출 예정 모델</h3></div><span id="webGptModelCount" class="capability">0개</span></div>
+            <div id="webGptModels" class="model-chip-list"><span class="empty">상태를 확인하고 있습니다.</span></div>
+            <p class="panel-footnote">Web GPT 모델을 선택한 요청은 OCX 모델 추론을 호출하지 않습니다. Codex Desktop은 화면·도구·승인 하네스만 담당합니다.</p>
+          </article>
+        </div>
+        <article class="panel web-readiness-panel" aria-labelledby="webReadinessTitle">
+          <div class="panel-title"><div><p class="eyebrow">LIVENESS ≠ READINESS</p><h3 id="webReadinessTitle">17841 의존성 준비 상태</h3></div><span id="webReadinessState" class="capability">확인 중</span></div>
+          <div id="webReadinessVector" class="web-readiness-vector"><span class="empty">/readyz dependency vector를 확인하고 있습니다.</span></div>
+          <p class="panel-footnote"><code>/healthz</code> 성공은 프로세스 생존만 뜻합니다. 새 요청 수용은 listener·broker·browser와 요청 시점 native upstream을 각각 확인합니다.</p>
+        </article>
+        <article class="panel route-topology" aria-labelledby="routeTopologyTitle">
+          <div class="panel-title"><div><p class="eyebrow">ROUTING MAP</p><h3 id="routeTopologyTitle">서로 분리된 네 가지 연결 경로</h3></div><span class="capability">역할별 독립 운영</span></div>
+          <div class="topology-list">
+            <div><span class="topology-source">Codex Desktop</span><span class="topology-arrow">→</span><span class="topology-port">17841</span><span class="topology-arrow">→</span><strong>Web GPT</strong><small>추론은 ChatGPT Web · 로컬 실행은 Web GPT 작업 하네스 MCP</small></div>
+            <div><span class="topology-source">Codex Desktop</span><span class="topology-arrow">→</span><span class="topology-port">17841</span><span class="topology-arrow">→</span><strong>OCX 10100</strong><small>Web 외 모델만 전달</small></div>
+            <div><span class="topology-source">codex-native 프로필</span><span class="topology-arrow">→</span><strong>OpenAI 네이티브</strong><small>브리지 장애 시 독립 복구 경로</small></div>
+            <div><span class="topology-source">외부 ChatGPT</span><span class="topology-arrow">→</span><span class="topology-port">Tunnel</span><span class="topology-arrow">→</span><strong>AICC 원격 작업공간</strong><small>별도 Tunnel · 배포 후보 22개 도구 · live 별도 확인</small></div>
+          </div>
+        </article>
+        <article class="panel web-test-panel" aria-labelledby="webTestTitle">
+          <div class="panel-title"><div><p class="eyebrow">LATEST VERIFICATION · 2026-08-10</p><h3 id="webTestTitle">Web GPT 검증 bundle 6경로 실측</h3></div><span id="webTestCapability" class="capability">검증 기록 확인 중</span></div>
+          <div class="test-contract"><strong>검증 당시 공통 조건</strong><span>2.0.0-aicc.4 · High · 비-Pro · 전용 launcher identity</span><span id="webTestBundleScope">최소 30초 간격 · terminal + exact bytes + task-tab screenshot 모두 확인</span></div>
+          <div class="web-test-grid" role="table" aria-label="Web GPT 운영 경로별 검증 결과">
+            <div class="test-row test-head" role="row"><span role="columnheader">모드</span><span role="columnheader">경로</span><span role="columnheader">Terminal</span><span role="columnheader">Artifact · Browser</span><span role="columnheader">시간</span></div>
+            <div class="test-row" role="row"><strong role="rowheader">01 새 thread</strong><span>Integrated</span><span>완료</span><span>일치 · 확인</span><span>20.83초</span></div>
+            <div class="test-row" role="row"><strong role="rowheader">02 resume</strong><span>Integrated</span><span>완료</span><span>일치 · 확인</span><span>23.40초</span></div>
+            <div class="test-row" role="row"><strong role="rowheader">03 read-only</strong><span>Direct</span><span>완료</span><span>일치 · 확인</span><span>24.95초</span></div>
+            <div class="test-row" role="row"><strong role="rowheader">04 App Server</strong><span>Direct</span><span>완료</span><span>일치 · 확인</span><span>23.04초</span></div>
+            <div class="test-row" role="row"><strong role="rowheader">05 adapter restart</strong><span>Direct</span><span>완료</span><span>일치 · 확인</span><span>25.13초</span></div>
+            <div class="test-row" role="row"><strong role="rowheader">06 router isolated</strong><span>Direct</span><span>완료</span><span>일치 · 확인</span><span>32.24초</span></div>
+          </div>
+          <div class="test-verdicts"><p><span class="verdict-dot pass"></span><strong>Terminal 6/6</strong><small>모든 stream이 turn/completed로 종료 · retry 0</small></p><p><span class="verdict-dot pass"></span><strong>Exact artifact 6/6</strong><small>개별 bytes와 SHA-256 고정</small></p><p><span class="verdict-dot pass"></span><strong>Browser-visible 6/6</strong><small>각 task tab 최종 token screenshot 직접 확인</small></p><p><span class="verdict-dot pass"></span><strong>Failure isolation</strong><small>adapter restart와 isolated router 거부에서도 direct 경로 유지</small></p></div>
+          <p id="webTestRuntimeNote" class="panel-footnote">현재 설치 bundle과 검증 bundle의 일치 여부를 확인하고 있습니다.</p>
+        </article>
+      </section>
+
+      <section id="workspace" class="anchor-section scroll-chapter" aria-labelledby="workspaceTitle" data-chapter="07" data-chapter-label="원격 작업">
+        <div class="section-title"><div><p class="eyebrow">REMOTE LOCAL WORKSPACE</p><h2 id="workspaceTitle">AICC 원격 작업공간 MCP</h2></div><span>Business와 Personal의 연결·게시 상태를 각각 확인</span></div>
+        <label for="workspacePublicationSurface">게시 대상</label>
+        <select id="workspacePublicationSurface" aria-describedby="workspaceSurfaceNote">
+          <option value="business-full" selected>Business — 업무 공간의 전체 도구</option>
+          <option value="personal-read-fetch">Personal — 개인 계정의 읽기 전용 도구</option>
+        </select>
+        <p id="workspaceSurfaceNote" class="panel-footnote">선택은 사전검사 대상만 바꿉니다. 실제 계정·앱·인증·Tunnel은 변경하지 않습니다.</p>
+        <details class="panel">
+          <summary>계정 연결과 게시 대상 설정</summary>
+          <p class="panel-footnote">이 기기의 게시 준비 설정입니다. 포트 번호는 선호 연결이며 실제 로그인과 소유권은 공식 화면에서 확인합니다.</p>
+          <form id="workspaceTargetPreferences">
+            <div class="button-row">
+              <label>1번 계정 CDP 포트 <input id="workspaceAccountPort1" type="number" min="1024" max="65535" step="1" required></label>
+              <label>2번 계정 CDP 포트 <input id="workspaceAccountPort2" type="number" min="1024" max="65535" step="1" required></label>
+              <label>3번 계정 CDP 포트 <input id="workspaceAccountPort3" type="number" min="1024" max="65535" step="1" required></label>
+            </div>
+            <label for="workspaceTargetAccount">선택한 게시 대상에 사용할 계정</label>
+            <select id="workspaceTargetAccount"><option value="1">1번 계정</option><option value="2">2번 계정</option><option value="3">3번 계정</option></select>
+            <label for="workspaceTargetTunnel">공식 화면에서 확인한 기존 Tunnel ID</label>
+            <input id="workspaceTargetTunnel" type="text" maxlength="100" autocomplete="off" placeholder="tunnel_로 시작하는 기존 ID · 미확인 시 비워 두세요">
+            <p class="panel-footnote">토큰·암호·인증 파일을 입력하지 마세요. Tunnel ID를 적어도 계정 소유나 인증 확인으로 처리하지 않습니다.</p>
+            <button type="submit" class="secondary">이 기기에 준비 설정 저장</button>
+          </form>
+          <p id="workspaceTargetPreferenceMessage" class="panel-footnote" role="status"></p>
+          <p id="workspaceTargetBindingState" class="panel-footnote"></p>
+          <a class="button-link secondary" href="https://platform.openai.com/settings/organization/tunnels" target="_blank" rel="noopener">공식 Tunnel 소유 목록 열기</a>
+        </details>
+        <div class="workspace-layout">
+          <article class="panel workspace-runtime">
+            <div class="web-gpt-heading"><span id="workspaceIndicator" class="large-status offline"></span><div><h3>AICC 원격 작업공간 Tunnel</h3><p id="workspaceDetail">원격 작업공간 상태 확인 중</p></div></div>
+            <dl class="metric-list">
+              <div><dt>등록 프로젝트</dt><dd id="workspaceCount">–</dd></div>
+              <div><dt>터널</dt><dd id="workspaceTunnel">–</dd></div>
+              <div><dt>파일 권한</dt><dd id="workspaceFilePermission">–</dd></div>
+              <div><dt>명령 실행</dt><dd id="workspaceCommandPermission">–</dd></div>
+              <div><dt>모델 추론</dt><dd>ChatGPT Web</dd></div>
+            </dl>
+            <p id="workspaceLocalBinding" class="panel-footnote">LOCAL 결속: 미확인. 로컬 identityBinding은 원격 앱 ID·계정·Tunnel의 증거가 아닙니다.</p>
+            <p class="panel-footnote">로컬 MCP·Tunnel 준비와 실제 원격 앱 게시는 별도로 확인합니다.</p>
+          </article>
+          <article class="panel workspace-publish">
+            <div class="panel-title"><div><p id="workspacePublishSurfaceLabel" class="eyebrow">Business 게시 사전검사</p><h3>로컬 도구와 게시 기록</h3></div><span id="workspacePublishState" class="capability">원격 게시 미확인</span></div>
+            <div class="publish-metrics">
+              <div><span>전체</span><strong id="workspaceToolCount">–</strong></div>
+              <div><span>읽기</span><strong id="workspaceReadToolCount">–</strong></div>
+              <div><span>쓰기</span><strong id="workspaceWriteToolCount">–</strong></div>
+            </div>
+            <p id="workspacePublishDetail" class="panel-footnote">로컬 도구 스냅샷을 확인하고 있습니다.</p>
+            <p class="panel-footnote">실제 게시: 선택한 표면의 계정·앱 확인 → Scan Tools → 위험 항목 검토 → 게시 1회 → 원격 결과 확인. 이 화면은 자동 게시하지 않습니다.</p>
+            <div class="button-row"><button id="workspacePreflight" type="button">게시 사전검사</button><a id="openChatGptApps" class="button-link secondary" href="https://chatgpt.com/plugins" target="_blank" rel="noopener">ChatGPT 공식 앱 화면</a></div>
+          </article>
+        </div>
+        <article class="panel workspace-app-sync" aria-labelledby="workspaceAppSyncTitle">
+          <div class="panel-title"><div><p class="eyebrow">ONE LOGICAL PLUGIN · SEPARATE BINDINGS</p><h3 id="workspaceAppSyncTitle">세 계정 앱 동기화</h3></div><span id="workspaceAppSyncState" class="capability">확인 중</span></div>
+          <p id="workspaceAppSyncDetail" class="panel-footnote">Business와 Personal을 분리한 계정별 게시 상태를 확인하고 있습니다.</p>
+          <div id="workspaceAppSurfaceGrid" class="workspace-app-surface-grid" aria-label="Workspace 앱 failure domain"><span class="empty">로컬 manifest를 확인하고 있습니다.</span></div>
+          <div class="workspace-app-table-wrap">
+            <table class="workspace-app-table">
+              <thead><tr><th>계정 결속</th><th>Surface</th><th>도구</th><th>Source</th><th>Installed</th><th>Runtime</th><th>Browser</th><th>다음 조치</th></tr></thead>
+              <tbody id="workspaceAppBindings"><tr><td colspan="8">최신 계정 inventory 확인 전</td></tr></tbody>
+            </table>
+          </div>
+          <p class="panel-footnote">화면에서는 하나의 <strong>AICC Workspace</strong>로 관리합니다. Business 공유 앱과 Personal 읽기 전용 replica의 원격 ID·Tunnel·권한·rollback은 서로 합치지 않습니다.</p>
+        </article>
+        <article class="panel workspace-tools-panel">
+          <div class="panel-title"><div><p class="eyebrow">LOCAL SOURCE TOOLS</p><h3>선택한 표면의 로컬 도구 후보</h3></div><span id="workspaceToolSummary" class="capability">0개</span></div>
+          <div id="workspaceTools" class="workspace-tool-grid"><span class="empty">상태를 확인하고 있습니다.</span></div>
+          <p class="panel-footnote">모든 파일·명령 작업은 먼저 연 워크스페이스 경계 안에서만 수행됩니다. 임의의 로컬 절대 경로는 열 수 없습니다.</p>
+        </article>
+      </section>
+
+      <section id="ocx-console" class="anchor-section scroll-chapter" aria-labelledby="ocxConsoleTitle" data-chapter="06" data-chapter-label="계정과 할당량">
+        <div class="section-title"><div><p class="eyebrow">OCX OPERATIONS</p><h2 id="ocxConsoleTitle">OCX 운영 센터</h2></div><span>핵심 상태는 AICC에서 · 전문 설정은 OCX 원본 화면에서</span></div>
+        <div class="ocx-hero panel">
+          <div class="ocx-health-copy"><div class="web-gpt-heading"><span id="ocxConsoleIndicator" class="large-status offline"></span><div><h3 id="ocxConsoleState">OCX 상태 확인 중</h3><p id="ocxConsoleDetail">읽기 전용 운영 지표를 불러오고 있습니다.</p></div></div><p class="panel-footnote">AICC는 OCX 자격증명을 복제하지 않습니다. OCX 공식 CLI의 안전한 JSON 요약만 표시하고, 설정 변경은 원본 콘솔로 연결합니다.</p></div>
+          <div class="ocx-kpi-grid" aria-label="OCX 핵심 지표">
+            <div><span>Provider</span><strong id="ocxProviderCount">–</strong><small id="ocxProviderNames">확인 중</small></div>
+            <div><span>노출 모델</span><strong id="ocxModelCount">–</strong><small>현재 catalog</small></div>
+            <div><span>30일 토큰</span><strong id="ocxTokens30d">–</strong><small id="ocxCoverage">측정 범위 확인 중</small></div>
+            <div><span>메모리 RSS</span><strong id="ocxMemoryRss">–</strong><small id="ocxMemoryBudget">예산 확인 중</small></div>
+            <div><span>Topology</span><strong id="ocxRebootSafe">–</strong><small id="ocxStartupState">route ownership 확인 중</small></div>
+            <div><span>하위 모델</span><strong id="ocxSubagentCount">–</strong><small id="ocxMultiAgentMode">모드 확인 중</small></div>
+          </div>
+        </div>
+        <div id="ocxModules" class="ocx-module-grid" aria-label="OCX 독립 상태 구역"><span class="empty">OCX 모듈을 확인하고 있습니다.</span></div>
+        <div class="ocx-source-link"><p>각 구역은 OCX 공식 CLI JSON을 독립적으로 읽습니다. 한 구역이 실패해도 AICC와 나머지 구역은 계속 동작합니다.</p><a class="button-link secondary" href="http://127.0.0.1:10100/#dashboard" target="_blank" rel="noopener">OCX 전문 설정 열기</a></div>
+      </section>
+
+      <section id="accounts" class="anchor-section" aria-labelledby="accountsTitle">
+        <div class="section-title"><div><p class="eyebrow">ACCOUNTS</p><h2 id="accountsTitle">계정 관리</h2></div><span>인증 토큰과 로그인 파일은 표시하지 않음</span></div>
+        <h3 class="account-heading">기본 GPT Desktop 계정</h3>
+        <div class="account-layout">
+          <div id="accountCards" class="account-cards" aria-live="polite"></div>
+          <article class="panel account-switcher">
+            <span class="panel-icon">◎</span><h3>기본 계정 바꾸기</h3><p>GPT Desktop을 안전하게 다시 시작해 선택한 계정으로 전환합니다.</p>
+            <label for="accountSelector">전환할 계정</label>
+            <select id="accountSelector"><option value="">계정 상태 확인 중</option></select>
+            <button id="switchAccount" type="button">변경 내용 먼저 보기</button>
+          </article>
+        </div>
+        <h3 class="account-heading">OCX 라우팅 계정</h3>
+        <div class="account-layout">
+          <div id="ocxAccountCards" class="account-cards" aria-live="polite"></div>
+          <article class="panel account-switcher">
+            <span class="panel-icon">O</span><h3>새 작업의 계정 바꾸기</h3><p>실행 중인 작업은 유지하고, 이후 시작되는 OCX 작업의 계정만 바꿉니다.</p>
+            <label for="ocxAccountSelector">전환할 OCX 계정</label>
+            <select id="ocxAccountSelector"><option value="">OCX 계정 상태 확인 중</option></select>
+            <button id="switchOcxAccount" type="button">변경 내용 먼저 보기</button>
+          </article>
+        </div>
+      </section>
+
+      <section id="controls" class="anchor-section" aria-labelledby="controlsTitle">
+        <div class="section-title"><div><p class="eyebrow">SAFE CONTROL</p><h2 id="controlsTitle">OCX 연결 제어</h2></div><span>미리보기 후 한 번 더 확인</span></div>
+        <article class="panel provider-control">
+          <div><span id="ocxIndicator" class="large-status offline"></span><div><h3>모델 연결</h3><p id="ocxDetail">OCX 상태 확인 중</p></div></div>
+          <div class="button-row"><button type="button" data-action="ocx.start">시작</button><button type="button" data-action="ocx.sync" class="secondary">모델 맞추기</button><button type="button" data-action="ocx.stop" class="danger ghost">중지</button></div>
+        </article>
+        <p id="actionMessage" class="action-message" role="status" aria-live="polite"></p>
+      </section>
+
+      <section id="openai-usage" class="anchor-section" aria-labelledby="openaiUsageTitle">
+        <div class="section-title"><div><p class="eyebrow">OPENAI API GUARD</p><h2 id="openaiUsageTitle">무료 토큰과 비용 방지</h2></div><span id="openaiUsageUpdated">로컬 원장 확인 중</span></div>
+        <article class="panel usage-contract">
+          <div><span id="openaiKeyState" class="large-status offline"></span><div><h3>AICC 통합 API gateway</h3><p id="openaiGuardSummary">Keychain과 사용량 원장을 확인하고 있습니다.</p></div></div>
+          <code>printf '질문' | aicc openai estimate --model gpt-5.6-luna --max-output 512</code>
+        </article>
+        <div class="openai-provider-grid">
+          <article class="panel openai-provider-control">
+            <div class="openai-provider-heading"><div><p class="eyebrow">PROVIDER CONTROL</p><h3>OpenAI API 공급자</h3></div><span id="openaiProviderState" class="state">확인 중</span></div>
+            <p>키는 Keychain에 유지하고 AICC를 거치는 호출만 통제합니다.</p>
+            <button id="toggleOpenaiProvider" type="button" class="secondary">상태 확인 중</button>
+          </article>
+          <article class="panel openai-default-control">
+            <div><p class="eyebrow">AGENT DEFAULT</p><h3>에이전트 기본 모델</h3></div>
+            <label for="openaiDefaultModel">API와 에이전트 선택이 모두 허용된 모델</label>
+            <select id="openaiDefaultModel"><option value="">모델 확인 중</option></select>
+            <button id="setOpenaiDefaultModel" type="button" class="secondary">기본 모델로 지정</button>
+          </article>
+        </div>
+        <article class="openai-monitor-panel" aria-labelledby="openaiMonitorTitle">
+          <div class="openai-monitor-heading">
+            <div><p class="eyebrow">ALWAYS-ON MONITOR</p><h3 id="openaiMonitorTitle">선제 정지와 공식 반영 상태</h3></div>
+            <span id="openaiMonitorState" class="state">확인 중</span>
+          </div>
+          <div id="openaiMonitorSummary" class="openai-monitor-summary"></div>
+          <div class="button-row"><button id="probeAllOpenaiModels" type="button" class="secondary">계정 무료 모델 전수 실호출</button><button id="checkOpenaiCatalog" type="button" class="ghost">공식 catalog 갱신 확인</button><button id="applyOpenaiAgentGuard" type="button" class="ghost">Agent 우회 방지 적용</button></div>
+        </article>
+        <article class="openai-model-catalog" aria-labelledby="openaiModelCatalogTitle">
+          <div class="openai-model-catalog-head"><div><p class="eyebrow">OFFICIAL COMPLIMENTARY CATALOG</p><h3 id="openaiModelCatalogTitle">무료 대상 모델과 선택 권한</h3></div><div id="openaiModelSummary">공식 목록 확인 중</div></div>
+          <div id="openaiModelFilters" class="model-filter-row" role="group" aria-label="OpenAI 모델 필터"></div>
+          <div id="openaiModelList" class="openai-model-list" aria-live="polite"></div>
+          <p class="openai-catalog-note">무료 한도는 모델별 별도 금액이 아니라 두 원시 token 풀에서 공유됩니다. 각 행은 그 모델이 실제로 소비한 풀 비율과 표준요금 환산액을 표시합니다. <a href="https://platform.openai.com/settings/organization/data-controls/sharing" target="_blank" rel="noreferrer">무료 등록 상태</a> · <a href="https://platform.openai.com/usage/chat-completions?groupBy=service_tier" target="_blank" rel="noreferrer">공식 서비스 티어 사용량</a> · <a href="https://platform.openai.com/usage" target="_blank" rel="noreferrer">비용 확인</a></p>
+        </article>
+        <div id="openaiUsageGroups" class="usage-groups" aria-live="polite"></div>
+        <p id="openaiActionMessage" class="action-message" role="status" aria-live="polite"></p>
+        <p class="usage-explainer">무료 할당량은 모델별이 아니라 두 모델 그룹에서 공유됩니다. 로그인 시 자동 시작하는 AICC local server가 60초마다 확인하고, 80%에서 경고하며 90%에서 API 전체를 선제 정지합니다. 95% 요청 전 하드 차단은 그대로 유지됩니다. 공식 무료 대상 목록과 실제 계정 접근 가능 여부는 구분해 표시하며, 프로젝트와 에이전트에는 원시 API key를 전달하지 않습니다.</p>
+      </section>
+
+      <section id="troubleshoot" class="anchor-section scroll-chapter" aria-labelledby="troubleshootTitle" data-chapter="08" data-chapter-label="복구">
+        <div class="section-title"><div><p class="eyebrow">RECOVERY CONSOLE</p><h2 id="troubleshootTitle">문제해결과 Native 복구</h2></div><span>정상 구역은 유지하고 고장 난 경로만 복구</span></div>
+        <article class="panel latest-recovery-card" aria-labelledby="latestRecoveryTitle">
+          <div>
+            <p class="eyebrow">ONE-CLICK EXACT RESTORE</p>
+            <h3 id="latestRecoveryTitle">최신 안전 복구</h3>
+            <p id="latestRecoveryDetail">봉인된 owner-only 복구점과 작업 게이트를 확인하고 있습니다.</p>
+            <dl class="latest-recovery-meta">
+              <div><dt>상태</dt><dd id="latestRecoveryState" class="capability">확인 중</dd></div>
+              <div><dt>복구 대상</dt><dd id="latestRecoveryTarget">–</dd></div>
+              <div><dt>갱신</dt><dd id="latestRecoveryUpdated">–</dd></div>
+            </dl>
+          </div>
+          <div class="latest-recovery-control">
+            <button id="latestRecoveryButton" type="button" class="danger recovery-primary" data-action="aicc.restore.latest" disabled>안전 상태 확인 중</button>
+            <small>현재 작업이 없고 status·dry-run이 모두 통과할 때만 미리보기 후 실행됩니다.</small>
+            <p id="latestRecoveryMessage" class="action-message" role="status" aria-live="polite"></p>
+          </div>
+        </article>
+        <div class="recovery-grid">
+          <article class="panel recovery-route-card">
+            <div class="panel-title"><div><p class="eyebrow">ACTIVE MODEL ROUTE</p><h3 id="codexRouteLabel">모델 경로 확인 중</h3></div><span id="codexRouteState" class="capability">확인 중</span></div>
+            <p id="codexRouteDetail">Native, Web GPT 17841, OCX 10100 상태를 분리해 읽고 있습니다.</p>
+            <dl class="metric-list compact">
+              <div><dt>Native 복구 프로필</dt><dd id="nativeProfileState">–</dd></div>
+              <div><dt>Web GPT 브리지</dt><dd id="routeWebGptState">–</dd></div>
+              <div><dt>17841 소유자</dt><dd id="routeRouterOwner">–</dd></div>
+              <div><dt>OCX upstream</dt><dd id="routeOcxState">–</dd></div>
+              <div><dt>진행 중 Web 작업</dt><dd id="routeActiveTurns">–</dd></div>
+            </dl>
+            <div class="button-row recovery-actions"><button type="button" data-action="codex.web-gpt.cancel-turns" class="danger">남은 Web 작업 취소</button><button type="button" data-action="codex.web-gpt.recover" class="secondary">17841 라우터 복구</button><button type="button" data-action="codex.native.recover" class="danger ghost">Native Codex 긴급 복구</button><button type="button" data-action="codex.bridge.reconnect" class="secondary">통합 모델 경로 다시 연결</button></div>
+            <div class="recovery-command"><div><strong>경로와 무관한 비상 명령</strong><span>현재 owner-only pointer의 exact component만 복구합니다.</span></div><code>aicc restore</code></div>
+            <p class="panel-footnote">비상 순서: live health와 세 active counter 확인 → exact zero일 때만 17841 service router one-shot → 별도 browser-host 점검. UNKNOWN이면 실행하지 않으며 17842·10100·Native를 자동 대체하지 않습니다.</p>
+          </article>
+          <article class="panel diagnostic-console">
+            <div class="panel-title"><div><p class="eyebrow">ISOLATED DIAGNOSTICS</p><h3>구역별 정밀 점검</h3></div><span>읽기 전용</span></div>
+            <div class="diagnostic-button-grid">
+              <button type="button" class="secondary" data-diagnostic-task="routes.status">모델 경로 점검</button>
+              <button type="button" class="secondary" data-diagnostic-task="web-gpt.doctor">Web GPT 점검</button>
+              <button type="button" class="secondary" data-diagnostic-task="ocx.diagnostics">OCX 점검</button>
+              <button type="button" class="secondary" data-diagnostic-task="workspace.status">Workspace MCP 점검</button>
+            </div>
+            <div class="support-copy-card">
+              <strong>Web GPT 최후 복구 문서</strong>
+              <p>로컬 연결이 모두 막혀도 전달할 수 있도록 현재 구조·상태·안전 경계·복구 순서를 owner-only 문서로 저장합니다. 계정 비밀, 토큰, 쿠키, 브라우저 프로필, 대화 본문과 원시 로그는 넣지 않습니다.</p>
+              <small id="supportBundleMeta">저장된 복구 문서를 확인하는 중입니다.</small>
+              <div class="button-row"><button id="refreshSupportBundle" type="button">복구 문서 갱신</button><button id="copySupportPrompt" type="button" class="secondary" disabled>Markdown 복사</button><button id="copySupportJson" type="button" class="secondary" disabled>진단 JSON 복사</button><button id="revealSupportBundle" type="button" class="secondary ghost" disabled>Finder에서 열기</button></div>
+            </div>
+            <p id="supportMessage" class="action-message" role="status" aria-live="polite"></p>
+          </article>
+        </div>
+        <div class="recovery-playbook-grid">
+          <article><span>01</span><strong>17841만 고장</strong><p>health/counter가 UNKNOWN이면 HOLD합니다. exact zero가 확인된 새 transaction에서 service router만 한 번 복구하고 Desktop·OCX·Workspace Tunnel은 유지합니다.</p></article>
+          <article><span>02</span><strong>10100만 고장</strong><p>OCX 독립 진단 → OCX 시작/동기화 미리보기. Web 모델과 AICC 페이지는 그대로 사용합니다.</p></article>
+          <article><span>03</span><strong>모델 설정 꼬임</strong><p>모델 경로 점검 → Native 복구 → Codex 재시작. 17841 정상화 후 통합 경로를 다시 연결합니다.</p></article>
+          <article><span>04</span><strong>AICC 일부 구역 실패</strong><p>새로고침 후 실패 구역만 점검합니다. Adapter 오류는 다른 구역과 정적 페이지를 막지 않습니다.</p></article>
+        </div>
+      </section>
+
+      <section id="monitoring" class="anchor-section scroll-chapter monitoring-center" aria-labelledby="monitoringTitle" data-chapter="09" data-chapter-label="감시 센터">
+        <div class="section-title monitoring-title"><div><p class="eyebrow">AICC LOCAL CONTROL PLANE</p><h2 id="monitoringTitle">검사는 로컬에서, 사이트는 필요할 때만</h2></div><span id="monitoringUpdated">통합 상태 불러오는 중</span></div>
+        <article class="monitoring-hero panel">
+          <div class="monitoring-verdict">
+            <span id="monitoringSignalMark" class="signal-mark" aria-hidden="true"><i></i><b>AICC</b></span>
+            <div><p class="eyebrow">DIRECT LOCAL CHECK</p><h3 id="monitoringSignalTitle">로컬 업스트림 상태 확인 중</h3><p id="monitoringSignalDetail">AICC가 이 Mac의 기존 Git 인증으로 원본 상태를 직접 확인합니다.</p></div>
+          </div>
+          <dl class="monitoring-metrics">
+            <div><dt>로컬 감시 대상</dt><dd id="monitoringSourceCount">–</dd></div>
+            <div><dt>업데이트 신호</dt><dd id="monitoringUpdateCount">–</dd></div>
+            <div><dt>검사 경로</dt><dd id="monitoringObserverMode">–</dd></div>
+            <div><dt>자동 적용</dt><dd class="safe">꺼짐</dd></div>
+          </dl>
+        </article>
+
+        <div class="monitoring-actions panel">
+          <div><strong>등록된 원본을 이 Mac에서 직접 확인하기</strong><small>로컬 Git credential helper와 npm 공개 메타데이터를 사용합니다. clone·pull·install·자동 적용은 실행하지 않습니다.</small></div>
+          <button id="refreshUpstreamMonitoring" type="button">업스트림 지금 확인</button>
+        </div>
+        <p id="monitoringMessage" class="action-message" role="status" aria-live="polite"></p>
+
+        <article class="web-jjonku-config panel" aria-labelledby="webJjonkuConfigTitle">
+          <div class="monitor-panel-head web-jjonku-config-head">
+            <div><p class="eyebrow">WEB GPT CONTINUATION</p><h3 id="webJjonkuConfigTitle">선택한 웹 대화 이어가기</h3><p>등록된 계정의 정확한 대화 URL을 선택합니다. 새 대상은 꺼짐이며, 동일 응답이 30분 동안 2회 이상 변하지 않을 때만 선택한 방식으로 재개합니다.</p></div>
+            <span id="webJjonkuConfigStatus" class="web-jjonku-state" role="status">설정을 불러오는 중</span>
+          </div>
+          <p id="webJjonkuLastRun" class="web-jjonku-receipt">설정 저장과 실제 감독기 실행은 별도입니다.</p>
+          <form id="webJjonkuConfigForm" class="web-jjonku-form">
+            <div class="web-jjonku-settings">
+              <label for="webJjonkuCheckInterval">확인 간격
+                <select id="webJjonkuCheckInterval" name="intervalSeconds"><option value="30">30초</option><option value="60">1분</option><option value="300">5분</option><option value="600">10분</option><option value="1800">30분</option><option value="3600">60분</option></select>
+              </label>
+              <label class="web-jjonku-enabled" for="webJjonkuEnabled"><input id="webJjonkuEnabled" name="enabled" type="checkbox"><span><strong>선택한 대화 감시 허용</strong><small>끄기는 다음 조치만 막습니다. 기존 응답이나 외부 작업을 강제로 종료하지 않습니다.</small></span></label>
+            </div>
+            <div id="webJjonkuTargets" class="web-supervisor-targets" aria-label="선택한 대화 목록"></div>
+              <button id="addWebJjonkuTarget" type="button" disabled>대화 추가</button>
+            <p>재개 문구: <q>하던 작업 중단 지점부터 재개해</q></p>
+            <p>응답만 중지하고 재개하면 외부 도구의 완료·취소 또는 모델의 중복 외부 행동 방지를 보장하지 않습니다. 전달이 불명확한 요청은 다시 보내지 않습니다. 일반 Chrome 확장은 이 백그라운드 감독기에 연결되지 않습니다.</p>
+              <details class="web-peer-selection"><summary>선택한 웹 대화 사이의 작업 전달 승인</summary>
+                <p>발신 대화가 완료한 응답에서 허용된 입력만 읽어, 지정한 수신 대화에 직접 적은 틀로 한 번 전달합니다. 아래 승인은 응답 중지·재개 허용과 별개입니다. 전체 감시를 끄면 둘 다 멈추며, 이미 전달된 결과가 불명확하면 재전송하지 않습니다.</p>
+                <div id="webPeerGrants" aria-label="대화 간 전달 승인 목록"></div>
+                <button id="addWebPeerGrant" type="button" disabled>전달 승인 추가</button>
+              </details>
+              <div class="web-jjonku-save-row"><p>설치된 로컬 타이머가 선택 설정을 읽습니다. 켜기 전 최근 타이머 보고를 확인하세요. Codex 대화의 공식 heartbeat와는 별개입니다.</p><button id="saveWebJjonkuConfig" type="submit" disabled>선택 설정 저장</button></div>
+            <p id="webJjonkuConfigMessage" class="action-message" role="status" aria-live="polite"></p>
+          </form>
+        </article>
+
+        <article class="project-service-control panel" aria-labelledby="projectServiceTitle">
+          <div class="monitor-panel-head"><div><h3 id="projectServiceTitle">프로젝트 사이트 수명주기</h3><p>필수 AI 경로는 그대로 두고 독립 프로젝트만 묶음으로 켜고 끕니다.</p></div><span id="projectServiceSummary">상태 확인 중</span></div>
+          <div id="projectServiceList" class="project-service-list" aria-live="polite"></div>
+          <p class="monitoring-note">탭 닫힘을 종료 신호로 사용하지 않습니다. 끄기는 활성 사이트 연결이 0개일 때 tunnel → app → worker 순서로 정상 종료합니다.</p>
+        </article>
+
+        <div id="monitoringLayers" class="monitoring-layers" aria-label="감시 체계 여섯 층"></div>
+
+        <div class="monitoring-grid">
+          <article class="panel monitoring-sensors" aria-labelledby="monitoringSensorsTitle">
+            <div class="monitor-panel-head"><div><h3 id="monitoringSensorsTitle">관찰자와 실행 주기</h3><p>상주 daemon과 짧은 interval 작업을 구분합니다.</p></div><span id="monitoringSensorCount">–</span></div>
+            <div id="monitoringSensorList" class="monitoring-sensor-list"></div>
+          </article>
+          <article class="panel monitoring-oracle" aria-labelledby="monitoringOracleTitle">
+            <div class="monitor-panel-head"><div><h3 id="monitoringOracleTitle">Oracle 예비 adapter</h3><p>일상 업데이트 검사 경로에서는 제외하고 필요할 때만 다시 활성화합니다.</p></div><span id="monitoringOracleState">–</span></div>
+            <dl id="monitoringOracleEvidence" class="oracle-evidence"></dl>
+          </article>
+        </div>
+
+        <details class="monitoring-detail" open>
+          <summary><span>업스트림 관측 결과</span><strong id="monitoringSourceSummary">불러오는 중</strong></summary>
+          <div class="monitor-filter-row" role="group" aria-label="업스트림 상태 필터">
+            <button type="button" class="monitor-filter active" data-monitor-source-filter="attention" aria-pressed="true">확인 필요</button>
+            <button type="button" class="monitor-filter" data-monitor-source-filter="all" aria-pressed="false">전체</button>
+            <button type="button" class="monitor-filter" data-monitor-source-filter="current" aria-pressed="false">최신</button>
+            <button type="button" class="monitor-filter" data-monitor-source-filter="update_available" aria-pressed="false">업데이트</button>
+            <button type="button" class="monitor-filter" data-monitor-source-filter="reference" aria-pressed="false">참고 원본</button>
+            <button type="button" class="monitor-filter" data-monitor-source-filter="unknown" aria-pressed="false">확인 실패</button>
+          </div>
+          <div id="monitoringSourceList" class="monitoring-source-list" aria-live="polite"></div>
+        </details>
+
+        <details class="monitoring-detail" open>
+          <summary><span>macOS LaunchAgent 비용과 필요성</span><strong id="launchAgentSummary">불러오는 중</strong></summary>
+          <div id="launchAgentList" class="launch-agent-list" aria-live="polite"></div>
+          <p class="monitoring-note">등록만 되어 있고 실행 중이 아닌 항목은 상주 메모리 0 MiB입니다. 실행 중 항목의 수치는 현재 프로세스 트리 순간치이며 사용량에 따라 달라집니다.</p>
+        </details>
+      </section>
+
+      <section id="design-sources" class="anchor-section scroll-chapter" aria-labelledby="designSourcesTitle" data-chapter="10" data-chapter-label="디자인 원본">
+        <div class="section-title design-source-title"><div><p class="eyebrow">DESIGN SOURCE CONTROL</p><h2 id="designSourcesTitle">원본 라이브러리 업데이트</h2></div><span id="designSourcesChecked">확인 기록 불러오는 중</span></div>
+        <article class="design-source-hero panel">
+          <div>
+            <span class="source-orbit" aria-hidden="true"><i></i><b>7</b></span>
+            <div><p class="eyebrow">IMMUTABLE LOCAL SOURCES</p><h3>필요한 원본은 그대로, 적용은 선택해서</h3><p>업스트림을 자동으로 설치하거나 실행하지 않습니다. 선택한 커밋의 원본 트리를 로컬에 보존한 뒤 Codex가 작업에 맞는 파일만 읽습니다.</p></div>
+          </div>
+          <dl class="design-source-metrics">
+            <div><dt>업데이트</dt><dd id="designSourceUpdateCount">–</dd></div>
+            <div><dt>로컬 없음</dt><dd id="designSourceMissingCount">–</dd></div>
+            <div><dt>예상 전체</dt><dd id="designSourceTotalSize">–</dd></div>
+            <div><dt>자동 적용</dt><dd class="safe">꺼짐</dd></div>
+          </dl>
+        </article>
+        <div class="design-source-toolbar panel">
+          <div class="source-selection-copy"><strong id="designSourceSelectionSummary">선택된 원본 없음</strong><small>모든 다운로드가 검증된 뒤 활성 참조가 전환됩니다.</small></div>
+          <div class="button-row">
+            <button id="selectAllDesignSources" type="button" class="ghost">전체 선택</button>
+            <button id="scanDesignSources" type="button" class="secondary">최신 커밋 확인</button>
+            <button id="applyDesignSources" type="button" disabled>선택 업데이트 미리보기</button>
+          </div>
+        </div>
+        <div id="designSourceList" class="design-source-list" aria-live="polite"><p class="empty">디자인 원본 상태를 확인하고 있습니다.</p></div>
+        <p id="designSourceMessage" class="action-message" role="status" aria-live="polite"></p>
+        <details class="data-details"><summary>저장과 사용 원칙 <span>원본 실행과 원본 참고를 분리합니다.</span></summary><div class="source-policy-grid"><p><strong>저장</strong> owner-local 상태 영역의 커밋별 스냅샷</p><p><strong>사용</strong> 작업 유형에 맞는 1~3개 원본의 관련 경로만 읽기</p><p><strong>적용</strong> 미리보기 → 전체 다운로드 → 무결성 확인 → 활성 참조 전환</p><p><strong>라이선스</strong> UNKNOWN 원본은 로컬 참고만 하고 코드·자산은 배포물에 복사하지 않기</p></div></details>
+      </section>
+
+      <section id="system" class="anchor-section scroll-chapter" aria-labelledby="systemTitle" data-chapter="11" data-chapter-label="운영 관리">
+        <div class="section-title"><div><p class="eyebrow">SYSTEM</p><h2 id="systemTitle">연결 상태와 데이터</h2></div><span id="componentUpdated"></span></div>
+        <div id="components" class="component-grid" aria-live="polite"></div>
+        <details class="data-details"><summary>데이터 위치 보기 <span>로그인 자료는 원래 위치에 유지됩니다.</span></summary><div id="stateRoots" class="paths"></div></details>
+      </section>
+    </main>
+  </div>
+
+  <dialog id="resultDialog" class="result-dialog" aria-labelledby="resultTitle">
+    <form method="dialog"><div class="dialog-head"><div><p class="eyebrow">RESULT</p><h2 id="resultTitle">실행 결과</h2></div><button value="cancel" class="icon-button" aria-label="결과 창 닫기">×</button></div><p id="resultSummary" class="dialog-impact"></p><div id="resultHighlights" class="result-highlights"></div><details id="resultDetails" class="result-details"><summary>기술 정보 보기</summary><pre id="resultOutput" tabindex="0"></pre></details><div class="dialog-buttons"><button value="cancel">닫기</button></div></form>
+  </dialog>
+
+  <dialog id="actionDialog">
+    <form method="dialog">
+      <p class="eyebrow">CHANGE PREVIEW</p>
+      <h2 id="dialogTitle">작업 확인</h2>
+      <p id="dialogImpact" class="dialog-impact"></p>
+      <ul id="dialogWarnings"></ul>
+      <p id="dialogRollback" class="rollback"></p>
+      <p class="confirmation-note">이 미리보기는 잠시만 유효하며 한 번만 실행할 수 있습니다.</p>
+      <div class="dialog-buttons"><button value="cancel" class="secondary">취소</button><button id="confirmAction" value="default">확인하고 실행</button></div>
+    </form>
+  </dialog>
+  <script type="module" src="/app.js"></script>
+  <script type="module" src="/dashboard-workspace.js"></script>
+</body>
+</html>

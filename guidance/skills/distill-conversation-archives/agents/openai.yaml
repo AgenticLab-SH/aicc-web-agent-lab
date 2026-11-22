@@ -1,0 +1,6 @@
+interface:
+  display_name: "대화 지식 증류"
+  short_description: "대화를 분리 증류해 정본 지식 볼트에 증분 편입"
+  default_prompt: "$distill-conversation-archives를 사용해 Codex와 Web GPT 변경분을 분리 증류하고 검증된 지식만 정본 볼트에 편입해줘."
+policy:
+  allow_implicit_invocation: false

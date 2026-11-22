@@ -1,0 +1,90 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agenticlab.example/contracts/workspaces/change-plan.schema.json",
+  "title": "Workspace change plan",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "schemaVersion",
+    "snapshotId",
+    "workspaceId",
+    "head",
+    "preconditionHash",
+    "desiredHash",
+    "policyHash",
+    "changes",
+    "verification",
+    "requestHash",
+    "createdAt",
+    "operationId",
+    "planHash"
+  ],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "snapshotId": { "type": "string", "pattern": "^snapshot_[a-f0-9]{64}$" },
+    "workspaceId": { "type": "string", "pattern": "^workspace_[a-f0-9]{24}$" },
+    "head": { "type": "string", "pattern": "^[a-f0-9]{40,64}$" },
+    "preconditionHash": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "desiredHash": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "policyHash": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "changes": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 20,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["type", "path", "expectedSha256", "desiredSha256", "bytes", "mode"],
+        "properties": {
+          "type": { "enum": ["write_text", "delete"] },
+          "path": { "type": "string", "minLength": 1, "maxLength": 16384 },
+          "expectedSha256": { "type": ["string", "null"], "pattern": "^[a-f0-9]{64}$" },
+          "desiredSha256": { "type": ["string", "null"], "pattern": "^[a-f0-9]{64}$" },
+          "bytes": { "type": "integer", "minimum": 0, "maximum": 1048576 },
+          "mode": { "type": "integer", "minimum": 0, "maximum": 511 }
+        }
+      }
+    },
+    "verification": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 3,
+      "items": {
+        "oneOf": [
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["type", "paths", "timeoutMs"],
+            "properties": {
+              "type": { "const": "node_test" },
+              "paths": {
+                "type": "array",
+                "minItems": 1,
+                "maxItems": 20,
+                "items": { "type": "string", "minLength": 1, "maxLength": 16384 }
+              },
+              "timeoutMs": { "type": "integer", "minimum": 1000, "maximum": 120000 }
+            }
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["type", "manager", "script", "packageJsonSha256", "commandSha256", "timeoutMs"],
+            "properties": {
+              "type": { "const": "package_script" },
+              "manager": { "const": "npm" },
+              "script": { "type": "string", "pattern": "^[A-Za-z0-9:_-]{1,100}$" },
+              "packageJsonSha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+              "commandSha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+              "timeoutMs": { "type": "integer", "minimum": 1000, "maximum": 120000 }
+            }
+          }
+        ]
+      }
+    },
+    "requestHash": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "createdAt": { "type": "string", "format": "date-time" },
+    "operationId": { "type": "string", "pattern": "^change_[a-f0-9]{64}$" },
+    "planHash": { "type": "string", "pattern": "^[a-f0-9]{64}$" }
+  }
+}

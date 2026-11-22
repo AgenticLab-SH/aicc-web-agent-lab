@@ -1,0 +1,2 @@
+{"type":"session_meta","timestamp":"2026-08-15T02:00:00.000Z","payload":{"id":"11111111-2222-4333-8444-555555555555","cwd":"/synthetic/other","title":"Synthetic secondary session"}}
+{"type":"event_msg","timestamp":"2026-08-15T02:00:01.000Z","payload":{"status":"interrupted"}}

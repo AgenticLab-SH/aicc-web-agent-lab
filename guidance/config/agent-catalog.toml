@@ -1,0 +1,28 @@
+# Public, portable guidance policy. Codex is the default; Claude is opt-in.
+
+[deployment_policy]
+default_groups = ["codex"]
+optional_mode = "explicit"
+skill_delivery_mode = "explicit-active"
+manifest_name = ".aicc-guidance-deployment.json"
+legacy_manifest_names = []
+prune_policy = "remove-only-manifest-owned-content"
+
+[[deployment_targets]]
+id = "codex"
+default = true
+skills = [".agents/skills"]
+legacy_skills = [".codex/skills"]
+# Only recurrent entry skills are registered. Every unlisted canonical skill stays cold and searchable.
+# codex-reset-credit is explicit-only in its invocation policy; registration does not authorize consumption.
+active_skills = ["aicc-workspace-operator", "agentic-website-maker", "avoid-duplicate-work", "browser-qa", "codex-frontend", "codex-rescue-preflight", "complete-site-login", "develop-from-project-spec", "distill-conversation-archives", "generate-images-with-web-gpt", "high-risk-change", "maintain-llm-wiki", "manage-chatgpt-assets", "manage-chatgpt-conversation-titles", "manage-chatgpt-skills", "manage-chatgpt-personal-skills", "manage-codex-model-routes", "manage-upstream-assets", "notify-user", "present-agent-terminal-status", "release-git-cloudflare", "review-agent-platform-updates", "run-evidence-gated-ai-development", "run-deadline-work", "use-web-gpt", "verify-account-identities", "codex-reset-credit", "web-codex-handoff", "web-jjonku-monitor", "use-cloudflare", "build-web-service-control", "codex-web-low-token-workflow", "web-gpt-driving", "direct-web-gpt-work", "capture-operational-knowledge", "evidence-first-web-research", "control-project-work", "windows-design", "korean-ui-quality", "govern-project-architecture"]
+rules = [".codex/AGENTS.md"]
+generated = ["guidance/directives/generated/codex/AGENTS.md"]
+
+[[deployment_targets]]
+id = "claude"
+default = false
+skills = [".claude/skills"]
+active_skills = ["agentic-website-maker", "avoid-duplicate-work", "browser-qa", "codex-frontend", "generate-images-with-web-gpt", "high-risk-change", "manage-chatgpt-assets", "manage-codex-model-routes", "notify-user", "present-agent-terminal-status", "release-git-cloudflare", "run-evidence-gated-ai-development", "use-web-gpt", "use-cloudflare", "build-web-service-control", "codex-web-low-token-workflow", "web-gpt-driving", "manage-chatgpt-skills", "direct-web-gpt-work", "capture-operational-knowledge", "control-project-work"]
+rules = [".claude/CLAUDE.md"]
+generated = ["guidance/directives/generated/claude/CLAUDE.md"]

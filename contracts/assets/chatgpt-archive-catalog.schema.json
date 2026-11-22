@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/contracts/assets/chatgpt-archive-catalog.schema.json",
+  "title": "ChatGPT archive summary catalog",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "generatedAt", "fingerprint", "accounts", "summary", "items", "externalWritePerformed"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "generatedAt": { "type": "string", "format": "date-time" },
+    "fingerprint": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "accounts": { "type": "array" },
+    "summary": { "type": "object" },
+    "items": {
+      "type": "array",
+      "maxItems": 100000,
+      "items": {
+        "type": "object",
+        "required": ["schemaVersion", "itemId", "accountAlias", "workspace", "kind", "remoteId", "title", "shortDescription", "status"],
+        "properties": {
+          "schemaVersion": { "const": 1 },
+          "itemId": { "type": "string" },
+          "accountAlias": { "type": "string", "pattern": "^[A-Za-z0-9._-]{1,100}$" },
+          "workspace": { "type": "string", "pattern": "^[A-Za-z0-9._-]{1,100}$" },
+          "kind": { "enum": ["conversation", "chatgpt_project", "custom_gpt"] },
+          "remoteId": { "type": "string", "maxLength": 200 },
+          "title": { "type": "string", "maxLength": 300 },
+          "shortDescription": { "type": "string", "maxLength": 300 },
+          "status": { "enum": ["captured", "linked", "pending", "unavailable", "invalid", "observed"] }
+        }
+      }
+    },
+    "externalWritePerformed": { "const": false }
+  }
+}

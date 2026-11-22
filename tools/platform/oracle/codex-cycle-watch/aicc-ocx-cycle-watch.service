@@ -1,0 +1,31 @@
+[Unit]
+Description=AICC OCX reset-cycle watcher
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+User=ubuntu
+Group=ubuntu
+UMask=0077
+LoadCredential=slack_token:/etc/aicc-ocx-cycle-watch/slack-bot-token
+ExecStart=/usr/bin/python3 -B /demo/owner/.local/share/aicc-ocx-cycle-watch/hub_cycle_watch.py run --root /demo/owner/.local/state/aicc-ocx-cycle-watch --ocx /demo/owner/.local/bin/ocx-hub --hub-config /demo/owner/.opencodex-hub/config.json --slack-config /etc/aicc-ocx-cycle-watch/slack.json --send --notify
+NoNewPrivileges=yes
+PrivateTmp=yes
+PrivateDevices=yes
+ProtectSystem=strict
+ProtectHome=read-only
+ReadWritePaths=/demo/owner/.local/state/aicc-ocx-cycle-watch
+ProtectControlGroups=yes
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectKernelLogs=yes
+ProtectClock=yes
+ProtectHostname=yes
+RestrictSUIDSGID=yes
+LockPersonality=yes
+MemoryDenyWriteExecute=yes
+SystemCallArchitectures=native
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+CapabilityBoundingSet=
+AmbientCapabilities=

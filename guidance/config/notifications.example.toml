@@ -1,0 +1,38 @@
+# Portable notification policy example. Copy only non-secret policy to the
+# owner-local AICC state. Keep Telegram and Slack credentials out of this file.
+
+schema_version = 1
+
+[policy]
+routing_profile = "telegram_primary"
+primary_channel = "telegram"
+secondary_channel = "slack"
+routine_progress = "none"
+user_response_required = ["telegram", "slack"]
+approval_required = ["telegram", "slack"]
+critical_error = ["telegram", "slack"]
+task_completed = ["telegram", "slack"]
+otp_required = ["telegram"]
+
+[telegram]
+transport_skill = "telegram-notify"
+credential_reference = "${AICC_STATE_ROOT}/telegram/agent-bridge.env"
+response_mode = "correlation_bound"
+
+[slack]
+transport = "aicc_slack_bot"
+destination = "owner_local_exact_user_id"
+response_mode = "report_only"
+credential_reference = "macos-keychain:aicc-slack-alerts:<team-id>"
+identity_binding = ["team_id", "app_id", "bot_user_id", "bot_id", "recipient_user_id"]
+self_dm_fallback = "audit_only_no_mobile_attention"
+
+# The executable policy is owner-local
+# `${AICC_STATE_ROOT}/notifications/policy.json`. Set routingProfile to
+# `slack_primary` only after the exact bot identity and inbound DM canary pass.
+
+[telegram_admin_browser]
+role = "registered_cdp_chrome_telegram_admin"
+port_source = "private_coordination"
+profile_source = "private_coordination"
+allowed_origins = ["https://web.telegram.org", "https://telegram.org"]

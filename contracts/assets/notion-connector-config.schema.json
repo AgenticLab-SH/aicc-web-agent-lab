@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/contracts/assets/notion-connector-config.schema.json",
+  "title": "Owner-local Notion asset connector mapping",
+  "type": "object",
+  "required": ["schemaVersion", "dataSourceId", "tokenEnv", "properties"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "profile": { "enum": ["projectCatalog", "assetRegistry"] },
+    "dataSourceId": { "type": "string", "pattern": "^[A-Fa-f0-9-]{32,36}$" },
+    "tokenEnv": { "type": "string", "pattern": "^[A-Z][A-Z0-9_]+$" },
+    "properties": {
+      "type": "object",
+      "properties": {
+        "projectId": { "type": "string" },
+        "title": { "type": "string" },
+        "priority": { "type": "string" },
+        "lifecycle": { "type": ["string", "null"] },
+        "nextAction": { "type": ["string", "null"] },
+        "canonicalRoot": { "type": ["string", "null"] },
+        "repository": { "type": ["string", "null"] },
+        "recordKind": { "type": ["string", "null"] },
+        "assetId": { "type": ["string", "null"] },
+        "assetKind": { "type": ["string", "null"] },
+        "remoteId": { "type": ["string", "null"] },
+        "syncState": { "type": ["string", "null"] }
+      },
+      "additionalProperties": true
+    }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "profile": { "const": "assetRegistry" } }, "required": ["profile"] },
+      "then": { "properties": { "properties": { "required": ["assetId", "title", "assetKind", "remoteId", "lifecycle", "syncState"] } } },
+      "else": { "properties": { "properties": { "required": ["projectId", "title", "priority"] } } }
+    }
+  ],
+  "additionalProperties": true
+}

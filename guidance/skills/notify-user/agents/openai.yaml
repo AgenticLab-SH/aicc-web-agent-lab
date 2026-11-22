@@ -1,0 +1,4 @@
+interface:
+  display_name: "Notify User"
+  short_description: "필요한 알림·요청한 결과를 모바일 Slack 표로 보고"
+  default_prompt: "Use $notify-user to send an authorized, deduplicated Slack alert or requested mobile report with a conclusion, narrow table, verified results and remaining work."

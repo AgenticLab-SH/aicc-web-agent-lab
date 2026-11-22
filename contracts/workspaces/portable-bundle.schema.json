@@ -1,0 +1,63 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agenticlab.example/contracts/workspaces/portable-bundle.schema.json",
+  "title": "Portable workspace snapshot ZIP manifest",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "schemaVersion",
+    "bundleFormat",
+    "snapshotId",
+    "workspaceId",
+    "head",
+    "dirtyOverlayHash",
+    "selectedUntracked",
+    "policyHash",
+    "toolSchemaHash",
+    "createdAt",
+    "files",
+    "treeDigest"
+  ],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "bundleFormat": { "const": "aicc-workspace-snapshot-zip-v1" },
+    "snapshotId": { "type": "string", "pattern": "^snapshot_[a-f0-9]{64}$" },
+    "workspaceId": { "type": "string", "pattern": "^workspace_[a-f0-9]{24}$" },
+    "head": { "type": "string", "pattern": "^[a-f0-9]{40,64}$" },
+    "branch": { "type": ["string", "null"], "maxLength": 1024 },
+    "dirtyOverlayHash": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "selectedUntracked": {
+      "type": "array",
+      "maxItems": 100,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["path", "bytes", "sha256"],
+        "properties": {
+          "path": { "type": "string", "minLength": 1, "maxLength": 16384 },
+          "bytes": { "type": "integer", "minimum": 0 },
+          "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" }
+        }
+      }
+    },
+    "policyHash": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "toolSchemaHash": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "createdAt": { "type": "string", "format": "date-time" },
+    "files": {
+      "type": "array",
+      "maxItems": 9999,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["path", "bytes", "sha256", "mode"],
+        "properties": {
+          "path": { "type": "string", "minLength": 1, "maxLength": 16384 },
+          "bytes": { "type": "integer", "minimum": 0, "maximum": 67108864 },
+          "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+          "mode": { "type": "integer", "minimum": 0, "maximum": 511 }
+        }
+      }
+    },
+    "treeDigest": { "type": "string", "pattern": "^[a-f0-9]{64}$" }
+  }
+}

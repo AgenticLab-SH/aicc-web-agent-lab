@@ -1,0 +1,4 @@
+interface:
+  display_name: "지피티 스킬 관리"
+  short_description: "검증된 로컬 스킬을 ChatGPT에 설치·동기화"
+  default_prompt: "Use $manage-chatgpt-skills to inventory, package, verify, and safely synchronize exactly the requested local skill with the registered ChatGPT workspace. Never overwrite an existing unknown version or replay an uncertain upload."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Cloudflare 공통 사용"
+  short_description: "모든 프로젝트에서 기존 Cloudflare 인증과 AICC 호스트를 재사용"
+  default_prompt: "Use $use-cloudflare to carry out this authorized Cloudflare task using the existing account and host tools."

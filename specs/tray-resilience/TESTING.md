@@ -1,0 +1,16 @@
+# Release scope and pending acceptance
+The user explicitly requested a final tray build/install on 2026-10-19 KST. Perform that compilation and managed installation only; it does not authorize additional automated tests, visual/UI inspection, live account mutations or message probes. Record the actual installer receipt in STATE.md and keep all other verification NOT RUN. Do not report source edits alone as installed or working.
+When explicitly authorized: compile tray; check both themes/high contrast, keyboard navigation, 100/150/200 percent DPI, multiple monitors and taskbar edges, low-height work areas, drag-to-edge and page/data changes; check instant cached display and progressive fresh output; check transient retry cooldown, terminal reauth state, generation mismatch, duplicate login suppression, wrong identity and ambiguous start; confirm existing account-control/credit protections and running turns survive a tray-only replacement.
+
+## Scroll and density revision
+Implementation acceptance targets: scroll during snapshot refresh without displaced controls; four account rows at normal DPI; selected toolbar remains reachable; keyboard selection scrolls into view; high DPI uses work-area clamping. Build/install explicitly authorized by the user; no automated tests, runtime inspection or post-edit review run in this revision.
+
+## Glass overview revision
+Targets: default overview without account clicks, narrow-work-area one-column fallback, mixed-DPI work-area clamp, crisp high-contrast fallback, credits absent/error/stale states, no hidden-window UI timer, sequential bounded credit requests. User authorized build/install in this conversation; perform only that release scope. Runtime UI/interaction checks and automated tests are not executed under the current model policy.
+## Identity and legibility refinement
+Build/install explicitly requested. Implementation targets: 16/20/24/32 and larger icon frames, shared icon identity across runtime/window/executable/shortcuts, Korean text fallback, 0/100/unknown figures, text size persistence and changing row geometry, used/remaining bar semantics, neutral stale icon and meaningful tooltip. UI/runtime/performance verification and automated tests are not executed under current model policy.
+## Warm order refinement
+Implementation targets: Up/Down draft, save-once, discard, same-priority baseline, identity/account-set change, concurrent remote priority change, partial management failure, metadata sync failure, keyboard selection and high contrast. These checks are not executed. Standing build/install authorization applies to tray packaging only; no live account-order mutation is performed for verification.
+
+## Final embedded conversations release
+Explicitly requested: compile and install the existing tray with its embedded composer, exact UUID finder, per-conversation draft isolation, existing-owner links and single-pass list refresh. Preserve original scheduled-task ownership, accounts, routes, selections, attempts and previous release snapshots. Build errors may be repaired as part of the requested build. Additional helper dispatch, queue delivery, runtime UI, DPI, input isolation and performance acceptance remain NOT RUN; no test message is sent for this release.

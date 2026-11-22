@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agenticlab.example/contracts/workspaces/snapshot.schema.json",
+  "title": "Workspace snapshot",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "schemaVersion",
+    "snapshotId",
+    "workspaceId",
+    "head",
+    "branch",
+    "trackedStatusHash",
+    "dirtyOverlayHash",
+    "selectedUntracked",
+    "policyHash",
+    "toolSchemaHash",
+    "createdAt",
+    "cacheScope",
+    "liveFactsCached"
+  ],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "snapshotId": { "type": "string", "pattern": "^snapshot_[a-f0-9]{64}$" },
+    "workspaceId": { "type": "string", "pattern": "^workspace_[a-f0-9]{24}$" },
+    "head": { "type": "string", "pattern": "^[a-f0-9]{40,64}$" },
+    "branch": { "type": ["string", "null"], "maxLength": 1024 },
+    "trackedStatusHash": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "dirtyOverlayHash": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "selectedUntracked": {
+      "type": "array",
+      "maxItems": 100,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["path", "bytes", "sha256"],
+        "properties": {
+          "path": { "type": "string", "minLength": 1, "maxLength": 16384 },
+          "bytes": { "type": "integer", "minimum": 0 },
+          "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" }
+        }
+      }
+    },
+    "policyHash": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "toolSchemaHash": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "createdAt": { "type": "string", "format": "date-time" },
+    "cacheScope": { "const": "immutable-read-only" },
+    "liveFactsCached": { "const": false }
+  }
+}

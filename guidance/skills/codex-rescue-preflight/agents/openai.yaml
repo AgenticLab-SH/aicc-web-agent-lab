@@ -1,0 +1,4 @@
+interface:
+  display_name: "Codex Rescue Preflight"
+  short_description: "위험 작업 전 독립 복구 준비를 확인합니다"
+  default_prompt: "Use $codex-rescue-preflight before a self-disruptive Codex or AICC maintenance operation, and proceed only after an independent authorized recovery resource actually acknowledges READY."

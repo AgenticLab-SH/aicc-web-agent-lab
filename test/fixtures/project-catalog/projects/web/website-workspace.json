@@ -1,0 +1,23 @@
+{
+  "schema_version": 2,
+  "workspace_name": "synthetic-web",
+  "services": [
+    {
+      "key": "web-demo",
+      "title": "Web Demo",
+      "kind": "public-site",
+      "hostname": "demo.example.invalid",
+      "canonical_path": "apps/web-demo",
+      "profile_path": "apps/web-demo/.openai/website-profile.json",
+      "path_type": "independent-private-repository",
+      "source_repository": "example/web-demo",
+      "repository_status": "ready",
+      "source_visibility": "private",
+      "hosting_provider": "fixture-pages",
+      "provider_project": "web-demo",
+      "production_url": "https://demo.example.invalid/",
+      "domain_status": "active",
+      "data_mode": "static"
+    }
+  ]
+}

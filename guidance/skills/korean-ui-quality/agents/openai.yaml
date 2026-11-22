@@ -1,0 +1,6 @@
+interface:
+  display_name: "한영 UI 품질"
+  short_description: "웹·Windows·모바일의 한영 글꼴·줄바꿈·문구 품질을 개선합니다"
+  default_prompt: "$korean-ui-quality로 기존 디자인을 보존하며 한영 문구와 텍스트 배치를 개선해 주세요."
+policy:
+  allow_implicit_invocation: true

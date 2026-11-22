@@ -1,0 +1,18 @@
+import {spawn,spawnSync} from 'node:child_process';
+import fs from 'node:fs';import os from 'node:os';import path from 'node:path';
+import {fileURLToPath} from 'node:url';
+if(process.platform!=='win32')throw new Error('Windows integration test required');
+const root=fs.mkdtempSync(path.join(os.tmpdir(),'aicc-job-test-'));
+const script=path.join(root,'probe.ps1'),module=fileURLToPath(new URL('./windows-process-job.ps1',import.meta.url));
+const quote=s=>`'${s.replaceAll("'","''")}'`;
+fs.writeFileSync(script,`. ${quote(module)}\n$p=Start-Process -FilePath ${quote(process.execPath)} -ArgumentList '-e','setInterval(()=>{},1000)' -WindowStyle Hidden -PassThru\n$p.Id\nStart-Sleep -Seconds 2\nexit 0\n`);
+const parent=spawn('pwsh',['-NoProfile','-File',script],{windowsHide:true,stdio:['ignore','pipe','pipe']});
+let output='',errors='';parent.stdout.on('data',x=>output+=x);parent.stderr.on('data',x=>errors+=x);
+const code=await new Promise(resolve=>parent.once('close',resolve));
+const child=Number(output.trim());
+if(code!==0||!Number.isInteger(child)||child<1)throw new Error(`Job setup failed: ${errors.slice(0,500)}`);
+await new Promise(resolve=>setTimeout(resolve,250));
+const check=spawnSync('pwsh',['-NoProfile','-Command',`if(Get-Process -Id ${child} -ErrorAction SilentlyContinue){exit 1}else{exit 0}`],{windowsHide:true});
+if(check.status!==0)throw new Error('Job child survived its owner exit');
+fs.unlinkSync(script);fs.rmdirSync(root);
+console.log(JSON.stringify({terminal:'PASS',childTerminatedWithOwner:true}));

@@ -1,0 +1,13 @@
+[Unit]
+Description=Poll A1 OCX quota for reset-cycle initialization
+
+[Timer]
+OnBootSec=45s
+OnUnitInactiveSec=10s
+AccuracySec=1s
+RandomizedDelaySec=0
+Persistent=yes
+Unit=aicc-ocx-cycle-watch.service
+
+[Install]
+WantedBy=timers.target

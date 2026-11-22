@@ -1,0 +1,11 @@
+#!/bin/sh
+set -eu
+
+# Friendly name for the independent 17842 rescue route. The owned rescue
+# wrapper retains the exact health, catalog, model, and no-fallback contract.
+target=${AICC_WEB_GPT_RESCUE_EXECUTABLE:-"$HOME/.local/bin/codex-web-gpt-rescue"}
+if [ ! -x "$target" ]; then
+  echo "codex-web: installed 17842 route is unavailable; run: aicc web-gpt rescue status" >&2
+  exit 69
+fi
+exec "$target" "$@"

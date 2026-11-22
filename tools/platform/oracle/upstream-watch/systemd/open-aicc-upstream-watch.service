@@ -1,0 +1,18 @@
+[Unit]
+Description=open-AICC source update observer
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+User=upstream-watch
+Group=upstream-watch
+EnvironmentFile=-/etc/open-aicc/upstream-watch.env
+ExecStart=/usr/bin/python3 /opt/open-aicc-upstream-watch/current/upstream_watch.py --manifest /etc/open-aicc/upstream-watch.json --state /var/lib/open-aicc-upstream-watch/state.json --events /var/lib/open-aicc-upstream-watch/events.jsonl
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/var/lib/open-aicc-upstream-watch
+ReadOnlyPaths=-/etc/open-aicc/upstream-watch-keys
+ReadOnlyPaths=-/etc/open-aicc/github_known_hosts

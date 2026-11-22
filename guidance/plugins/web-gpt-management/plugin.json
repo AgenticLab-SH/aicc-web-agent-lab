@@ -1,0 +1,22 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "web-gpt-management",
+  "version": "0.1.20",
+  "description": "사용자 소유 지피티 스킬, 지침, 플러그인과 프로젝트를 중복 없는 GitHub와 Notion 백업 후 관리합니다.",
+  "author": {
+    "name": "AgenticLab-SH"
+  },
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "지피티 관리",
+        "shortDescription": "백업 후 스킬·지침·프로젝트 관리",
+        "longDescription": "코덱스와 지피티가 같은 AICC 실행기와 내용 주소 백업을 사용합니다. Web 프로젝트는 w-이름과 기본 메모리를 사용하며 원격 변경과 실제 호출을 구분합니다.",
+        "developerName": "AgenticLab-SH",
+        "category": "Productivity",
+        "capabilities": [],
+        "defaultPrompt": "내 지피티 스킬·지침·플러그인·프로젝트를 관리해줘. 변경 전 GitHub·Notion 양쪽에 실제 원본을 백업하고 같은 내용은 중복 저장하지 마."
+      }
+    }
+  }
+}

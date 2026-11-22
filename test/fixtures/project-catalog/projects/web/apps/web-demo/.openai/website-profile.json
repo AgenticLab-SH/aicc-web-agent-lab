@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "title": "Web Demo",
+  "primary_domain": "demo.example.invalid",
+  "hosting_provider": "fixture-pages",
+  "provider_project": "web-demo",
+  "source_repository": "example/web-demo",
+  "source_visibility": "private",
+  "last_verified_at": "2026-02-02T00:00:00Z",
+  "last_verification": {
+    "status": "active",
+    "production_url": "https://demo.example.invalid/"
+  }
+}

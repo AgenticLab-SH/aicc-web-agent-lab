@@ -1,0 +1,4 @@
+interface:
+  display_name: "Manage Telegram Bots"
+  short_description: "Audit and manage bots with guarded AICC tools"
+  default_prompt: "Use $manage-telegram-bots to audit or perform an authorized Telegram bot operation."

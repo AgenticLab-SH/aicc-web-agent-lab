@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agenticlab.local/contracts/extensions/registry-entry.schema.json",
+  "title": "AICC Extension Registry Entry",
+  "type": "object",
+  "required": [
+    "contractVersion",
+    "id",
+    "type",
+    "owner",
+    "sourceVersion",
+    "sourceRevision",
+    "license",
+    "distribution",
+    "checksumManifest",
+    "sbom",
+    "notice",
+    "permissions",
+    "compatibility",
+    "lifecycle",
+    "privateAdapterRequired",
+    "routeMutationAllowed"
+  ],
+  "properties": {
+    "contractVersion": { "const": 1 },
+    "id": { "type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$" },
+    "type": { "enum": ["codex-plugin", "model-adapter", "tool-adapter"] },
+    "owner": { "type": "string", "minLength": 1 },
+    "sourceVersion": { "type": "string", "minLength": 1 },
+    "sourceRevision": { "type": "string", "minLength": 1 },
+    "license": { "type": "string", "minLength": 1 },
+    "distribution": { "enum": ["public", "optional-private"] },
+    "checksumManifest": { "type": "string", "minLength": 1 },
+    "sbom": { "type": "string", "minLength": 1 },
+    "notice": { "type": "string", "minLength": 1 },
+    "permissions": {
+      "type": "object",
+      "required": ["filesystem", "network", "browser", "secrets", "tools"],
+      "properties": {
+        "filesystem": { "type": "array", "items": { "type": "string" } },
+        "network": { "type": "array", "items": { "type": "string" } },
+        "browser": { "type": "array", "items": { "type": "string" } },
+        "secrets": { "type": "array", "items": { "type": "string" } },
+        "tools": { "type": "array", "items": { "type": "string" }, "uniqueItems": true }
+      },
+      "additionalProperties": true
+    },
+    "compatibility": { "type": "object", "minProperties": 1, "additionalProperties": true },
+    "lifecycle": {
+      "type": "object",
+      "required": ["install", "enable", "disable", "update", "uninstall", "rollback"],
+      "additionalProperties": true
+    },
+    "privateAdapterRequired": { "type": "boolean" },
+    "routeMutationAllowed": { "type": "boolean" }
+  },
+  "additionalProperties": true
+}

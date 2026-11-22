@@ -1,0 +1,10 @@
+[extend]
+useDefault = true
+
+# Hex SHA-256 used solely to verify pinned source files. Retained as integrity metadata.
+[[allowlists]]
+description = "Pinned OCX SHA-256 values associated with source-file keys"
+condition = 'AND'
+regexTarget = 'line'
+paths = ['''(?:^|/)tools/platform/opencodex/(?:build-window-policy|hub-window-policy|hub-accounts)\.py$''']
+regexes = ['''^\s*'(?:auth|src/codex/auth-context\.ts)'\s*:\s*'[a-f0-9]{64}'[,}]?\s*[,}]?\s*$''']

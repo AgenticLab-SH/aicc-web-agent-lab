@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/contracts/projects/catalog.schema.json",
+  "title": "AICC project catalog projection",
+  "type": "object",
+  "required": ["schemaVersion", "generatedAt", "sourcePolicy", "sourceSnapshots", "projects", "summary"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "generatedAt": { "type": "string", "format": "date-time" },
+    "sourcePolicy": {
+      "type": "object",
+      "required": ["notionAuthoritative", "localAuthoritative", "silentOverwrite"],
+      "properties": {
+        "notionAuthoritative": {
+          "type": "array",
+          "const": ["lifecycle", "priority", "nextAction"]
+        },
+        "localAuthoritative": {
+          "type": "array",
+          "const": ["canonicalRoot", "source", "runtime", "release"]
+        },
+        "silentOverwrite": { "const": false }
+      },
+      "additionalProperties": true
+    },
+    "sourceSnapshots": {
+      "type": "object",
+      "required": ["local", "notion"],
+      "properties": {
+        "local": { "type": "object", "additionalProperties": true },
+        "notion": { "type": "object", "additionalProperties": true }
+      },
+      "additionalProperties": true
+    },
+    "projects": {
+      "type": "array",
+      "items": { "$ref": "./project.schema.json" }
+    },
+    "summary": {
+      "type": "object",
+      "required": ["total", "inSync", "localOnly", "notionOnly", "drift"],
+      "properties": {
+        "total": { "type": "integer", "minimum": 0 },
+        "inSync": { "type": "integer", "minimum": 0 },
+        "localOnly": { "type": "integer", "minimum": 0 },
+        "notionOnly": { "type": "integer", "minimum": 0 },
+        "drift": { "type": "integer", "minimum": 0 }
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": true
+}

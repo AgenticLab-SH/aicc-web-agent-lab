@@ -1,0 +1,37 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/contracts/remote/codex-session-index.schema.json",
+  "title": "Redacted Codex session metadata index entry",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["session_uuid", "date", "cwd", "title", "status", "size_bytes", "event_kinds"],
+  "properties": {
+    "session_uuid": { "type": "string", "format": "uuid" },
+    "date": { "type": "string", "format": "date-time" },
+    "cwd": { "type": ["string", "null"], "maxLength": 512 },
+    "title": { "type": "string", "maxLength": 240 },
+    "status": { "enum": ["active", "completed", "interrupted", "unknown"] },
+    "activity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["state", "lastObservedAt", "evidence", "freshnessSeconds", "liveOwnerVerified", "writeAuthorized", "completionVerified"],
+      "properties": {
+        "state": { "enum": ["RECENT_EXECUTION_EVENT", "STALE_OR_WAITING", "TURN_ENDED", "INTERRUPTED", "UNKNOWN"] },
+        "lastObservedAt": { "type": ["string", "null"], "format": "date-time" },
+        "evidence": { "enum": ["SAVED_STATE_ONLY", "TURN_START_EVENT", "TURN_TERMINAL_EVENT", "EXPLICIT_STATUS_EVENT", "TOOL_EVENT"] },
+        "freshnessSeconds": { "const": 120 },
+        "liveOwnerVerified": { "const": false },
+        "writeAuthorized": { "const": false },
+        "completionVerified": { "const": false }
+      }
+    },
+    "size_bytes": { "type": "integer", "minimum": 0 },
+    "event_kinds": {
+      "type": "array",
+      "maxItems": 256,
+      "uniqueItems": true,
+      "items": { "type": "string", "minLength": 1, "maxLength": 80 }
+    }
+  },
+  "description": "Contains metadata only. AICC must not copy raw JSONL, prompt, response, tool output, command output, capability, approval_ref, or owner session databases into this index."
+}

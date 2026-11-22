@@ -1,0 +1,4 @@
+interface:
+  display_name: "실제 웹 화면 증거 캡처"
+  short_description: "실제 웹 동작을 스크린샷과 GIF 증거로 기록합니다"
+  default_prompt: "Use $capture-actual-web-evidence to record this web flow as truthful screenshots and a GIF with provenance."

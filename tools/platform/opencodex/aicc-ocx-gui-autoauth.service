@@ -1,0 +1,7 @@
+[Unit]
+Description=AICC OpenCodex GUI auto-auth compatibility repair
+After=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/demo/owner/.local/bin/aicc-ocx-gui-autoauth-repair

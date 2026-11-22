@@ -1,0 +1,7 @@
+# OpenAI developer indexes
+
+- [API](https://developers.openai.com/api/llms.txt)
+- [Plugins](https://developers.openai.com/plugins/llms.txt)
+- [Workspace Agents](https://developers.openai.com/workspace-agents/llms.txt)
+- [Codex](https://developers.openai.com/codex/llms.txt)
+- [Learn cross-host](https://learn.chatgpt.com/llms.txt)

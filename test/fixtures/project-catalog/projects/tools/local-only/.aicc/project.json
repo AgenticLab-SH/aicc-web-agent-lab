@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "id": "local-only",
+  "title": "Local Only Tool",
+  "kind": "tool",
+  "domain": "other",
+  "progressGates": {
+    "discovery": {
+      "status": "PASS",
+      "current": true,
+      "evidenceRefs": ["evidence://local-only/discovery"]
+    }
+  },
+  "serviceProfileId": "demo-service",
+  "links": {
+    "repository": "https://example.invalid/local-only",
+    "production": null,
+    "docs": ["docs://local-only/readme"]
+  },
+  "sensitivity": "private",
+  "lastVerifiedAt": "2026-01-01T00:00:00Z"
+}

@@ -1,0 +1,4 @@
+interface:
+  display_name: "검증 중심 AI 개발"
+  short_description: "장기·multi-writer 작업의 checkpoint와 검증 근거 관리"
+  default_prompt: "Use $run-evidence-gated-ai-development to run this long or multi-writer change from accepted requirements through owned checkpoints and current evidence."

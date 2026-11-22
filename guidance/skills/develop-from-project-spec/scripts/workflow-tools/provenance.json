@@ -1,0 +1,54 @@
+{
+  "sourceCommit": "b9f69c3b6c87760020a0537be283fb8a15998dc4",
+  "sourceRepository": "AgenticLab-SH/sh-workflows",
+  "files": [
+    {
+      "source": "tools/kit_utils.py",
+      "path": "kit_utils.py",
+      "sha256": "c0187b5378d80d3e1ef911f79579dd580a75432b3f63da17721851cafd983587"
+    },
+    {
+      "source": "tools/audit_csv.py",
+      "path": "audit_csv.py",
+      "sha256": "2dbf84d7f640c2e953a9c1623619931c7cf109063b73c0445814e81c75dee564"
+    },
+    {
+      "source": "tools/validate_json.py",
+      "path": "validate_json.py",
+      "sha256": "a8d36f38717795bbc9bcf365fc59840dc15de01835bee31914683726471c23a9"
+    },
+    {
+      "source": "tools/compare_json.py",
+      "path": "compare_json.py",
+      "sha256": "3bcdad49cfd43e88d71ac123bb954be317da9606ee6d461c0fbb1b409197e66d"
+    },
+    {
+      "source": "tools/metrics.py",
+      "path": "metrics.py",
+      "sha256": "2f948e638b23d8b3205bdb169032fd0a09a583e96a34cbffe5cf6a0c51dc1f57"
+    },
+    {
+      "source": "tools/question_candidates.py",
+      "path": "question_candidates.py",
+      "sha256": "4d6a11de2b31880033e3382158000a0404b2f799aa16b3656092babcef7ec013"
+    },
+    {
+      "source": "tools/question_ledger.py",
+      "path": "question_ledger.py",
+      "sha256": "ec88f2bd4af3d769ccfb40b6f8e8d37754130accf2672a083d33d4adc5ecc63e"
+    },
+    {
+      "source": "tools/context_budget.py",
+      "path": "context_budget.py",
+      "sha256": "f662ff6562b051aed513057d5476d31c6df3e1e7d863493b9c6846f7a8ce3b05"
+    },
+    {
+      "source": "tools/opt_kit.py",
+      "path": "opt_kit.py",
+      "sha256": "76000dbbe5a0007ad26849368fbf31bbfdd9784fb4e7d86faeffc96ce86b6f92"
+    }
+  ],
+  "changes": "Unmodified stdlib-only scripts; documentation adapted in the existing development skill",
+  "license": "MIT",
+  "excluded": "Assessment UI, MCP server, model/goal/agent launchers, Workroom server, automatic dependency installation and stale runtime instruction inspection"
+}

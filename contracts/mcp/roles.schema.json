@@ -1,0 +1,12 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/contracts/mcp/roles.schema.json",
+  "title": "Separated MCP role contracts",
+  "type": "object",
+  "required": ["contractVersion", "roles"],
+  "properties": {
+    "contractVersion": { "type": "integer", "minimum": 1 },
+    "roles": { "type": "array", "minItems": 2, "items": { "type": "object", "required": ["id", "lifetime", "authorization", "processOwner", "tunnelIdentity", "capabilitySource", "failureDomain", "browserAccess"], "properties": { "id": { "enum": ["web-gpt-turn-harness", "aicc-workspace-mcp"] }, "lifetime": { "enum": ["turn-bound", "persistent"] }, "authorization": { "type": "string" }, "processOwner": { "type": "string" }, "tunnelIdentity": { "type": "string" }, "capabilitySource": { "type": "string" }, "failureDomain": { "type": "string" }, "browserAccess": { "type": "string" } }, "additionalProperties": true } }
+  },
+  "additionalProperties": true
+}

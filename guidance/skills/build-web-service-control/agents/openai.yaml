@@ -1,0 +1,6 @@
+interface:
+  display_name: "서비스 웹 제어"
+  short_description: "로컬과 서버의 자동화를 PC와 폰의 웹 화면에서 보고 제어하기"
+  default_prompt: "$build-web-service-control로 기존 실행기를 재사용해 이 서비스의 PC·폰 웹 제어 화면을 만들어줘."
+policy:
+  allow_implicit_invocation: true

@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/contracts/assets/inventory.schema.json",
+  "title": "AI asset control-plane inventory",
+  "type": "object",
+  "required": ["schemaVersion", "generatedAt", "fingerprint", "assets", "summary"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "generatedAt": { "type": "string", "format": "date-time" },
+    "fingerprint": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "assets": { "type": "array", "items": { "$ref": "./asset-record.schema.json" } },
+    "summary": {
+      "type": "object",
+      "required": ["total", "byKind", "byState"],
+      "properties": {
+        "total": { "type": "integer", "minimum": 0 },
+        "byKind": { "type": "object", "additionalProperties": { "type": "integer", "minimum": 0 } },
+        "byState": { "type": "object", "additionalProperties": { "type": "integer", "minimum": 0 } }
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": true
+}

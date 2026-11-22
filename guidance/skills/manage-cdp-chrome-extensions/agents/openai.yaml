@@ -1,0 +1,6 @@
+interface:
+  display_name: "CDP Chrome Extension Manager"
+  short_description: "Safely deploy, configure, and remove CDP extensions"
+  default_prompt: "Use $manage-cdp-chrome-extensions to manage registered Chrome extensions on the AICC CDP ports."
+policy:
+  allow_implicit_invocation: true

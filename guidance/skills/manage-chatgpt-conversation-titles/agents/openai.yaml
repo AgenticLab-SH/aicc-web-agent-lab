@@ -1,0 +1,6 @@
+interface:
+  display_name: "지피티 채팅 제목 관리"
+  short_description: "명시 요청한 기간이나 제목 조건의 대화를 읽고 이름을 정리합니다"
+  default_prompt: "Use $manage-chatgpt-conversation-titles to rename the explicitly selected ChatGPT chats after reading their content."
+policy:
+  allow_implicit_invocation: false

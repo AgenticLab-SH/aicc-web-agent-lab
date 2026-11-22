@@ -1,0 +1,76 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/contracts/projects/priority-outbox.schema.json",
+  "title": "Durable guarded project priority outbox",
+  "type": "object",
+  "required": ["schemaVersion", "sequence", "confirmedSnapshot", "operations", "idempotency"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "sequence": { "type": "integer", "minimum": 0 },
+    "confirmedSnapshot": {
+      "type": ["object", "null"],
+      "required": ["remoteVersion", "capturedAt", "priorities"],
+      "properties": {
+        "remoteVersion": { "type": "string", "minLength": 1 },
+        "capturedAt": { "type": "string", "format": "date-time" },
+        "priorities": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["projectId", "rank"],
+            "properties": {
+              "projectId": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$" },
+              "rank": { "type": "integer", "minimum": 0 }
+            },
+            "additionalProperties": true
+          }
+        }
+      },
+      "additionalProperties": true
+    },
+    "operations": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": [
+          "operationId",
+          "idempotencyKey",
+          "projectId",
+          "desiredRank",
+          "expectedRemoteVersion",
+          "state",
+          "effect",
+          "rollbackSnapshot",
+          "createdAt",
+          "updatedAt"
+        ],
+        "properties": {
+          "operationId": { "type": "string", "minLength": 1 },
+          "idempotencyKey": { "type": "string", "minLength": 1 },
+          "projectId": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$" },
+          "desiredRank": { "type": "integer", "minimum": 0 },
+          "expectedRemoteVersion": { "type": "string", "minLength": 1 },
+          "actualRemoteVersion": { "type": ["string", "null"] },
+          "state": { "enum": ["PENDING_SYNC", "SYNCING", "APPLIED", "DRIFT", "ROLLED_BACK"] },
+          "effect": {
+            "type": "object",
+            "required": ["effectId", "state", "reservedAt"],
+            "properties": {
+              "effectId": { "type": "string", "minLength": 1 },
+              "state": { "enum": ["RESERVED", "COMMITTED", "CANCELLED"] },
+              "reservedAt": { "type": "string", "format": "date-time" },
+              "completedAt": { "type": ["string", "null"], "format": "date-time" }
+            },
+            "additionalProperties": true
+          },
+          "rollbackSnapshot": { "type": "object", "additionalProperties": true },
+          "createdAt": { "type": "string", "format": "date-time" },
+          "updatedAt": { "type": "string", "format": "date-time" }
+        },
+        "additionalProperties": true
+      }
+    },
+    "idempotency": { "type": "object", "additionalProperties": { "type": "string" } }
+  },
+  "additionalProperties": true
+}

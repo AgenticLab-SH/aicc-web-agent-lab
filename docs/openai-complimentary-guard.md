@@ -1,0 +1,205 @@
+# OpenAI 무료 토큰 guard
+
+## 무엇을 해결하나
+
+OpenAI의 API 입력·출력 공유 인센티브를 켠 프로젝트에서 AICC를 통과한 요청만 로컬로
+즉시 세고, 현재 계정 화면에 표시된 두 일일 풀을 보호한다. 80%에서 경고하고 90%에서
+provider를 자동 정지하며, 95% 하드 차단도 별도로 유지한다. 공식 catalog와 현재 계정의
+무료 대상, 실제 API 접근 가능성을 분리하고 사용자가 API 호출과 에이전트 자동 선택을
+별도로 허용한다.
+
+| UTC 일일 풀 | 공식 한도 | 경고 | 자동 정지 | 하드 차단 |
+| --- | ---: | ---: | ---: | ---: |
+| 고성능 모델 | 250,000 token | 200,000 | 225,000 | 237,500 |
+| 경량 모델 | 2,500,000 token | 2,000,000 | 2,250,000 | 2,375,000 |
+
+한도와 대상 모델은 2026-08-06 Personal 조직의 공식 설정 화면과
+[OpenAI 도움말](https://help.openai.com/en/articles/10306912-sharing-feedback-evals-and-api-data-with-openai)을
+기준으로 확인했다. 정책이 바뀌면 코드와 이 문서를 함께 갱신해야 한다.
+
+Personal 조직 화면은 고성능 11개, 경량 12개 모델군을 무료 대상으로 표시했다. 별도의
+Usage 검증에서는 `gpt-5.6-sol`, `gpt-5.6-terra`, `gpt-5.6-luna`도
+`Data sharing incentive tier`로 관측했다. 이 계정 전용 기록은 사용자 전용 상태에만 두며,
+Help Center의 전역 catalog 30개를 곧바로 호출 허용 목록으로 사용하지 않는다.
+
+`gpt-6-astra`는 2026-09-06 OpenAI Developers 공식 모델 catalog와 로컬 Codex 모델 목록에서
+확인되어 AICC 후보 목록에 추가했다. 가격 snapshot은 input $10, cached input $1, output $50 /
+1M token이다. 같은 날 Sol은 $4/$0.40/$20, Terra는 $2/$0.20/$12로 공식 가격 snapshot을
+갱신했다. 무료 귀속과 현재 계정 API 접근은 아직 확인하지 않았으므로 Astra가 목록에 보이더라도
+자동 호출되지 않으며, 별도 eligibility와 최소 연결 확인이 있어야 활성화된다.
+
+2026-08-06 최소 실호출에서는 이 26개 모델군/관측 모델 중 20개가 Responses API에서
+성공했고 배치 사용량은 281 token이었다. 다음 6개는 현재 계정의 Responses API에서
+`model_not_found`였다.
+
+- `codex-mini-latest`
+- `gpt-5-chat-latest`
+- `gpt-5-codex`
+- `gpt-5.1-codex`
+- `gpt-5.1-codex-mini`
+- `o1-mini`
+
+무료 목록에 있다는 사실은 현재 endpoint 접근 가능성을 보장하지 않으므로, 실패 모델은
+availability 결과를 그대로 표시하고 자동 선택하지 않는다.
+
+## 사용법
+
+API key는 macOS Keychain의 `OpenAI API` / `personal-default` 항목 또는 Windows Credential
+Manager의 AICC 소유 Generic Credential에서 읽고 화면·원장·로그에 쓰지 않는다. Windows에서는
+`pwsh -NoProfile -File tools/platform/openai/Invoke-WindowsOpenAiSecretStore.ps1 -Action Store`가 key를 stdin으로만
+받는다. 입력과 key는 shell history와 process list에 남지 않도록 stdin으로 보낸다.
+
+```bash
+aicc openai usage
+aicc openai usage --json
+aicc openai provider --json
+aicc openai models --json
+aicc openai monitor status --json
+aicc openai catalog check --json
+cd /path/to/git-project
+aicc openai project status
+printf '요약해줘' | aicc openai estimate --max-output 512
+printf '요약해줘' | aicc openai ask --max-output 512
+```
+
+모델을 생략하면 AICC 웹에서 사용자가 지정한 기본 모델을 쓰며 초기 기본값은 `gpt-5.6-sol`이다. 사용자가 특정 모델을
+명시적으로 고른 CLI 호출만 `--model <id> --user-selected`를 붙인다. 에이전트가 고른
+요청은 이 옵션을 사용하지 않으며 `agentSelectable` 정책을 따른다.
+
+원장은 `~/.ai-control-center/openai-usage/usage.json`에 사용자 전용 권한으로 저장한다.
+프롬프트, 응답, API key는 저장하지 않고 모델별 요청 수와 input/cached/output token만
+저장한다. UTC 00:00에 새 일자로 자동 전환한다. 호출 전에는 보수적 입력 상한과
+`max_output_tokens`를 `pendingTokens`로 먼저 예약하고, 성공 시 실제 `response.usage`로
+정산하며 실패 시 예약을 반환한다. 프로세스가 중간 종료되어 예약이 남으면 적게 허용하는
+안전 방향으로 실패한다.
+
+macOS의 4381 Dashboard LaunchAgent는 60초마다 로컬 원장을 평가한다. Windows에는 해당
+LaunchAgent를 이식한 척하지 않으며, 다음 명령으로 같은 평가를 명시적으로 실행한다.
+
+```bash
+aicc openai monitor run --json
+```
+
+## AICC provider 관리
+
+- `API 전체`: AICC를 지나는 모든 새 OpenAI 요청을 켜거나 끈다.
+- `API 모델 허용`: 사용자 명시 호출을 포함해 해당 모델을 사용할 수 있는지 정한다.
+- `Agent 허용`: Codex가 해당 모델을 자동 선택할 수 있는지 정한다.
+- `기본 모델`: 모델을 생략한 agent 호출의 기본값이다.
+- `연결 확인`: 고정된 비민감 문장으로 최소 요청을 보내 실제 계정 접근을 기록한다.
+
+Restricted key에 `api.model.read` scope를 추가하지 않아도 안전하게 운영할 수 있도록,
+계정 화면의 무료 대상 기록을 호출 allowlist로 쓰고 실제 접근 여부는 개별 최소 호출로
+확인한다. 키 권한을
+넓혀 `/v1/models`를 읽는 것은 별도의 보안 결정이며 자동으로 수행하지 않는다.
+
+전수 확인은 명시적 token 사용 확인이 있어야 실행된다.
+
+```bash
+aicc openai probe-all --confirm-token-use --json
+```
+
+## catalog 갱신
+
+서버는 시작 5초 뒤와 이후 6시간마다 다음 두 공식 소스를 읽기 전용으로 비교한다.
+
+- Help Center 공유 인센티브 문서의 machine-readable JSON
+- OpenAI Developers 모델 catalog Markdown
+
+결과와 source hash만 `~/.ai-control-center/openai-usage/catalog-check.json`에 기록한다.
+새 모델이나 제거 후보를 발견해도 source code와 가격표를 자동 수정하지 않는다. 공식 문서와
+현재 계정 Data Controls 화면을 사람이 검토한 뒤 eligibility와 catalog를 갱신한다.
+
+```bash
+aicc openai catalog check --json
+```
+
+## 로컬 프로젝트 예산
+
+OpenAI의 `Default project`와 로컬 Git 프로젝트는 다른 개념이다. OpenAI key는 계속
+하나의 Default project에 속하지만, AICC는 호출한 작업 디렉터리의 Git remote를 hash해
+로컬 프로젝트별로 사용량을 나눈다. URL, 절대경로와 remote 본문은 원장에 저장하지 않는다.
+
+프로젝트 기본 한도는 전역 95% 하드 한도의 10%다.
+
+| 풀 | 프로젝트 기본 일일 한도 |
+| --- | ---: |
+| 고성능 | 23,750 token |
+| 경량 | 237,500 token |
+
+필요성이 검증된 프로젝트만 전역 하드 한도 안에서 조정한다.
+
+```bash
+aicc openai project set \
+  --frontier-limit 40000 \
+  --efficient-limit 400000
+```
+
+`--project 이름`을 주면 Git remote가 없는 일회성 작업도 안정적인 별칭으로 묶을 수 있다.
+프로젝트 정책은 `~/.ai-control-center/openai-usage/projects.json`에 사용자 전용 권한으로
+저장한다.
+
+## 프로젝트 연결 계약
+
+- 결정적 로컬 코드로 충분하면 API를 호출하지 않는다.
+- 기본 모델은 `gpt-5.6-sol`로 두고, 호출 전 `estimate`로 입력 상한과 출력 예약량을 확인한다.
+- 로컬 Node/Python backend는 `aicc openai ask --json`을 subprocess로 실행하고 stdin으로
+  입력한다. 실행 `cwd`를 해당 Git 프로젝트 루트로 둔다.
+- `OPENAI_API_KEY`를 프로젝트 `.env`, 브라우저 bundle, Cloudflare Pages 정적 자산,
+  로그나 Git에 복사하지 않는다.
+- 공개 배포 서버는 사용자의 Mac에 있는 AICC를 호출할 수 없다. 서버 호출이 필요하면
+  별도 인증·secret·rate limit·비용 승인 경계를 설계한다.
+- AICC 오류나 한도 차단을 정상 실패로 처리하고 deterministic fallback을 둔다.
+
+Codex agent가 raw key를 가져가 우회하지 않도록 AICC는 각 Codex home에 다음 두 경계를
+관리할 수 있다.
+
+- shell child에 `OPENAI_API_KEY`와 `OPENAI_ADMIN_KEY`를 전달하지 않는다.
+- Bash의 직접 `api.openai.com`, 운영체제 보안 저장소의 OpenAI key 읽기, key 환경변수 읽기를 PreToolUse
+  hook에서 차단한다.
+
+설치는 모든 Codex home을 먼저 검사하고, 충돌이나 TOML 검증 실패가 있으면 이미 바꾼 파일을
+전부 복원한다. 기존 비관리 `requirements.toml`은 덮어쓰지 않는다. 이 경계는 Codex agent의
+일반적인 우회를 막는 것이며, 같은 macOS 사용자 권한으로 실행한 사람이나 별도 앱까지 완전한
+보안 경계로 격리하지는 않는다.
+
+### 훅 출력 계약
+
+OpenAI API와 파괴적 작업 가드 훅은 허용할 때 stdout/stderr에 안내를 반복하지 않는다.
+거절할 때는 기존 `PreToolUse` deny 형식의 ASCII JSON 한 줄을 공백 없이 출력한다.
+판정 사유에 원 요청·비밀 값·실제 보호 경로를 되비추지 않으며, 파괴적 작업 거절은
+다른 도구나 요청 분할로 우회하지 않도록 안내한다. 출력 정리는 기존 차단 조건과
+임계값을 변경하지 않는다.
+
+소스 수정, 설치 등록, 실제 훅 호출은 별도 상태다. 설치가 소스 경로를 직접 참조하면
+다음 호출부터 변경을 읽을 수 있으므로, 설치 설정을 바꾸지 않았다는 사실만으로
+실제 동작도 그대로라고 단정하지 않는다. 실제 호출을 관측하지 않았으면
+`NOT_OBSERVED`로 남긴다.
+
+## 표시를 읽는 법
+
+- 풀 게이지는 같은 무료 한도를 공유하는 모델들의 실제 input+output token 합계다.
+- 모델별 사용률은 해당 모델이 공유 풀에서 소비한 token / 풀 전체 한도다. 같은 token 수는
+  모델 가격과 무관하게 같은 무료 quota를 소비하므로 고가 모델에 임의 가중치를 주지 않는다.
+- 프로젝트 표는 Git 프로젝트별 실제 사용량과 기본/사용자 한도를 보여준다.
+- 모델 행은 해당 모델의 input, cached input, output과 표준 요금 환산 추정치를 나눈다.
+- 요금 환산은 비용 청구액이 아니라 절감 규모를 이해하기 위한 날짜가 있는 가격 snapshot이다.
+- OpenAI가 한 요청 전체를 무료 한도 초과로 판단할 수 있으므로 AICC는 요청 전 입력의 보수적
+  상한과 `max_output_tokens`를 예약하고 5% 여유를 둔다.
+
+## 정확성 경계
+
+로컬 원장은 `aicc openai ask`를 통과한 요청만 포함한다. 다른 프로그램이나 OpenAI
+Playground에서 같은 프로젝트/API key를 쓴 사용량은 알 수 없다. 공식 조직 전체 집계에는
+별도의 Admin API key로 Usage/Costs API를 읽는 동기화가 필요하며, 그 집계도 실시간이라고
+가정하면 안 된다. Admin key는 일반 호출 key보다 권한이 크므로 현재 기본 구성에서는 만들거나
+저장하지 않는다.
+
+실측 Usage Dashboard는 모델 호출을 한 번에 모두 반영하지 않고 단계적으로 갱신했으며,
+로컬 원장과 완전히 일치하기까지 690초가 걸렸다.
+따라서 공식 화면은 무료 귀속과 사후 대조에 사용하고, 다음 요청의 허용 판단은 응답 직후
+정산되는 로컬 원장과 호출 전 예약만 사용한다. 2026-08-06 검증에서는 비용이 `$0.00`였고
+`Data sharing incentive tier` 필터에서 성공 모델 사용량을 확인했다.
+
+데이터 공유 동의는 계정 소유자가 약관과 입력 데이터 권리를 직접 확인해 완료해야 한다.
+기밀, 개인정보, 건강정보, 아동 데이터, 권리를 보유하지 않은 콘텐츠는 보내지 않는다.

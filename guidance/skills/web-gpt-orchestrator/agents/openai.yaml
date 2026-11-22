@@ -1,0 +1,4 @@
+interface:
+  display_name: "Web GPT 오케스트레이션"
+  short_description: "역할 DAG와 단일 writer로 Web GPT 병렬 작업 조율"
+  default_prompt: "Use $web-gpt-orchestrator to plan and coordinate bounded Web GPT roles with explicit capabilities, exact browser ownership, and one local writer."

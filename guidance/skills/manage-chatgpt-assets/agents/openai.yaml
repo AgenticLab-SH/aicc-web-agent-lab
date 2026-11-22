@@ -1,0 +1,7 @@
+interface:
+  display_name: "ChatGPT Asset Manager"
+  short_description: "Reorganize ChatGPT assets and preserve conversations"
+  default_prompt: "Use $manage-chatgpt-assets to reorganize my ChatGPT Projects and Custom GPTs and migrate conversations without losing IDs."
+
+policy:
+  allow_implicit_invocation: true

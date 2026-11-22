@@ -1,0 +1,4 @@
+interface:
+  display_name: "웹 GPT 지시와 복구 학습"
+  short_description: "짧은 작업 지시와 실제 결과에서 얻은 복구 학습을 관리"
+  default_prompt: "Use $direct-web-gpt-work to prepare a concise instruction for the existing Web GPT conversation and distinguish dispatch from verified results."

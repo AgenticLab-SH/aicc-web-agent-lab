@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">AICC</string>
+    <string name="heading">AICC</string>
+    <string name="intro">기존 브라우저에서 AICC를 열고 ‘내 앱’에서 등록 앱을 찾으세요. 실행과 큐 처리는 연결된 PC가 맡습니다.</string>
+    <string name="open_control">웹에서 AICC 열기</string>
+    <string name="address">https://aicc.example.invalid/mobile.html</string>
+    <string name="pairing">처음 연결할 때는 PC의 ‘휴대폰 연결’에서 발급한 일회용 링크를 휴대폰 브라우저에서 여세요. 이 앱도 인증한 그 브라우저로 열어야 같은 기기 기억을 사용합니다. 앱은 연결 링크나 쿠키를 읽거나 저장하지 않습니다.</string>
+    <string name="limits">PC가 켜져 있고 기존 연결 서비스가 실행 중이어야 합니다. Desktop 큐 선택만으로 무인 재개되는 것은 아닙니다. 화면의 전달 단계와 보류 사유를 확인하세요. 앱은 별도 감시기나 예약을 실행하지 않습니다.</string>
+    <string name="browser_missing">열 수 있는 브라우저가 없습니다. 기존 브라우저에서 표시된 주소를 열어 주세요.</string>
+</resources>

@@ -1,0 +1,4 @@
+alpha searchable text
+api_key=synthetic-fixture-secret
+prompt: synthetic private prompt
+tool_output: synthetic command result

@@ -1,0 +1,64 @@
+{
+  "schemaVersion": 1,
+  "extensions": [
+    {
+      "id": "web-gpt-orchestrator",
+      "type": "codex-plugin",
+      "owner": "AICC public core",
+      "source": {
+        "kind": "repository",
+        "url": "https://github.com/AgenticLab-SH/aicc-web-agent-lab",
+        "path": "plugins/web-gpt-orchestrator",
+        "version": "0.1.0",
+        "revision": "worktree-checksums-v1"
+      },
+      "distribution": "public",
+      "license": "MIT",
+      "notice": "plugins/web-gpt-orchestrator/NOTICE",
+      "sbom": "plugins/web-gpt-orchestrator/sbom.cdx.json",
+      "integrity": "plugins/web-gpt-orchestrator/checksums.sha256",
+      "permissions": {
+        "filesystem": [
+          "aicc-private-job-metadata"
+        ],
+        "network": [],
+        "browser": [
+          "exact-task-owned-target-when-advertised"
+        ],
+        "secrets": [],
+        "tools": [
+          "plan_run",
+          "start_role",
+          "wait_role",
+          "submit_result",
+          "request_writer",
+          "status",
+          "cancel_run",
+          "cleanup_run"
+        ]
+      },
+      "compatibility": {
+        "aicc": ">=0.1.0 <1.0.0",
+        "codex": ">=0.147.0",
+        "mcp": "2025-06-18"
+      },
+      "lifecycle": {
+        "install": "copy-verified-package",
+        "enable": "state-pointer-only",
+        "disable": "state-pointer-only",
+        "update": "verify-before-switch",
+        "uninstall": "recoverable-quarantine",
+        "rollback": "previous-verified-package"
+      },
+      "health": {
+        "command": [
+          "aicc",
+          "orchestration",
+          "status",
+          "--json"
+        ],
+        "mcpToolCount": 8
+      }
+    }
+  ]
+}

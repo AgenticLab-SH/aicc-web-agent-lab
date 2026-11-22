@@ -1,0 +1,4 @@
+interface:
+  display_name: "Codex Frontend"
+  short_description: "기존 stack을 보존하는 큰 React/Vite UI 구현"
+  default_prompt: "Use $codex-frontend to implement this substantial responsive UI in the project's validated stack."

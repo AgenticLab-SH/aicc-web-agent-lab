@@ -1,0 +1,5 @@
+interface:
+  display_name: "General Report Design"
+  short_description: "브랜드 중립 보고서의 문체와 시각 구조를 설계합니다."
+  brand_color: "#1F5D7A"
+  default_prompt: "Use $general-report-design to structure and style this report in an editable, evidence-centered format."

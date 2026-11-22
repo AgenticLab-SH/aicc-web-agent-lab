@@ -1,0 +1,20 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {readRdcQuota,quotaResult,quotaProfile} from '../tools/platform/windows/rdc-quota-client.mjs';
+const target={profile:'account1',email:'fixture@example.invalid',userId:'fixture-user',deviceId:'fixture-device'};
+const session=exp=>({access_token:'e30.'+Buffer.from(JSON.stringify({sub:target.userId,exp})).toString('base64url')+'.fixture',refresh_token:'fixture'});
+const valid=session(Math.floor(Date.now()/1000)+3600);
+const profile={deviceId:target.deviceId,session:valid};
+const who={id:target.userId,email:target.email,remote_calls_left_pct:99,last_sign_in_at:'2026-10-20T10:36:51Z'};
+const response=body=>({ok:true,status:200,headers:new Headers({'content-type':'application/json'}),json:async()=>body});
+function replies(log){return async(url,options)=>{const p=JSON.parse(options.body);log.push(p.method);return response(p.method==='initialize'?{result:{serverInfo:{name:'desktop-commander-remote-mcp'}}}:{result:{content:[{type:'text',text:JSON.stringify(who)}]}});};}
+test('official metadata only: initialize and who_am_i, no browser/login/switch',async()=>{const log=[];const q=await readRdcQuota({target,profile,currentDeviceId:target.deviceId,fetcher:replies(log)});assert.equal(q.remainingPercent,99);assert.equal(q.source,'rdc-who_am_i');assert.deepEqual(log,['initialize','tools/call']);});
+test('expired current agent session is never refreshed by observer',async()=>{let refreshed=0;await assert.rejects(readRdcQuota({target,profile:{...profile,session:session(1)},currentDeviceId:target.deviceId,refresh:()=>refreshed++}),e=>e.phase==='AUTH_REFRESH_PENDING');assert.equal(refreshed,0);});
+test('expired inactive session is persisted before quota and refreshed only once',async()=>{const log=[];let refreshed=0;const q=await readRdcQuota({target,profile:{...profile,session:session(1)},currentDeviceId:'other',refresh:async()=>{refreshed++;return valid;},store:async()=>log.push('store'),fetcher:replies(log)});assert.equal(q.remainingPercent,99);assert.equal(refreshed,1);assert.deepEqual(log,['store','initialize','tools/call']);});
+for(const status of [401,403])test('HTTP '+status+' is terminal without alternate route or retry',async()=>{let count=0;await assert.rejects(readRdcQuota({target,profile,currentDeviceId:target.deviceId,fetcher:async()=>{count++;return {status,ok:false};}}),e=>e.phase===(status===403?'SECURITY_REFUSED':'AUTH_REQUIRED'));assert.equal(count,1);});
+test('mismatched device fails before requests',async()=>{let count=0;await assert.rejects(readRdcQuota({target,profile:{...profile,deviceId:'wrong'},fetcher:()=>count++}),e=>e.phase==='IDENTITY_MISMATCH');assert.equal(count,0);});
+test('mismatched official identity cannot publish quota',()=>{assert.throws(()=>quotaResult({...who,id:'other'},target),e=>e.phase==='IDENTITY_MISMATCH');});
+test('zero quota is accepted as observation, not sign-in failure',()=>assert.equal(quotaResult({...who,remote_calls_left_pct:0},target).remainingPercent,0));
+test('current live owner session wins over stale DPAPI copy without refresh',()=>{const old={...profile,session:session(1)};assert.equal(quotaProfile(target,old,profile),profile);});
+test('inactive quota account keeps its isolated stored session',()=>assert.equal(quotaProfile(target,profile,{deviceId:'other'}),profile));
+test('current owner identity mismatch fails closed before use',()=>assert.throws(()=>quotaProfile(target,profile,{...profile,session:{access_token:'e30.'+Buffer.from(JSON.stringify({sub:'wrong',exp:9999999999})).toString('base64url')+'.x'}}),e=>e.phase==='IDENTITY_MISMATCH'));

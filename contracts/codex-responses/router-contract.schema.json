@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/contracts/codex-responses/router-contract.schema.json",
+  "title": "Codex Responses router contract",
+  "type": "object",
+  "required": ["contractVersion", "protocol", "endpoints", "routing", "streamSemantics", "errorSemantics", "unknownFieldPolicy"],
+  "properties": {
+    "contractVersion": { "type": "integer", "minimum": 1 },
+    "protocol": { "const": "openai-responses" },
+    "endpoints": { "type": "array", "items": { "enum": ["/v1/responses", "/v1/models", "/protocol", "/startupz", "/livez", "/readyz", "/routes"] } },
+    "routing": { "type": "object", "required": ["webModelPrefix", "webAdapter", "nonWebAdapter", "silentFallback"], "properties": { "webModelPrefix": { "const": "chatgpt-web/" }, "webAdapter": { "type": "string", "minLength": 1 }, "nonWebAdapter": { "type": "string", "minLength": 1 }, "silentFallback": { "const": false } }, "additionalProperties": true },
+    "streamSemantics": { "type": "object", "required": ["sse", "replayAfterStart"], "properties": { "sse": { "const": true }, "replayAfterStart": { "const": false } }, "additionalProperties": true },
+    "errorSemantics": { "type": "object", "required": ["preserveStatus", "preserveBody", "routeSpecificReadiness"], "properties": { "preserveStatus": { "const": true }, "preserveBody": { "const": true }, "routeSpecificReadiness": { "const": true } }, "additionalProperties": true },
+    "unknownFieldPolicy": { "const": "preserve" }
+  },
+  "additionalProperties": true
+}

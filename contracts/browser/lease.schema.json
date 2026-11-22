@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/contracts/browser/lease.schema.json",
+  "title": "Browser identity and target lease",
+  "type": "object",
+  "required": ["contractVersion", "leaseId", "identity", "targetId", "ownerTaskId", "ownerAttemptId", "purpose", "accessMode", "capabilities", "permittedOrigins", "downloadPolicy", "state", "heartbeatAt", "expiresAt", "cleanupState", "rawTabContentStored"],
+  "properties": {
+    "contractVersion": { "type": "integer", "minimum": 1 },
+    "leaseId": { "type": "string" },
+    "identity": { "type": "object", "required": ["role", "engine", "appIdentity", "executable", "userDataRoot", "profile", "cdpEndpoint", "nativeSessionId", "accountAlias", "workspaceAlias", "owner", "ownershipPolicy"], "properties": { "role": { "enum": ["in-app-browser", "web-gpt-partition", "registered-cdp", "isolated-qa"] }, "engine": { "type": "string" }, "appIdentity": { "type": "string" }, "executable": { "type": "string" }, "userDataRoot": { "type": "string" }, "profile": { "type": "string" }, "cdpEndpoint": { "type": ["string", "null"] }, "nativeSessionId": { "type": ["string", "null"] }, "accountAlias": { "type": ["string", "null"] }, "workspaceAlias": { "type": ["string", "null"] }, "owner": { "type": "string" }, "ownershipPolicy": { "const": "task-created-target-only" } }, "additionalProperties": true },
+    "targetId": { "type": "string" },
+    "ownerTaskId": { "type": "string" },
+    "ownerAttemptId": { "type": "string" },
+    "purpose": { "type": "string" },
+    "accessMode": { "enum": ["observe", "interact"] },
+    "capabilities": { "type": "array", "items": { "type": "string" } },
+    "permittedOrigins": { "type": "array", "items": { "type": "string" } },
+    "downloadPolicy": { "type": "string" },
+    "state": { "enum": ["leased", "released", "stale", "quarantined"] },
+    "heartbeatAt": { "type": "string" },
+    "expiresAt": { "type": "string" },
+    "cleanupState": { "type": "string" },
+    "rawTabContentStored": { "const": false }
+  },
+  "additionalProperties": true
+}

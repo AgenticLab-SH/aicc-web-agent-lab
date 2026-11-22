@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/contracts/orchestration/run.schema.json",
+  "title": "Durable Web GPT orchestration run",
+  "type": "object",
+  "required": ["contractVersion", "runId", "requestId", "rootTaskId", "workspaceId", "routeId", "identityBinding", "mode", "state", "budgets", "capabilitySnapshotHash", "roleDag", "jobIds", "resultRefs", "artifactRefs", "rawTranscriptStored"],
+  "properties": {
+    "contractVersion": { "type": "integer", "minimum": 1 },
+    "runId": { "type": "string", "minLength": 1 },
+    "requestId": { "type": "string", "minLength": 1 },
+    "rootTaskId": { "type": "string", "minLength": 1 },
+    "workspaceId": { "type": "string", "minLength": 1 },
+    "routeId": { "type": "string", "minLength": 1 },
+    "identityBinding": { "type": "string", "minLength": 1 },
+    "mode": { "enum": ["full", "browser-only"] },
+    "state": { "enum": ["planned", "running", "paused", "completed", "failed", "cancelled"] },
+    "budgets": {
+      "type": "object",
+      "required": ["defaultFanOut", "hardActiveCap"],
+      "properties": {
+        "defaultFanOut": { "type": "integer", "minimum": 2 },
+        "hardActiveCap": { "type": "integer", "minimum": 2 }
+      },
+      "additionalProperties": true
+    },
+    "capabilitySnapshotHash": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "roleDag": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["roleId", "role", "mode", "dependencies"],
+        "properties": {
+          "roleId": { "type": "string", "minLength": 1 },
+          "role": { "type": "string", "minLength": 1 },
+          "mode": { "enum": ["write", "read-only"] },
+          "dependencies": { "type": "array", "items": { "type": "string" } }
+        },
+        "additionalProperties": true
+      }
+    },
+    "jobIds": { "type": "array", "items": { "type": "string" } },
+    "resultRefs": { "type": "array", "items": { "type": "string" } },
+    "artifactRefs": { "type": "array", "items": { "type": "string" } },
+    "rawTranscriptStored": { "const": false },
+    "terminalReason": { "type": ["string", "null"] }
+  },
+  "additionalProperties": true
+}

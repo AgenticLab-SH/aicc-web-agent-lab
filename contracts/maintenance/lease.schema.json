@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/contracts/maintenance/lease.schema.json",
+  "title": "Component maintenance lease and CAS journal",
+  "type": "object",
+  "required": ["contractVersion", "operationId", "targetComponent", "owner", "preconditionHash", "desiredHash", "state", "activeWorkProof", "rollbackRef", "restartBudget"],
+  "properties": {
+    "contractVersion": { "type": "integer", "minimum": 1 },
+    "operationId": { "type": "string" },
+    "targetComponent": { "type": "string" },
+    "owner": { "type": "string" },
+    "preconditionHash": { "type": "string" },
+    "desiredHash": { "type": "string" },
+    "state": { "enum": ["planned", "leased", "draining", "applying", "verifying", "committed", "rolled-back", "quarantined"] },
+    "activeWorkProof": { "type": "object", "required": ["observedAt", "count", "source"], "properties": { "observedAt": { "type": "string" }, "count": { "const": 0 }, "source": { "type": "string" } }, "additionalProperties": true },
+    "rollbackRef": { "type": "string" },
+    "restartBudget": { "type": "integer", "minimum": 0, "maximum": 2 }
+  },
+  "additionalProperties": true
+}

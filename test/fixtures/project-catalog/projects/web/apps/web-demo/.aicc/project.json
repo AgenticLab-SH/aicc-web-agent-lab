@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "id": "web-demo",
+  "title": "Web Demo",
+  "kind": "product",
+  "domain": "web",
+  "lifecycle": "design",
+  "priority": {
+    "rank": 99,
+    "source": "local-hint",
+    "updatedAt": "2026-01-01T00:00:00Z"
+  },
+  "nextAction": "Use the stale local next action",
+  "progressGates": {
+    "discovery": {
+      "status": "PASS",
+      "current": true,
+      "evidenceRefs": ["evidence://web-demo/discovery"]
+    },
+    "design": {
+      "status": "PASS",
+      "current": true,
+      "evidenceRefs": ["evidence://web-demo/design"]
+    }
+  },
+  "links": {
+    "docs": ["docs://web-demo/local"]
+  },
+  "sensitivity": "private"
+}

@@ -1,0 +1,4 @@
+interface:
+  display_name: "막힌 서비스 문제 확대 진단"
+  short_description: "반복 실패 뒤에만 외부 서비스 장애와 상태를 확인합니다"
+  default_prompt: "Use $escalate-unresolved-service-failures to investigate this persistent service failure without changing accounts or providers."

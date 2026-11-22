@@ -1,0 +1,6 @@
+{
+  "schemaVersion": 1,
+  "routingProfile": "telegram_primary",
+  "slackEnabled": true,
+  "telegramEnabled": true
+}

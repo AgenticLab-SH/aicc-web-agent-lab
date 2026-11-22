@@ -1,0 +1,118 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://site.example.invalid/open-aicc/contracts/control-report.schema.json",
+  "title": "AICC worker control report",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "controlPlaneId",
+    "workerId",
+    "workerSequence",
+    "status",
+    "revision"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": 1
+    },
+    "controlPlaneId": {
+      "$ref": "#/$defs/safeId"
+    },
+    "workerId": {
+      "$ref": "#/$defs/safeId"
+    },
+    "workerSequence": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "status": {
+      "enum": [
+        "PROGRESS",
+        "DONE",
+        "HOLD",
+        "APPROVAL_REQUIRED",
+        "DRIFT"
+      ]
+    },
+    "revision": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 120
+    },
+    "summary": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 240
+    },
+    "nextGate": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 160
+    },
+    "evidence": {
+      "type": "array",
+      "maxItems": 8,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "type",
+          "ref"
+        ],
+        "properties": {
+          "type": {
+            "$ref": "#/$defs/safeId"
+          },
+          "ref": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 260
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          }
+        }
+      }
+    },
+    "completed": { "$ref": "#/$defs/shortList" },
+    "remaining": { "$ref": "#/$defs/shortList" },
+    "choices": { "$ref": "#/$defs/shortList" },
+    "nextAction": { "type": "string", "minLength": 1, "maxLength": 160 }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "enum": [
+              "HOLD",
+              "APPROVAL_REQUIRED",
+              "DRIFT"
+            ]
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "then": {
+        "required": [
+          "nextGate"
+        ]
+      }
+    }
+  ],
+  "$defs": {
+    "shortList": {
+      "type": "array",
+      "maxItems": 6,
+      "items": { "type": "string", "minLength": 1, "maxLength": 240 }
+    },
+    "safeId": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+    }
+  }
+}

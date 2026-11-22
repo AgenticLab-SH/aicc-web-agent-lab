@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/contracts/model-adapter/capability.schema.json",
+  "title": "Model adapter capability",
+  "type": "object",
+  "required": ["contractVersion", "adapterId", "protocol", "models", "reasoningModes", "inputModalities", "toolModes", "identityBinding", "conversationModes", "concurrencyLimit", "ratePolicy", "healthEndpoints", "supportsResume", "supportsCompaction", "dataHandling"],
+  "properties": {
+    "contractVersion": { "type": "integer", "minimum": 1 },
+    "adapterId": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]+$" },
+    "protocol": { "enum": ["openai-responses", "anthropic-messages"] },
+    "models": { "type": "array", "items": { "type": "string" } },
+    "reasoningModes": { "type": "array", "items": { "type": "string" } },
+    "inputModalities": { "type": "array", "items": { "type": "string" } },
+    "toolModes": { "type": "array", "items": { "type": "string" } },
+    "identityBinding": { "type": "string", "minLength": 1 },
+    "conversationModes": { "type": "array", "items": { "type": "string" } },
+    "concurrencyLimit": { "type": "integer", "minimum": 1 },
+    "ratePolicy": { "type": "string", "minLength": 1 },
+    "healthEndpoints": { "type": "array", "minItems": 1, "items": { "type": "string" } },
+    "supportsResume": { "type": "boolean" },
+    "supportsCompaction": { "type": "boolean" },
+    "dataHandling": { "type": "string", "minLength": 1 }
+  },
+  "additionalProperties": true
+}

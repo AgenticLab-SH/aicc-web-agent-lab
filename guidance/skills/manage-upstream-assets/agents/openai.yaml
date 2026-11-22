@@ -1,0 +1,6 @@
+interface:
+  display_name: "오픈소스·업데이트 관리"
+  short_description: "프로젝트 의존성·공식 출처·크롤러·CLI/서버 버전 점검"
+  default_prompt: "Use $manage-upstream-assets to inspect registered OSS, dependencies, crawler targets and live versions; compare exact upstream sources, and safely plan changes without auto-upgrading running services."
+policy:
+  allow_implicit_invocation: true

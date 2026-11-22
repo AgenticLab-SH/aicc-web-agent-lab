@@ -1,0 +1,4 @@
+interface:
+  display_name: "로컬 포트 감사"
+  short_description: "포트 배정과 현재 점유를 안전하게 대조"
+  default_prompt: "Use $audit-local-ports to audit intended local port assignments and current listeners without stopping services."

@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/contracts/private-state/inventory.schema.json",
+  "title": "Private Home and external state inventory",
+  "type": "object",
+  "required": ["contractVersion", "privateHomeRef", "requiredMode", "entries"],
+  "properties": {
+    "contractVersion": { "type": "integer", "minimum": 1 },
+    "privateHomeRef": { "const": "${AI_PLATFORM_PRIVATE_HOME}" },
+    "requiredMode": { "const": "0700" },
+    "entries": { "type": "array", "items": { "type": "object", "required": ["id", "owner", "class", "pathRef", "sensitivity", "backupPolicy", "eraseProcedure"], "properties": { "id": { "type": "string" }, "owner": { "type": "string" }, "class": { "enum": ["aicc-owned-movable", "secret-reference", "application-owned-immovable", "cache-rebuildable", "user-artifact"] }, "pathRef": { "type": "string" }, "sensitivity": { "type": "string" }, "backupPolicy": { "type": "string" }, "eraseProcedure": { "type": "string" }, "secretRef": { "type": ["string", "null"] } }, "additionalProperties": true } }
+  },
+  "additionalProperties": true
+}

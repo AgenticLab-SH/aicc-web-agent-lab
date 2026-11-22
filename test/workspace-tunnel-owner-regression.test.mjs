@@ -1,0 +1,12 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import path from 'node:path';
+import {probeTunnelOwner} from '../tools/platform/workspace-mcp/windows-tunnel-secret.mjs';
+const binary=path.resolve('fixtures/tunnel-client.exe');
+const probe=(owner,extra={})=>({platform:'win32',signalProcess:()=>true,ownerProbe:()=>({status:0,stdout:JSON.stringify(owner)}),...extra});
+test('a recycled live PID owned by the tray does not block a stopped workspace tunnel',()=>{assert.throws(()=>probeTunnelOwner(5664,{binary},probe({state:'present',executablePath:path.resolve('fixtures/aicc-status-tray.exe')})),{code:'ESRCH'})});
+test('same basename from another directory is a different tunnel owner',()=>{assert.throws(()=>probeTunnelOwner(5664,{binary},probe({state:'present',executablePath:path.resolve('other/tunnel-client.exe')})),{code:'ESRCH'})});
+test('the exact binary remains protected',()=>{assert.equal(probeTunnelOwner(5664,{binary},probe({state:'present',executablePath:binary})),true)});
+test('an unreadable executable remains unknown',()=>{assert.throws(()=>probeTunnelOwner(5664,{binary},probe({state:'present',executablePath:null})),{code:'EPERM'})});
+test('a failed identity query remains unknown',()=>{assert.throws(()=>probeTunnelOwner(5664,{binary},probe({}, {ownerProbe:()=>({status:1,stdout:''})})),{code:'EPERM'})});
+test('an absent process is stale',()=>{assert.throws(()=>probeTunnelOwner(5664,{binary},probe({state:'absent'})),{code:'ESRCH'})});

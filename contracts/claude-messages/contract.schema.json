@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/contracts/claude-messages/contract.schema.json",
+  "title": "Claude Messages path contract",
+  "type": "object",
+  "required": ["contractVersion", "protocol", "routeOwner", "independentFrom", "unknownFieldPolicy"],
+  "properties": {
+    "contractVersion": { "type": "integer", "minimum": 1 },
+    "protocol": { "const": "anthropic-messages" },
+    "routeOwner": { "type": "string", "minLength": 1 },
+    "independentFrom": { "type": "array", "contains": { "const": "router-17841" } },
+    "unknownFieldPolicy": { "const": "preserve" }
+  },
+  "additionalProperties": true
+}

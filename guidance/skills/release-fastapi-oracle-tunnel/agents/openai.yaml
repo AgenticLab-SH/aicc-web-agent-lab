@@ -1,0 +1,4 @@
+interface:
+  display_name: "Release FastAPI to Oracle"
+  short_description: "Release a FastAPI app through Oracle and Tunnel"
+  default_prompt: "Use $release-fastapi-oracle-tunnel to safely release this authenticated FastAPI app through an existing Oracle host and Cloudflare Tunnel."

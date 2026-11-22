@@ -1,0 +1,69 @@
+{
+  "schemaVersion": 1,
+  "releaseId": "aicc-0.1.0-phase10-portable-baseline",
+  "matrixRole": "portable-phase-10-baseline-not-live-runtime",
+  "policy": {
+    "sequence": ["shadow", "canary", "default"],
+    "restartBudget": 2,
+    "activeWorkPolicy": "hold-unless-exact-zero",
+    "directRescuePolicy": "all-required-before-default",
+    "automaticVersionApply": false
+  },
+  "components": [
+    {
+      "id": "aicc-public-core",
+      "classification": "public-core",
+      "current": { "version": "0.1.0", "source": "package.json" },
+      "target": { "version": "0.1.0", "source": "current-source-canary" },
+      "contractVersion": 1,
+      "rollback": "previous-verified-package"
+    },
+    {
+      "id": "codex-app-server",
+      "classification": "installed-official-contract",
+      "current": { "version": "0.147.0", "schema": "phase10-verified-baseline" },
+      "target": { "version": "0.147.0", "schema": "phase10-verified-baseline" },
+      "contractVersion": 1,
+      "rollback": "keep-current-installed-binary"
+    },
+    {
+      "id": "web-gpt-private-adapter",
+      "classification": "optional-private-adapter",
+      "current": { "version": "2.0.0-aicc.4", "source": "phase10-verified-baseline" },
+      "target": { "version": "2.0.0-aicc.4", "source": "phase10-verified-baseline" },
+      "contractVersion": 1,
+      "rollback": "owner-only-signed-app-backup"
+    },
+    {
+      "id": "ocx-upstream",
+      "classification": "optional-external-adapter",
+      "current": { "version": "2.10.0", "source": "phase10-verified-baseline" },
+      "target": { "version": "2.10.0", "source": "phase10-verified-baseline" },
+      "contractVersion": 1,
+      "rollback": "component-owner-previous-release"
+    },
+    {
+      "id": "web-gpt-orchestrator",
+      "classification": "public-codex-plugin",
+      "current": { "version": "0.1.0", "source": "extension-registry" },
+      "target": { "version": "0.1.0", "source": "extension-registry" },
+      "contractVersion": 1,
+      "rollback": "previous-verified-extension-package"
+    }
+  ],
+  "requiredRegression": [
+    "source-schema",
+    "app-server-stable",
+    "responses-pass-through",
+    "integrated-and-direct-rescue",
+    "web-gpt-six-mode",
+    "ocx-upstream-storage-dry-run",
+    "jobs-browser-remote",
+    "plugin-lifecycle",
+    "component-update-rollback",
+    "restart-budget-start-once",
+    "privacy-public-package",
+    "orchestration-capacity"
+  ],
+  "requiredDirectRescue": ["web-gpt-direct", "ocx-direct", "native-direct"]
+}

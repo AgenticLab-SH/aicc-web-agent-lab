@@ -1,0 +1,71 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://open-aicc.local/contracts/assets/workspace-plugin-inventory.schema.json",
+  "title": "AICC Workspace plugin inventory",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "observedAt",
+    "accountRole",
+    "identityHash",
+    "workspaceHash",
+    "pluginId",
+    "displayName",
+    "ownerHash",
+    "packageVersion",
+    "packageHash",
+    "installState",
+    "installationPolicy",
+    "canRefresh",
+    "supportedSurfaces",
+    "skills",
+    "apps",
+    "appTemplates",
+    "appSnapshotCurrent",
+    "permissionPolicy",
+    "inventoryHash"
+  ],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "observedAt": { "type": "string", "format": "date-time" },
+    "accountRole": { "enum": ["business-owner", "business-member", "personal"] },
+    "identityHash": { "$ref": "#/$defs/hash" },
+    "workspaceHash": { "$ref": "#/$defs/hash" },
+    "pluginId": { "$ref": "#/$defs/stableId" },
+    "displayName": { "type": "string", "minLength": 1 },
+    "ownerHash": { "$ref": "#/$defs/hash" },
+    "packageVersion": { "type": "string", "minLength": 1 },
+    "packageHash": { "$ref": "#/$defs/hash" },
+    "installState": { "enum": ["installed", "available", "unsupported", "unknown"] },
+    "installationPolicy": { "enum": ["required", "optional", "shared", "unsupported", "unknown"] },
+    "canRefresh": { "type": "boolean" },
+    "supportedSurfaces": { "type": "array", "uniqueItems": true, "items": { "$ref": "#/$defs/stableId" } },
+    "skills": { "$ref": "#/$defs/included" },
+    "apps": { "$ref": "#/$defs/included" },
+    "appTemplates": { "$ref": "#/$defs/included" },
+    "appSnapshotCurrent": { "type": "boolean" },
+    "permissionPolicy": { "type": "string", "minLength": 1 },
+    "inventoryHash": { "$ref": "#/$defs/hash" },
+    "rawAccountIncluded": { "const": false },
+    "authMaterialIncluded": { "const": false }
+  },
+  "$defs": {
+    "hash": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "stableId": { "type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{1,191}$" },
+    "included": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "version", "hash", "required"],
+        "properties": {
+          "id": { "$ref": "#/$defs/stableId" },
+          "version": { "type": ["string", "null"] },
+          "hash": { "$ref": "#/$defs/hash" },
+          "required": { "type": "boolean" }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,17 @@
+[Unit]
+Description=AICC A1 Remote MCP Gateway (user)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=/demo/owner/.local/share/aicc-remote-gateway
+Environment=AICC_REMOTE_GATEWAY_HOST=127.0.0.1
+Environment=AICC_REMOTE_GATEWAY_PORT=10311
+Environment=AICC_REMOTE_DEVICE_ID=windows-primary
+ExecStart=/demo/owner/.local/share/ocx-hub/node_modules/bun/bin/bun.exe /demo/owner/.local/share/aicc-remote-gateway/server.mjs
+Restart=always
+RestartSec=2
+
+[Install]
+WantedBy=default.target

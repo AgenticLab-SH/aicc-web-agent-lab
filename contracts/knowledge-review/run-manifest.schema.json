@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/contracts/knowledge-review/run-manifest.schema.json",
+  "title": "AICC knowledge review run manifest",
+  "type": "object",
+  "additionalProperties": true,
+  "required": ["schemaVersion", "runId", "jobId", "requestId", "requestHash", "startedAt", "finishedAt", "outcome", "sources", "changedUrls", "errors", "automaticApply", "rollback"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "runId": { "type": "string" },
+    "jobId": { "type": "string" },
+    "requestId": { "type": "string" },
+    "requestHash": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "startedAt": { "type": "string", "format": "date-time" },
+    "finishedAt": { "type": "string", "format": "date-time" },
+    "outcome": { "enum": ["completed", "partial", "hold", "failed"] },
+    "sources": { "type": "array" },
+    "changedUrls": { "type": "array", "items": { "type": "string" } },
+    "errors": { "type": "array" },
+    "automaticApply": { "const": false },
+    "rollback": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["scope", "sourceOrGuidanceChanged", "requiresOwnerBackupForCursorRollback", "cursorBackupId", "automaticRestore"],
+      "properties": {
+        "sourceOrGuidanceChanged": { "const": false },
+        "requiresOwnerBackupForCursorRollback": { "const": true },
+        "automaticRestore": { "const": false }
+      }
+    }
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/contracts/knowledge-review/decision-event.schema.json",
+  "title": "AICC append-only knowledge decision event",
+  "type": "object",
+  "additionalProperties": true,
+  "required": ["schemaVersion", "eventId", "candidateId", "decision", "reason", "reviewedBy", "evidenceRefs", "applied", "automaticApply", "decidedAt"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "eventId": { "type": "string" },
+    "candidateId": { "type": "string" },
+    "decision": { "enum": ["promote", "reject", "hold"] },
+    "applied": { "const": false },
+    "automaticApply": { "const": false },
+    "decidedAt": { "type": "string", "format": "date-time" }
+  }
+}

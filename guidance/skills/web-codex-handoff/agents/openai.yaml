@@ -1,0 +1,4 @@
+interface:
+  display_name: "Web GPT-Codex Handoff"
+  short_description: "Web GPT-Codex task handoff and exact callbacks"
+  default_prompt: "Use $web-codex-handoff to delegate the exact owned task to Web GPT or Codex, preserve links and work ownership, and verify one-shot return to its origin."

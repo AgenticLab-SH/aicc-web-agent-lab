@@ -1,0 +1,139 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/contracts/projects/project.schema.json",
+  "title": "AICC project catalog item",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "id",
+    "title",
+    "kind",
+    "domain",
+    "canonicalRoot",
+    "lifecycle",
+    "progress",
+    "priority",
+    "nextAction",
+    "serviceProfileId",
+    "links",
+    "sensitivity",
+    "lastVerifiedAt",
+    "sourceState",
+    "drift",
+    "origins"
+  ],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$" },
+    "title": { "type": "string", "minLength": 1 },
+    "kind": {
+      "type": ["string", "null"],
+      "enum": ["product", "tool", "platform", "knowledge", "idea", "prototype", null]
+    },
+    "domain": {
+      "type": ["string", "null"],
+      "enum": ["aicc", "web", "app", "career", "notion", "knowledge", "other", null]
+    },
+    "canonicalRoot": {
+      "type": ["string", "null"],
+      "minLength": 1,
+      "description": "Canonical real path from an approved local source. Notion-only items are null."
+    },
+    "lifecycle": {
+      "type": ["string", "null"],
+      "enum": ["idea", "discovery", "design", "building", "verification", "operating", "paused", "archived", null],
+      "description": "Notion-authoritative lifecycle. Local-only items are null."
+    },
+    "progress": {
+      "type": "object",
+      "required": ["percent", "method", "confidence", "evidenceRefs", "computed", "override"],
+      "properties": {
+        "percent": { "type": "integer", "minimum": 0, "maximum": 100 },
+        "method": { "enum": ["weighted-gates", "manual-override"] },
+        "confidence": { "enum": ["verified", "partial", "unknown"] },
+        "evidenceRefs": { "type": "array", "items": { "type": "string", "minLength": 1 }, "uniqueItems": true },
+        "computed": {
+          "type": "object",
+          "required": ["percent", "numerator", "denominator", "confidence", "gates"],
+          "properties": {
+            "percent": { "type": "integer", "minimum": 0, "maximum": 100 },
+            "numerator": { "type": "integer", "minimum": 0 },
+            "denominator": { "type": "integer", "minimum": 0 },
+            "confidence": { "enum": ["verified", "partial", "unknown"] },
+            "gates": { "type": "object", "additionalProperties": true }
+          },
+          "additionalProperties": true
+        },
+        "override": {
+          "type": ["object", "null"],
+          "required": ["percent", "originalPercent", "reason", "actor", "at"],
+          "properties": {
+            "percent": { "type": "integer", "minimum": 0, "maximum": 100 },
+            "originalPercent": { "type": "integer", "minimum": 0, "maximum": 100 },
+            "reason": { "type": "string", "minLength": 1 },
+            "actor": { "type": "string", "minLength": 1 },
+            "at": { "type": "string", "format": "date-time" }
+          },
+          "additionalProperties": true
+        }
+      },
+      "additionalProperties": true
+    },
+    "priority": {
+      "type": ["object", "null"],
+      "required": ["rank", "source", "updatedAt"],
+      "properties": {
+        "rank": { "type": "integer", "minimum": 0 },
+        "source": { "const": "notion" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "additionalProperties": true,
+      "description": "Notion-authoritative priority. Local-only items are null."
+    },
+    "nextAction": {
+      "type": ["string", "null"],
+      "description": "Notion-authoritative next action. Local-only items are null."
+    },
+    "serviceProfileId": { "type": ["string", "null"], "pattern": "^[a-z0-9][a-z0-9-]*$" },
+    "links": {
+      "type": "object",
+      "required": ["notion", "repository", "production", "docs"],
+      "properties": {
+        "notion": { "type": ["string", "null"] },
+        "repository": { "type": ["string", "null"] },
+        "production": { "type": ["string", "null"] },
+        "docs": { "type": "array", "items": { "type": "string", "minLength": 1 }, "uniqueItems": true }
+      },
+      "additionalProperties": true
+    },
+    "sensitivity": { "type": ["string", "null"], "enum": ["public-safe", "private", "restricted", null] },
+    "lastVerifiedAt": { "type": ["string", "null"], "format": "date-time" },
+    "sourceState": { "enum": ["IN_SYNC", "LOCAL_ONLY", "NOTION_ONLY", "DRIFT"] },
+    "drift": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["field", "authoritativeSource", "localValue", "notionValue"],
+        "properties": {
+          "field": { "type": "string", "minLength": 1 },
+          "authoritativeSource": { "enum": ["local", "notion", "none"] },
+          "localValue": {},
+          "notionValue": {}
+        },
+        "additionalProperties": true
+      }
+    },
+    "origins": {
+      "type": "object",
+      "required": ["local", "notion"],
+      "properties": {
+        "local": { "type": ["object", "null"], "additionalProperties": true },
+        "notion": { "type": ["object", "null"], "additionalProperties": true }
+      },
+      "additionalProperties": true
+    },
+    "runtime": { "type": ["object", "null"], "additionalProperties": true },
+    "release": { "type": ["object", "null"], "additionalProperties": true }
+  },
+  "additionalProperties": true
+}

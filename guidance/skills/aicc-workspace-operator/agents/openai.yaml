@@ -1,0 +1,6 @@
+interface:
+  display_name: "AICC로 로컬 작업하기"
+  short_description: "AICC로 파일을 편집하고 서비스 장애의 로그 진단·수정·적용을 수행합니다"
+  default_prompt: "$aicc-workspace-operator로 등록된 작업 폴더를 확인하고 요청한 작업을 끝내줘."
+policy:
+  allow_implicit_invocation: true

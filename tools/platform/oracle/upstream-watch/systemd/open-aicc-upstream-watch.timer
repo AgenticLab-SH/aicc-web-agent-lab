@@ -1,0 +1,11 @@
+[Unit]
+Description=Check open-AICC upstreams every six hours
+
+[Timer]
+OnCalendar=*-*-* 00/6:17:00
+RandomizedDelaySec=900
+Persistent=true
+Unit=open-aicc-upstream-watch.service
+
+[Install]
+WantedBy=timers.target

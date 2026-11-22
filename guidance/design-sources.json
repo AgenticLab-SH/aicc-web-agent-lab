@@ -1,0 +1,124 @@
+{
+  "schemaVersion": 1,
+  "policy": {
+    "automaticApply": false,
+    "storage": "owner-local-commit-snapshots",
+    "execution": "source-only",
+    "monitorIntervalHours": 6
+  },
+  "sources": [
+    {
+      "id": "mission-control", "label": "Mission Control · 흐름 참고", "repository": "builderz-labs/mission-control", "url": "https://github.com/builderz-labs/mission-control",
+      "baselineRevision": "c1a846fe020567bb3ceb3b65db9f00db875618cd", "license": "MIT", "kind": "workflow-reference",
+      "capabilities": ["agent reports", "activity evidence"], "recommendedPaths": ["README.md", "LICENSE"],
+      "usageRestriction": "기존 설계 조사 고정점 재사용. 코드·자산 복제나 별도 실행 체계 도입 없음.",
+      "usedBy": ["public/dashboard-workspace.js", "docs/dashboard-product-spec.md"], "recordedAt": "2026-11-02"
+    },
+    {
+      "id": "vibe-kanban", "label": "Vibe Kanban · 작업 참고", "repository": "BloopAI/vibe-kanban", "url": "https://github.com/BloopAI/vibe-kanban",
+      "baselineRevision": "7c3807084daad0d9d315064f60fa869de254f027", "license": "Apache-2.0", "kind": "workflow-reference",
+      "capabilities": ["task ownership", "review evidence"], "recommendedPaths": ["docs/getting-started.mdx", "LICENSE"],
+      "usageRestriction": "기존 조사 고정점. 코드·실행기 채택 없음. 작성권·검토 분리 참고.",
+      "usedBy": ["docs/dashboard-product-spec.md"], "recordedAt": "2026-11-02"
+    },
+    {
+      "id": "paperclip", "label": "Paperclip · 목표 관계 참고", "repository": "paperclipai/paperclip", "url": "https://github.com/paperclipai/paperclip",
+      "baselineRevision": "e1224783685405eb7d987ece2446962920ee0cf5", "license": "MIT", "kind": "workflow-reference",
+      "capabilities": ["goal relations", "atomic ownership"], "recommendedPaths": ["docs/start/core-concepts.md", "LICENSE"],
+      "usageRestriction": "기존 조사 고정점. 코드·DB·스케줄러 채택 없음. 기존 원장 관계와 원자적 소유권 참고.",
+      "usedBy": ["src/dashboard-workspace.mjs", "docs/dashboard-product-spec.md"], "recordedAt": "2026-11-02"
+    },
+    {
+      "id": "sortablejs", "label": "SortableJS · 미채택 후보", "repository": "SortableJS/Sortable", "url": "https://github.com/SortableJS/Sortable",
+      "baselineRevision": "48b626bbc61afbb0f179730c1dd3cca3dcc8b788", "license": "MIT", "kind": "candidate-not-adopted",
+      "capabilities": ["touch sorting"], "recommendedPaths": ["README.md", "LICENSE"],
+      "usageRestriction": "기존 조사 후보만 보존. 설치·코드 복제 없음. 현재 자체 Pointer/Drag/Alt키/위·아래 구현. 채택 시 배포 버전·해시 고정 필요.",
+      "usedBy": ["docs/dashboard-product-spec.md"], "recordedAt": "2026-11-02"
+    },
+    {
+      "id": "impeccable",
+      "label": "Impeccable",
+      "repository": "pbakaus/impeccable",
+      "url": "https://github.com/pbakaus/impeccable",
+      "baselineRevision": "ae388ac58fb33aade50fc47e2be07c3192dcaabd",
+      "license": "Apache-2.0",
+      "estimatedKiB": 346078,
+      "kind": "skill-library",
+      "capabilities": ["layout", "typography", "color", "polish", "visual critique", "deterministic detectors"],
+      "recommendedPaths": [".agent/skills/impeccable", "packages/detector"]
+    },
+    {
+      "id": "open-design",
+      "label": "Open Design",
+      "repository": "nexu-io/open-design",
+      "url": "https://github.com/nexu-io/open-design",
+      "baselineRevision": "3807766f9e39c665481210c19dc6684183625847",
+      "license": "Apache-2.0",
+      "estimatedKiB": 1780042,
+      "kind": "design-platform",
+      "capabilities": ["design systems", "templates", "multi-format planning", "component catalogs"],
+      "recommendedPaths": ["plugins", "apps", "packages"]
+    },
+    {
+      "id": "diagram-design",
+      "label": "Diagram Design",
+      "repository": "cathrynlavery/diagram-design",
+      "url": "https://github.com/cathrynlavery/diagram-design",
+      "baselineRevision": "4da4dfb80b1f3d2f11678726b0db58c33c1d7e9d",
+      "license": "MIT",
+      "estimatedKiB": 5656,
+      "kind": "skill",
+      "capabilities": ["technical diagrams", "motion diagrams", "SVG", "Mermaid", "draw.io"],
+      "recommendedPaths": ["SKILL.md", "references", "assets", "scripts"]
+    },
+    {
+      "id": "shadcn-ui",
+      "label": "shadcn/ui",
+      "repository": "shadcn-ui/ui",
+      "url": "https://github.com/shadcn-ui/ui",
+      "baselineRevision": "efac5987074af84ece57c367c6dd83387b967022",
+      "license": "MIT",
+      "estimatedKiB": 69635,
+      "kind": "component-library",
+      "capabilities": ["accessible components", "component examples", "themes", "registry patterns"],
+      "recommendedPaths": ["apps/v4/registry", "packages", "templates"]
+    },
+    {
+      "id": "ai-website-cloner-template",
+      "label": "AI Website Cloner",
+      "repository": "JCodesMore/ai-website-cloner-template",
+      "url": "https://github.com/JCodesMore/ai-website-cloner-template",
+      "baselineRevision": "3040f9c7597ac487457e0c0a1dcedc17a486e5b4",
+      "license": "MIT",
+      "estimatedKiB": 1343,
+      "kind": "skill-and-template",
+      "capabilities": ["observable UI reconstruction", "multi-viewport comparison", "implementation workflow"],
+      "recommendedPaths": [".agents/skills/clone-website", "README.md"]
+    },
+    {
+      "id": "presentation-ai",
+      "label": "Presentation AI",
+      "repository": "allweonedev/presentation-ai",
+      "url": "https://github.com/allweonedev/presentation-ai",
+      "baselineRevision": "43fe74abd5676dbbea52b8cd66c43fb3b931b5c1",
+      "license": "MIT",
+      "estimatedKiB": 10014,
+      "kind": "presentation-reference",
+      "capabilities": ["slide themes", "editable layouts", "charts", "narrative modes", "PPTX import"],
+      "recommendedPaths": ["app", "components", "lib"]
+    },
+    {
+      "id": "logocreator",
+      "label": "Logo Creator",
+      "repository": "Nutlope/logocreator",
+      "url": "https://github.com/Nutlope/logocreator",
+      "baselineRevision": "268916b2e5de54af11e0248bbf4b4144dc547c59",
+      "license": "UNKNOWN",
+      "estimatedKiB": 48566,
+      "kind": "logo-reference",
+      "capabilities": ["brand brief", "independent logo variants", "selection workflow", "brand kit"],
+      "recommendedPaths": ["app", "components", "README.md"],
+      "usageRestriction": "Reference locally. Do not copy code or assets into distributed outputs until a license is verified."
+    }
+  ]
+}

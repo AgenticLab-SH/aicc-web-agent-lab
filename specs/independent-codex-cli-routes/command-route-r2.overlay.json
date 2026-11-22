@@ -1,0 +1,58 @@
+{
+  "schemaVersion": 1,
+  "component": "aicc-control-plane-overlay",
+  "paths": [
+    {
+      "path": "src/codex-cli-routes.mjs",
+      "reason": "command-route-r2 inherited user selection and thin account compat"
+    },
+    {
+      "path": "src/codex-route-launchers.mjs",
+      "reason": "No fixed legacy 5.6 catalog requirement"
+    },
+    {
+      "path": "src/cli.mjs",
+      "reason": "Updated compatibility command help"
+    },
+    {
+      "path": "src/catalog.mjs",
+      "reason": "Ordinary official codex entry and service-only ocx"
+    },
+    {
+      "path": "tools/platform/codex/Read-AiccOcxAdmission.ps1",
+      "reason": "Official command-backed auth using existing registered credential"
+    },
+    {
+      "path": "tools/platform/codex/Prepare-CodexSharedHome.ps1",
+      "reason": "Source-only V2 shared-HOME candidate preparation"
+    },
+    {
+      "path": "src/codex-checkpoint-handoff.mjs",
+      "reason": "G1 one-shot checkpoint launch, exact ACK, writer CAS, pinned result adoption; preserve UNKNOWN"
+    },
+    {
+      "path": "src/codex-checkpoint-stop.mjs",
+      "reason": "G1-06 launcher stop receipt from real exit/PID, per-conversation fence (G1-07), draft; no synthetic receipt"
+    },
+    {
+      "path": "src/codex-cli-install-drift.mjs",
+      "reason": "G1-03 read-only r2 overlay source versus registered managed CLI release file identity"
+    },
+    {
+      "path": "src/windows-health-repair.mjs",
+      "reason": "Closure: statically imported by src/cli.mjs and absent from the registered base release"
+    },
+    {
+      "path": "src/workspace-client-config.mjs",
+      "reason": "Closure: statically imported by src/cli.mjs and absent from the registered base release"
+    },
+    {
+      "path": "src/runtime-layout.mjs",
+      "reason": "Closure: statically imported by src/cli.mjs and absent from the registered base release"
+    },
+    {
+      "path": "src/windows-codex-desktop-identity.mjs",
+      "reason": "Closure: statically imported by src/cli.mjs and absent from the registered base release"
+    }
+  ]
+}

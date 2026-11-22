@@ -1,0 +1,4 @@
+interface:
+  display_name: "Establish Design Direction"
+  short_description: "Choose references and create an evidence-backed DESIGN.md"
+  default_prompt: "Use $establish-design-direction to compare visual directions and create a project-owned DESIGN.md."

@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/contracts/assets/asset-record.schema.json",
+  "title": "Normalized AI asset record",
+  "type": "object",
+  "required": ["schemaVersion", "assetId", "assetKind", "displayName", "canonicalOwner", "lifecycle", "syncState", "adapterId", "capabilities", "fingerprint"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "assetId": { "type": "string", "pattern": "^(project|skill|plugin|chatgpt-project|custom-gpt):" },
+    "assetKind": { "enum": ["project", "skill", "codex_plugin", "chatgpt_project", "custom_gpt"] },
+    "displayName": { "type": "string", "minLength": 1 },
+    "canonicalOwner": { "type": "string", "minLength": 1 },
+    "canonicalLocator": { "type": ["string", "null"] },
+    "sourceRevision": { "type": ["string", "null"] },
+    "lifecycle": { "enum": ["idea", "active", "paused", "retired", "unknown"] },
+    "priority": { "type": ["integer", "null"], "minimum": 0 },
+    "nextAction": { "type": ["string", "null"] },
+    "sensitivity": { "type": ["string", "null"] },
+    "syncState": { "enum": ["DISCOVERED", "IN_SYNC", "DRIFT", "HOLD", "RETIRED", "UNKNOWN"] },
+    "adapterId": { "type": "string", "minLength": 1 },
+    "capabilities": { "type": "array", "items": { "type": "string" }, "uniqueItems": true },
+    "fingerprint": { "type": "string", "pattern": "^[a-f0-9]{64}$" }
+  },
+  "additionalProperties": true
+}

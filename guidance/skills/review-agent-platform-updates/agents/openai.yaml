@@ -1,0 +1,6 @@
+interface:
+  display_name: "Agent Platform Update Review"
+  short_description: "공식 최신 문서와 로컬 에이전트 정본 비교"
+  default_prompt: "Use $review-agent-platform-updates to read status first, collect only exact sources authorized by an explicit request or an eligible stale/changelog task-entry trigger, compare them with the local AICC baseline, and document bounded improvements without automatic promotion."
+policy:
+  allow_implicit_invocation: true

@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "web-gpt-orchestrator": {
+      "command": "aicc",
+      "args": [
+        "orchestration",
+        "mcp"
+      ],
+      "cwd": "."
+    }
+  }
+}

@@ -1,0 +1,266 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/contracts/jobs/job.schema.json",
+  "title": "Durable job and attempt contract",
+  "description": "Durable scheduling, route and identity lineage. External side-effect commit/reconcile truth is owned by the durable attempt journal rather than duplicated in the job record.",
+  "type": "object",
+  "required": [
+    "contractVersion",
+    "jobId",
+    "idempotencyKey",
+    "workloadClass",
+    "workspaceId",
+    "requestedRoute",
+    "identityBinding",
+    "state",
+    "attempts",
+    "writerLease"
+  ],
+  "properties": {
+    "contractVersion": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 2
+    },
+    "jobId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "operationId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "idempotencyKey": {
+      "type": "string",
+      "minLength": 1
+    },
+    "workloadClass": {
+      "enum": [
+        "interactive",
+        "batch",
+        "browser",
+        "remote",
+        "render"
+      ]
+    },
+    "workspaceId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "direction": {
+      "enum": [
+        null,
+        "web_to_local",
+        "local_to_web",
+        "local",
+        "oob_ops"
+      ]
+    },
+    "requestedRoute": {
+      "type": "string",
+      "minLength": 1
+    },
+    "routeClass": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "routeInstanceRef": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "identityBinding": {
+      "type": "string",
+      "minLength": 1
+    },
+    "mode": {
+      "enum": [
+        "write",
+        "read-only"
+      ]
+    },
+    "state": {
+      "enum": [
+        "queued",
+        "leased",
+        "running",
+        "verifying",
+        "paused",
+        "completed",
+        "failed",
+        "cancelled"
+      ]
+    },
+    "requestRef": {
+      "type": "string",
+      "minLength": 1
+    },
+    "requestHash": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "dependencies": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "orchestrationRunId": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "roleId": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "attempts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "attemptId",
+          "routeId",
+          "state"
+        ],
+        "properties": {
+          "attemptId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "operationId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "workerId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "routeId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "routeClass": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "routeInstanceRef": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "identityBinding": {
+            "type": "string",
+            "minLength": 1
+          },
+          "state": {
+            "enum": [
+              "queued",
+              "running",
+              "paused",
+              "failed",
+              "superseded",
+              "completed"
+            ]
+          },
+          "fallbackFrom": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "reason": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "approvedPolicy": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "startedAt": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "heartbeatAt": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "terminalAt": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    "writerLease": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "properties": {
+        "workspaceId": {
+          "type": "string"
+        },
+        "attemptId": {
+          "type": "string"
+        },
+        "mode": {
+          "enum": [
+            "write",
+            "read-only"
+          ]
+        },
+        "expiresAt": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": true
+    },
+    "checkpoints": {
+      "type": "array"
+    },
+    "artifactRefs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "results": {
+      "type": "array"
+    },
+    "createdAt": {
+      "type": "string"
+    },
+    "updatedAt": {
+      "type": "string"
+    },
+    "terminalReason": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "additionalProperties": true
+}

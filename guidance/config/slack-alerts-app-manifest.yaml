@@ -1,0 +1,30 @@
+_metadata:
+  major_version: 2
+  minor_version: 2
+display_information:
+  name: AICC 한도 운영
+  description: AICC 운영 알림과 OCX 사용 한도 조회. 기존 단일 AICC 앱을 유지합니다.
+  background_color: "#101827"
+features:
+  app_home:
+    home_tab_enabled: false
+    messages_tab_enabled: true
+    messages_tab_read_only_enabled: false
+  bot_user:
+    display_name: AICC 한도 운영
+    always_online: false
+oauth_config:
+  scopes:
+    bot:
+      - chat:write
+      - files:write
+      - im:history
+settings:
+  org_deploy_enabled: false
+  event_subscriptions:
+    bot_events:
+      - message.im
+  interactivity:
+    is_enabled: true
+  socket_mode_enabled: true
+  token_rotation_enabled: false

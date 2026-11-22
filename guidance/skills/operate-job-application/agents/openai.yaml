@@ -1,0 +1,4 @@
+interface:
+  display_name: "Operate Job Application"
+  short_description: "Drive local job applications to pre-submit review"
+  default_prompt: "Use $operate-job-application to complete this job application through the local Apply Autofill service and stop before submission."
